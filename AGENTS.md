@@ -10,6 +10,19 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Project rules
 
+### Required coding workflow
+
+Before creating, updating, refactoring, fixing, reviewing, or designing any
+project code, use the Ponytail plugin's `ponytail:ponytail` skill at its default
+**full** intensity. Follow its simplicity ladder and preserve its safety,
+validation, error-handling, and accessibility boundaries. This requirement
+supplements, rather than replaces, the relevant project rules below.
+
+When writing, changing, or reviewing code that uses a library, framework, SDK,
+API, CLI, or cloud service, use the `context7-mcp` skill first to fetch the
+current official documentation. Follow the documented, current syntax rather
+than relying on remembered examples.
+
 Read the relevant rule file before changing code in that area:
 
 - [Next.js](docs/nextjs.md)
