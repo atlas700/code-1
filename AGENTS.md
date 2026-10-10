@@ -32,3 +32,15 @@ Read the relevant rule file before changing code in that area:
 - [PostgreSQL and Drizzle ORM](docs/postgresql-drizzle-orm.md)
 - [Project Build Plan](docs/agent-sized-build-plan.md)
 - [Github Rules](docs/github-rules.md)
+
+### Quality checks
+
+Run only the checks affected by the change while working:
+
+- Run `npm run lint` after changing application TypeScript, JavaScript, or ESLint configuration.
+- Run `npm run typecheck` after changing TypeScript, type declarations, or TypeScript configuration.
+- Run `npm run test` after changing behavior covered by tests or test configuration.
+- Run `npm run build` after changing application, Next.js, dependency, or build configuration, and before handing off an application change.
+
+For application, dependency, CI, or quality-configuration changes, run all four
+commands before handoff. Documentation-only changes do not require these commands
