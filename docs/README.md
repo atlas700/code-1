@@ -16,6 +16,8 @@ pilot evidence are labelled **Open**.
 - [Deployment](deployment.md)
 - [Architecture decision records](adr/README.md)
 - [Task 01 handoff](handoffs/01-documentation-shell.md)
+- [Task 02 handoff](handoffs/02-quality-ci.md)
+- [Task 03 handoff](handoffs/03-runtime-environment-validation.md)
 
 ## Existing project guidance
 

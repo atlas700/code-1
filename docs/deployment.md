@@ -7,6 +7,17 @@
 - Staging deployment, migration handling, backup scheduling, restore verification,
   and monitoring are planned for Task 34.
 
+## Environment configuration
+
+- The server validates `NODE_ENV` at startup. It must be `development`,
+  `production`, or `test`.
+- No application-specific configuration or secrets are required yet; see the
+  redacted root [`.env.example`](../.env.example).
+- Local-only values belong in the ignored root `.env.local` file.
+- Staging and production values will be set in the approved deployment target's
+  encrypted environment configuration after G4 selects that target. They must not
+  be committed to the repository or exposed with a `NEXT_PUBLIC_` prefix.
+
 ## Future deployment requirements
 
 - A deployment target and backup owner require G4 approval before infrastructure is
