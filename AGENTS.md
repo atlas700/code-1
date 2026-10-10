@@ -44,3 +44,18 @@ Run only the checks affected by the change while working:
 
 For application, dependency, CI, or quality-configuration changes, run all four
 commands before handoff. Documentation-only changes do not require these commands
+unless they change the documented commands or their configuration.
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked in this repository's GitHub Issues. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Uses the default five triage labels. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Uses the single-context layout. See `docs/agents/domain.md`.
