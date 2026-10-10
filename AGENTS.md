@@ -46,6 +46,13 @@ For application, dependency, CI, or quality-configuration changes, run all four
 commands before handoff. Documentation-only changes do not require these commands
 unless they change the documented commands or their configuration.
 
+### Feature completion and review
+
+Do not call an implementation feature complete until its handoff note records the
+completed acceptance checks, changed files, verification evidence, limitations, and
+next task. Then follow the [GitHub review delivery workflow](docs/github-rules.md)
+to commit the work on its feature branch, push it to GitHub, and request review.
+
 ## Agent skills
 
 ### Issue tracker
