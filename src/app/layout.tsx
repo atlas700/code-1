@@ -1,4 +1,5 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { GTProvider } from "gt-next";
 import { getLocale, getLocaleDirection } from "gt-next/server";
@@ -27,10 +28,7 @@ export const viewport: Viewport = {
   themeColor: "#f8fafc",
 };
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const locale = await getLocale();
-  const direction = await getLocaleDirection();
-
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       dir={direction}
