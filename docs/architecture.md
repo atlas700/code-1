@@ -7,6 +7,8 @@
 - Application code currently lives in `src/app`.
 - PostgreSQL, Drizzle, authentication, test, and UI-component libraries are not
   installed.
+- Localization uses General Translation with English and Pashto; its runtime
+  translation service remains disabled until terminology and credentials are ready.
 - Future application work follows the App Router and favors Server Components with
   small client-side interactive leaves.
 
