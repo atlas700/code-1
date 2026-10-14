@@ -1,0 +1,11 @@
+{
+  "defaultLocale": "en-US",
+  "locales": ["ps-AF"],
+  "runtimeUrl": null,
+  "cacheUrl": null,
+  "files": {
+    "gt": {
+      "output": "public/_gt/[locale].json"
+    }
+  }
+}

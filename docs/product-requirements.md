@@ -24,7 +24,8 @@ The candidate workflow above is not pilot-validated until G2 is complete.
 **Open — G3 domain policies:** decide unit conversion, stock identity attributes,
 receiving variance and approval, negative-stock policy, sale timing, payment-credit
 allocation, correction authority, and validated launch terminology. Record each as a
-dated ADR before the task that depends on it.
+dated ADR before the task that depends on it. The launch localization approach is
+General Translation with `en-US` and `ps-AF`; see [ADR 0001](adr/0001-launch-localization.md).
 
 ## Product boundaries
 
