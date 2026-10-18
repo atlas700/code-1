@@ -11,15 +11,20 @@
 
 ## Decision status
 
-**Open — G0 initial market:** choose one city or province, one business type,
-selection rationale, expected pilot contacts, and target language or languages.
+**Decided — G0 initial market:** target Helmand fruit-and-nut wholesalers,
+launching Pashto-first with English for internal and administrative use. The
+expected pilot contacts are recorded only as Pilot A (owner), Pilot B
+(warehouse/operations), and Pilot C (sales/accounts). See
+[ADR 0003](adr/0003-helmand-pilot-workflow.md).
 
 **Open — G1 workflow research:** record 20 interviews and 5 workflow observations
 covering purchase, receiving, stock, sale, debt, payment, correction, and reporting.
 
-**Open — G2 pilot workflow:** identify the top three pains, highest-frequency and
-willingness-to-pay workflow, pilot success metric, and explicit MVP exclusions.
-The candidate workflow above is not pilot-validated until G2 is complete.
+**Decided — G2 pilot workflow:** validate purchase-to-receipt first to improve stock
+accuracy and supplier balance visibility. The pains, four-week success metric, and
+explicit exclusions are in [ADR 0003](adr/0003-helmand-pilot-workflow.md). G1
+research remains required before treating this founder-approved scope as
+pilot-validated.
 
 **Open — G3 domain policies:** decide unit conversion, stock identity attributes,
 receiving variance and approval, negative-stock policy, sale timing, payment-credit
