@@ -18,8 +18,13 @@ authentication task with the later database task.
 - Treat Clerk's user ID as an external identity reference only. The application's
   future `organization_members` records remain the authority for organization
   selection and business permissions.
-- Choose the enabled end-user sign-in methods only after pilot contacts validate
-  whether email, phone, or owner-created credentials are workable.
+- Validate Clerk phone OTP with Pilot A (owner), Pilot B (warehouse/operations),
+  and Pilot C (sales/accounts) before enabling it as the pilot sign-in method.
+  Record only anonymized delivery and completion outcomes; never add phone numbers
+  or OTPs to the repository.
+- Choose the enabled end-user sign-in method after reviewing those outcomes. Email
+  and owner-created credentials remain alternatives, not fallbacks enabled by
+  default.
 
 ## Consequences
 
@@ -28,6 +33,8 @@ authentication task with the later database task.
 - Clerk account configuration and server-side credentials will be required during
   implementation. Server-side credentials must remain server-only; any publishable
   key follows Clerk's documented client-exposure guidance.
+- Phone OTP is not approved for pilot use until the Pilot A–C validation result is
+  recorded and reviewed.
 - Replacing Clerk later requires changing the local auth adapter and migrating the
   external user identity references; it must not change tenant or role rules.
 
