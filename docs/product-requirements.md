@@ -26,11 +26,16 @@ explicit exclusions are in [ADR 0003](adr/0003-helmand-pilot-workflow.md). G1
 research remains required before treating this founder-approved scope as
 pilot-validated.
 
-**Open — G3 domain policies:** decide unit conversion, stock identity attributes,
-receiving variance and approval, negative-stock policy, sale timing, payment-credit
-allocation, correction authority, and validated launch terminology. Record each as a
-dated ADR before the task that depends on it. The launch localization approach is
-General Translation with `en-US` and `ps-AF`; see [ADR 0001](adr/0001-launch-localization.md).
+**Decided — G3 units:** each product uses one stock unit for the pilot. Defer unit
+conversions unless G1 observes routine differing purchase and physical-stock units
+with stable, trustworthy per-product conversions; see
+[ADR 0004](adr/0004-single-stock-unit.md).
+
+**Open — G3 domain policies:** decide stock identity attributes, receiving variance
+and approval, negative-stock policy, sale timing, payment-credit allocation,
+correction authority, and validated launch terminology. Record each as a dated ADR
+before the task that depends on it. The launch localization approach is General
+Translation with `en-US` and `ps-AF`; see [ADR 0001](adr/0001-launch-localization.md).
 
 ## Product boundaries
 

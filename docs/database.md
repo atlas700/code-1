@@ -18,7 +18,12 @@
 
 ## Decision status
 
-**Open — G3 domain policies:** units, product stock identity, receipt variance,
+**Decided — G3 units:** each product uses one stock unit for the pilot; see
+[ADR 0004](adr/0004-single-stock-unit.md). Conversion support remains deferred
+unless G1 establishes routine differing units with stable, trustworthy per-product
+conversions.
+
+**Open — G3 domain policies:** product stock identity, receipt variance,
 negative-stock policy, sale timing, credit allocation, and correction authority must
 be decided before their dependent schemas and services.
 
