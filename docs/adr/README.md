@@ -18,5 +18,8 @@ clearly distinguish evidence from assumptions.
 
 ## Current state
 
-No ADR has been created because G0–G4 remain open. Record the corresponding decision
-before starting a task that depends on it.
+[ADR 0001](0001-launch-localization.md) and
+[ADR 0002](0002-clerk-authentication.md) record the accepted localization and pilot
+authentication decisions. The remaining G0–G4 decisions stay open until evidence or
+founder approval exists. Record each decision before starting a task that depends on
+it.
