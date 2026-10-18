@@ -49,8 +49,10 @@ separate debt record; see
 [ADR 0009](adr/0009-specific-obligation-payment-allocation.md). Automatic
 oldest-debt allocation and payment splitting remain deferred.
 
-**Open — G3 domain policies:** correction authority must be decided before its
-dependent schemas and services.
+**Decided — G3 correction authority:** stock corrections and transaction
+cancellations require wholesaler-owner approval; any future return requires the
+same approval and a separate scope decision. See
+[ADR 0010](adr/0010-owner-approval-for-corrections.md).
 
 **Open — G4 initial data model:** approve the organization, membership, master-data,
 transaction, and audit model before database implementation begins.

@@ -15,6 +15,10 @@ An inventory state in which a product's recorded quantity is below zero.
 The unpaid amount remaining on one invoice or payable.
 _Avoid_: separate debt record
 
+**Correction**:
+A recorded change that resolves a stock discrepancy or reverses an operational
+transaction.
+
 **Receipt variance**:
 The difference between a purchase order's quantity and the quantity actually
 received.

@@ -54,10 +54,13 @@ or payable. Debt is that obligation's outstanding balance; defer automatic
 oldest-debt allocation, payment splitting, and a separate debt record; see
 [ADR 0009](adr/0009-specific-obligation-payment-allocation.md).
 
-**Open — G3 domain policies:** decide correction authority and validated launch
-terminology. Record each as a dated ADR before the task that depends on it. The
-launch localization approach is General Translation with `en-US` and `ps-AF`; see
-[ADR 0001](adr/0001-launch-localization.md).
+**Decided — G3 correction authority:** require wholesaler-owner approval for stock
+corrections, transaction cancellations, and any future return. Returns remain
+excluded from the pilot; see [ADR 0010](adr/0010-owner-approval-for-corrections.md).
+
+**Open — G3 domain policies:** validate launch terminology. Record each as a dated
+ADR before the task that depends on it. The launch localization approach is General
+Translation with `en-US` and `ps-AF`; see [ADR 0001](adr/0001-launch-localization.md).
 
 ## Product boundaries
 
