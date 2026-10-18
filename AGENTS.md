@@ -12,6 +12,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ### Required coding workflow
 
+Before implementing a feature or change, use the `find-skills` skill to search
+for a task-specific skill. If a relevant skill is found, use it; otherwise,
+continue with the default workflow below.
+
 Before creating, updating, refactoring, fixing, reviewing, or designing any
 project code, use the Ponytail plugin's `ponytail:ponytail` skill at its default
 **full** intensity. Follow its simplicity ladder and preserve its safety,
