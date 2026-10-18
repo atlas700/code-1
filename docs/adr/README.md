@@ -25,6 +25,7 @@ initial market and pilot workflow. [ADR 0004](0004-single-stock-unit.md) records
 the pilot's single-stock-unit policy. [ADR 0005](0005-product-stock-identity.md)
 records the pilot's product-identity policy. [ADR 0006](0006-receipt-variance-approval.md)
 records the pilot's receipt-variance approval policy. [ADR 0007](0007-no-negative-stock.md)
-records the no-negative-stock policy. G1, the remaining G3 decisions, and the
-remaining G4 decisions stay open until evidence or founder approval exists. Record
-each decision before starting a task that depends on it.
+records the no-negative-stock policy. [ADR 0008](0008-dispatch-stock-timing.md)
+records the conditional dispatch stock-timing policy. G1, the remaining G3
+decisions, and the remaining G4 decisions stay open until evidence or founder
+approval exists. Record each decision before starting a task that depends on it.

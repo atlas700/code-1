@@ -45,10 +45,14 @@ only if G1 shows the owner is unavailable for routine receipts; see
 that would reduce stock below zero, then investigate and correct the underlying
 receipt or count discrepancy; see [ADR 0007](adr/0007-no-negative-stock.md).
 
-**Open — G3 domain policies:** decide sale timing, payment-credit allocation,
-correction authority, and validated launch terminology. Record each as a dated ADR
-before the task that depends on it. The launch localization approach is General
-Translation with `en-US` and `ps-AF`; see [ADR 0001](adr/0001-launch-localization.md).
+**Decided — G3 sale timing:** reduce stock at dispatch if G1 establishes that
+physical handoff is reliably recorded. Otherwise, revisit the timing before building
+a stock-decreasing sale workflow; see [ADR 0008](adr/0008-dispatch-stock-timing.md).
+
+**Open — G3 domain policies:** decide payment-credit allocation, correction
+authority, and validated launch terminology. Record each as a dated ADR before the
+task that depends on it. The launch localization approach is General Translation
+with `en-US` and `ps-AF`; see [ADR 0001](adr/0001-launch-localization.md).
 
 ## Product boundaries
 

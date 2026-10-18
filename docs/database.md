@@ -38,8 +38,13 @@ in negative stock; see [ADR 0007](adr/0007-no-negative-stock.md). A would-be
 negative quantity must be rejected while its underlying receipt or count discrepancy
 is investigated and corrected.
 
-**Open — G3 domain policies:** sale timing, credit allocation, and correction
-authority must be decided before their dependent schemas and services.
+**Decided — G3 sale timing:** reduce stock at dispatch only if G1 establishes that
+physical handoff is reliably recorded; see
+[ADR 0008](adr/0008-dispatch-stock-timing.md). Otherwise, revisit sale timing before
+the stock-decreasing sales workflow is implemented.
+
+**Open — G3 domain policies:** credit allocation and correction authority must be
+decided before their dependent schemas and services.
 
 **Open — G4 initial data model:** approve the organization, membership, master-data,
 transaction, and audit model before database implementation begins.
