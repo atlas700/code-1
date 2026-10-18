@@ -18,9 +18,41 @@
 
 ## Decision status
 
-**Open — G3 domain policies:** units, product stock identity, receipt variance,
-negative-stock policy, sale timing, credit allocation, and correction authority must
-be decided before their dependent schemas and services.
+**Decided — G3 units:** each product uses one stock unit for the pilot; see
+[ADR 0004](adr/0004-single-stock-unit.md). Conversion support remains deferred
+unless G1 establishes routine differing units with stable, trustworthy per-product
+conversions.
+
+**Decided — G3 product identity:** each product is one stock identity for the
+pilot; see [ADR 0005](adr/0005-product-stock-identity.md). Grade, origin,
+harvest-date, and quality distinctions remain deferred unless G1 establishes that
+an attribute creates operationally distinct stock for purchasing, storage, or
+pricing.
+
+**Decided — G3 receiving:** a receipt variance requires wholesaler-owner approval;
+see [ADR 0006](adr/0006-receipt-variance-approval.md). The approver remains the
+owner unless G1 establishes that the owner is unavailable for routine receipts.
+
+**Decided — G3 stock policy:** no transaction or authorized correction may result
+in negative stock; see [ADR 0007](adr/0007-no-negative-stock.md). A would-be
+negative quantity must be rejected while its underlying receipt or count discrepancy
+is investigated and corrected.
+
+**Decided — G3 sale timing:** reduce stock at dispatch only if G1 establishes that
+physical handoff is reliably recorded; see
+[ADR 0008](adr/0008-dispatch-stock-timing.md). Otherwise, revisit sale timing before
+the stock-decreasing sales workflow is implemented.
+
+**Decided — G3 credit allocation:** a payment is allocated to one selected invoice
+or payable. Its unpaid amount is the obligation's outstanding balance, not a
+separate debt record; see
+[ADR 0009](adr/0009-specific-obligation-payment-allocation.md). Automatic
+oldest-debt allocation and payment splitting remain deferred.
+
+**Decided — G3 correction authority:** stock corrections and transaction
+cancellations require wholesaler-owner approval; any future return requires the
+same approval and a separate scope decision. See
+[ADR 0010](adr/0010-owner-approval-for-corrections.md).
 
 **Open — G4 initial data model:** approve the organization, membership, master-data,
 transaction, and audit model before database implementation begins.

@@ -11,21 +11,62 @@
 
 ## Decision status
 
-**Open — G0 initial market:** choose one city or province, one business type,
-selection rationale, expected pilot contacts, and target language or languages.
+**Decided — G0 initial market:** target Helmand fruit-and-nut wholesalers,
+launching Pashto-first with English for internal and administrative use. The
+expected pilot contacts are recorded only as Pilot A (owner), Pilot B
+(warehouse/operations), and Pilot C (sales/accounts). See
+[ADR 0003](adr/0003-helmand-pilot-workflow.md).
 
 **Open — G1 workflow research:** record 20 interviews and 5 workflow observations
 covering purchase, receiving, stock, sale, debt, payment, correction, and reporting.
 
-**Open — G2 pilot workflow:** identify the top three pains, highest-frequency and
-willingness-to-pay workflow, pilot success metric, and explicit MVP exclusions.
-The candidate workflow above is not pilot-validated until G2 is complete.
+**Decided — G2 pilot workflow:** validate purchase-to-receipt first to improve stock
+accuracy and supplier balance visibility. The pains, four-week success metric, and
+explicit exclusions are in [ADR 0003](adr/0003-helmand-pilot-workflow.md). G1
+research remains required before treating this founder-approved scope as
+pilot-validated.
 
-**Open — G3 domain policies:** decide unit conversion, stock identity attributes,
-receiving variance and approval, negative-stock policy, sale timing, payment-credit
-allocation, correction authority, and validated launch terminology. Record each as a
-dated ADR before the task that depends on it. The launch localization approach is
-General Translation with `en-US` and `ps-AF`; see [ADR 0001](adr/0001-launch-localization.md).
+**Decided — G3 units:** each product uses one stock unit for the pilot. Defer unit
+conversions unless G1 observes routine differing purchase and physical-stock units
+with stable, trustworthy per-product conversions; see
+[ADR 0004](adr/0004-single-stock-unit.md).
+
+**Decided — G3 product identity:** each product is one stock identity for the
+pilot. Defer grade, origin, harvest-date, and quality distinctions unless G1
+observes an attribute as operationally distinct stock for purchasing, storage, or
+pricing; see [ADR 0005](adr/0005-product-stock-identity.md).
+
+**Decided — G3 receiving:** permit a receipt quantity that differs from its
+purchase-order quantity only with wholesaler-owner approval. Revisit the approver
+only if G1 shows the owner is unavailable for routine receipts; see
+[ADR 0006](adr/0006-receipt-variance-approval.md).
+
+**Decided — G3 stock policy:** never permit negative stock. Reject a transaction
+that would reduce stock below zero, then investigate and correct the underlying
+receipt or count discrepancy; see [ADR 0007](adr/0007-no-negative-stock.md).
+
+**Decided — G3 sale timing:** reduce stock at dispatch if G1 establishes that
+physical handoff is reliably recorded. Otherwise, revisit the timing before building
+a stock-decreasing sale workflow; see [ADR 0008](adr/0008-dispatch-stock-timing.md).
+
+**Decided — G3 credit allocation:** allocate each payment to one selected invoice
+or payable. Debt is that obligation's outstanding balance; defer automatic
+oldest-debt allocation, payment splitting, and a separate debt record; see
+[ADR 0009](adr/0009-specific-obligation-payment-allocation.md).
+
+**Decided — G3 correction authority:** require wholesaler-owner approval for stock
+corrections, transaction cancellations, and any future return. Returns remain
+excluded from the pilot; see [ADR 0010](adr/0010-owner-approval-for-corrections.md).
+
+**Decided — G3 terminology validation:** validate Pashto terms for product, stock
+unit, supplier, purchase, receipt, receipt variance, stock balance, supplier
+balance, and correction before shipping pilot labels. Defer sales/payment terms;
+see [ADR 0011](adr/0011-validate-purchase-receipt-terminology.md).
+
+**G3 complete — policy decisions:** the remaining G3 work is user validation of the
+chosen terminology, as part of G1 evidence. The localization approach remains
+General Translation with `en-US` and `ps-AF`; see
+[ADR 0001](adr/0001-launch-localization.md).
 
 ## Product boundaries
 

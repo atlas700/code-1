@@ -18,5 +18,17 @@ clearly distinguish evidence from assumptions.
 
 ## Current state
 
-No ADR has been created because G0–G4 remain open. Record the corresponding decision
-before starting a task that depends on it.
+[ADR 0001](0001-launch-localization.md) and
+[ADR 0002](0002-clerk-authentication.md) record the accepted localization and pilot
+authentication decisions. [ADR 0003](0003-helmand-pilot-workflow.md) records the
+initial market and pilot workflow. [ADR 0004](0004-single-stock-unit.md) records
+the pilot's single-stock-unit policy. [ADR 0005](0005-product-stock-identity.md)
+records the pilot's product-identity policy. [ADR 0006](0006-receipt-variance-approval.md)
+records the pilot's receipt-variance approval policy. [ADR 0007](0007-no-negative-stock.md)
+records the no-negative-stock policy. [ADR 0008](0008-dispatch-stock-timing.md)
+records the conditional dispatch stock-timing policy. [ADR 0009](0009-specific-obligation-payment-allocation.md)
+records the payment-allocation policy. [ADR 0010](0010-owner-approval-for-corrections.md)
+records the corrections-approval policy. [ADR 0011](0011-validate-purchase-receipt-terminology.md)
+records the terminology-validation scope. G1 and the remaining G4 decisions stay
+open until evidence or founder approval exists. Record each decision before starting
+a task that depends on it.

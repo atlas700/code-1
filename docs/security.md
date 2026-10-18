@@ -12,8 +12,11 @@
 
 ## Decision status
 
-**Open — G4 authentication:** select and approve an authentication provider, secure
-session design, and production cookie guidance before Task 06.
+**Decided — G4 authentication:** Clerk is the approved managed identity and secure
+session provider for Task 06; see [ADR 0002](adr/0002-clerk-authentication.md). The
+enabled sign-in method remains a pilot-validation decision. Application organization
+membership and business permissions remain server-side records, not client-controlled
+Clerk organization state.
 
 **Open — G4 role matrix:** approve the roles, allowed actions, and authorization
 guard behavior before Task 10.

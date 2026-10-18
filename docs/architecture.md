@@ -14,11 +14,12 @@
 
 ## Decision status
 
-**Open — G4 architecture approval:** approve the initial data model, authentication
-provider, role matrix, mutation boundary, deployment target, and backup owner before
-irreversible infrastructure work. The owning details are tracked in
-[database](database.md), [security](security.md), [API conventions](api-conventions.md),
-and [deployment](deployment.md).
+**Partially decided — G4 architecture approval:** Clerk is the approved pilot
+authentication provider; see [ADR 0002](adr/0002-clerk-authentication.md). The
+initial data model, role matrix, mutation boundary, deployment target, and backup
+owner remain open before their dependent infrastructure work. The owning details are
+tracked in [database](database.md), [security](security.md),
+[API conventions](api-conventions.md), and [deployment](deployment.md).
 
 ## Intended boundaries
 
