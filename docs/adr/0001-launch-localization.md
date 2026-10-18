@@ -18,7 +18,8 @@ application must not publish machine-translated business terms.
   locale-prefixed routes.
 - Set the document `lang` and `dir` attributes from the active GT locale.
 - Keep GT runtime translation and remote translation caching disabled until validated
-  Pashto terminology and GT project credentials are available.
+  Pashto terminology from [ADR 0011](0011-validate-purchase-receipt-terminology.md)
+  and GT project credentials are available.
 
 ## Consequences
 

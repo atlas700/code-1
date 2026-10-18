@@ -58,9 +58,15 @@ oldest-debt allocation, payment splitting, and a separate debt record; see
 corrections, transaction cancellations, and any future return. Returns remain
 excluded from the pilot; see [ADR 0010](adr/0010-owner-approval-for-corrections.md).
 
-**Open — G3 domain policies:** validate launch terminology. Record each as a dated
-ADR before the task that depends on it. The launch localization approach is General
-Translation with `en-US` and `ps-AF`; see [ADR 0001](adr/0001-launch-localization.md).
+**Decided — G3 terminology validation:** validate Pashto terms for product, stock
+unit, supplier, purchase, receipt, receipt variance, stock balance, supplier
+balance, and correction before shipping pilot labels. Defer sales/payment terms;
+see [ADR 0011](adr/0011-validate-purchase-receipt-terminology.md).
+
+**G3 complete — policy decisions:** the remaining G3 work is user validation of the
+chosen terminology, as part of G1 evidence. The localization approach remains
+General Translation with `en-US` and `ps-AF`; see
+[ADR 0001](adr/0001-launch-localization.md).
 
 ## Product boundaries
 
