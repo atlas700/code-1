@@ -36,11 +36,16 @@ pilot. Defer grade, origin, harvest-date, and quality distinctions unless G1
 observes an attribute as operationally distinct stock for purchasing, storage, or
 pricing; see [ADR 0005](adr/0005-product-stock-identity.md).
 
-**Open — G3 domain policies:** decide receiving variance and approval,
-negative-stock policy, sale timing, payment-credit allocation, correction authority,
-and validated launch terminology. Record each as a dated ADR before the task that
-depends on it. The launch localization approach is General Translation with `en-US`
-and `ps-AF`; see [ADR 0001](adr/0001-launch-localization.md).
+**Decided — G3 receiving:** permit a receipt quantity that differs from its
+purchase-order quantity only with wholesaler-owner approval. Revisit the approver
+only if G1 shows the owner is unavailable for routine receipts; see
+[ADR 0006](adr/0006-receipt-variance-approval.md).
+
+**Open — G3 domain policies:** decide negative-stock policy, sale timing,
+payment-credit allocation, correction authority, and validated launch terminology.
+Record each as a dated ADR before the task that depends on it. The launch
+localization approach is General Translation with `en-US` and `ps-AF`; see
+[ADR 0001](adr/0001-launch-localization.md).
 
 ## Product boundaries
 
