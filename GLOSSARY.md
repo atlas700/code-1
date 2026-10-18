@@ -11,6 +11,10 @@ A distinct stock identity whose quantities are tracked independently.
 **Negative stock**:
 An inventory state in which a product's recorded quantity is below zero.
 
+**Outstanding balance**:
+The unpaid amount remaining on one invoice or payable.
+_Avoid_: separate debt record
+
 **Receipt variance**:
 The difference between a purchase order's quantity and the quantity actually
 received.

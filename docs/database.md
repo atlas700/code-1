@@ -43,8 +43,14 @@ physical handoff is reliably recorded; see
 [ADR 0008](adr/0008-dispatch-stock-timing.md). Otherwise, revisit sale timing before
 the stock-decreasing sales workflow is implemented.
 
-**Open — G3 domain policies:** credit allocation and correction authority must be
-decided before their dependent schemas and services.
+**Decided — G3 credit allocation:** a payment is allocated to one selected invoice
+or payable. Its unpaid amount is the obligation's outstanding balance, not a
+separate debt record; see
+[ADR 0009](adr/0009-specific-obligation-payment-allocation.md). Automatic
+oldest-debt allocation and payment splitting remain deferred.
+
+**Open — G3 domain policies:** correction authority must be decided before its
+dependent schemas and services.
 
 **Open — G4 initial data model:** approve the organization, membership, master-data,
 transaction, and audit model before database implementation begins.

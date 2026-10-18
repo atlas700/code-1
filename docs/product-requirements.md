@@ -49,10 +49,15 @@ receipt or count discrepancy; see [ADR 0007](adr/0007-no-negative-stock.md).
 physical handoff is reliably recorded. Otherwise, revisit the timing before building
 a stock-decreasing sale workflow; see [ADR 0008](adr/0008-dispatch-stock-timing.md).
 
-**Open — G3 domain policies:** decide payment-credit allocation, correction
-authority, and validated launch terminology. Record each as a dated ADR before the
-task that depends on it. The launch localization approach is General Translation
-with `en-US` and `ps-AF`; see [ADR 0001](adr/0001-launch-localization.md).
+**Decided — G3 credit allocation:** allocate each payment to one selected invoice
+or payable. Debt is that obligation's outstanding balance; defer automatic
+oldest-debt allocation, payment splitting, and a separate debt record; see
+[ADR 0009](adr/0009-specific-obligation-payment-allocation.md).
+
+**Open — G3 domain policies:** decide correction authority and validated launch
+terminology. Record each as a dated ADR before the task that depends on it. The
+launch localization approach is General Translation with `en-US` and `ps-AF`; see
+[ADR 0001](adr/0001-launch-localization.md).
 
 ## Product boundaries
 
