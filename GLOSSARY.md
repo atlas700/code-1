@@ -5,6 +5,9 @@ inventory documentation.
 
 ## Inventory
 
+**Product**:
+A distinct stock identity whose quantities are tracked independently.
+
 **Stock unit**:
 The single unit in which a product's purchase, receipt, and inventory quantities
 are recorded during the pilot.

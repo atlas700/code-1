@@ -23,9 +23,15 @@
 unless G1 establishes routine differing units with stable, trustworthy per-product
 conversions.
 
-**Open — G3 domain policies:** product stock identity, receipt variance,
-negative-stock policy, sale timing, credit allocation, and correction authority must
-be decided before their dependent schemas and services.
+**Decided — G3 product identity:** each product is one stock identity for the
+pilot; see [ADR 0005](adr/0005-product-stock-identity.md). Grade, origin,
+harvest-date, and quality distinctions remain deferred unless G1 establishes that
+an attribute creates operationally distinct stock for purchasing, storage, or
+pricing.
+
+**Open — G3 domain policies:** receipt variance, negative-stock policy, sale timing,
+credit allocation, and correction authority must be decided before their dependent
+schemas and services.
 
 **Open — G4 initial data model:** approve the organization, membership, master-data,
 transaction, and audit model before database implementation begins.
