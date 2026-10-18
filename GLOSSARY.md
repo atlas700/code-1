@@ -8,6 +8,9 @@ inventory documentation.
 **Product**:
 A distinct stock identity whose quantities are tracked independently.
 
+**Negative stock**:
+An inventory state in which a product's recorded quantity is below zero.
+
 **Receipt variance**:
 The difference between a purchase order's quantity and the quantity actually
 received.

@@ -33,9 +33,13 @@ pricing.
 see [ADR 0006](adr/0006-receipt-variance-approval.md). The approver remains the
 owner unless G1 establishes that the owner is unavailable for routine receipts.
 
-**Open — G3 domain policies:** negative-stock policy, sale timing, credit
-allocation, and correction authority must be decided before their dependent schemas
-and services.
+**Decided — G3 stock policy:** no transaction or authorized correction may result
+in negative stock; see [ADR 0007](adr/0007-no-negative-stock.md). A would-be
+negative quantity must be rejected while its underlying receipt or count discrepancy
+is investigated and corrected.
+
+**Open — G3 domain policies:** sale timing, credit allocation, and correction
+authority must be decided before their dependent schemas and services.
 
 **Open — G4 initial data model:** approve the organization, membership, master-data,
 transaction, and audit model before database implementation begins.

@@ -41,11 +41,14 @@ purchase-order quantity only with wholesaler-owner approval. Revisit the approve
 only if G1 shows the owner is unavailable for routine receipts; see
 [ADR 0006](adr/0006-receipt-variance-approval.md).
 
-**Open — G3 domain policies:** decide negative-stock policy, sale timing,
-payment-credit allocation, correction authority, and validated launch terminology.
-Record each as a dated ADR before the task that depends on it. The launch
-localization approach is General Translation with `en-US` and `ps-AF`; see
-[ADR 0001](adr/0001-launch-localization.md).
+**Decided — G3 stock policy:** never permit negative stock. Reject a transaction
+that would reduce stock below zero, then investigate and correct the underlying
+receipt or count discrepancy; see [ADR 0007](adr/0007-no-negative-stock.md).
+
+**Open — G3 domain policies:** decide sale timing, payment-credit allocation,
+correction authority, and validated launch terminology. Record each as a dated ADR
+before the task that depends on it. The launch localization approach is General
+Translation with `en-US` and `ps-AF`; see [ADR 0001](adr/0001-launch-localization.md).
 
 ## Product boundaries
 
