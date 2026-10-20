@@ -15,6 +15,9 @@
 - Treat `inventory_movements` as the stock audit source when inventory is added.
 - Scope future business data by organization and derive tenant context on the server.
 - Execute receiving, sale fulfilment, and payment allocation atomically.
+- Accepted receipt, inbound stock movements, supplier payable, and purchase status
+  commit together. Derive supplier balances from receipt payables less supplier
+  payment allocations; see [ADR 0012](adr/0012-receipt-supplier-payables.md).
 
 ## Decision status
 
@@ -54,8 +57,11 @@ cancellations require wholesaler-owner approval; any future return requires the
 same approval and a separate scope decision. See
 [ADR 0010](adr/0010-owner-approval-for-corrections.md).
 
-**Open — G4 initial data model:** approve the organization, membership, master-data,
-transaction, and audit model before database implementation begins.
+**Open — G4 database approval:** approve the database environment, migration/recovery
+workflow, and initial organization, membership, master-data, transaction, and audit
+model before Task 07. Task 07 creates only a harmless infrastructure baseline;
+business schema and screens beginning at Task 13 also require G1 evidence. Current
+eligibility is recorded in the [build plan's gate status](agent-sized-build-plan.md#current-gate-status).
 
 No schema, database vendor configuration, migration, or ORM choice is made by this
 document.

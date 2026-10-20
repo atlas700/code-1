@@ -7,23 +7,25 @@ agent should complete **one numbered implementation task per chat**, including i
 tests and handoff note. Do not combine adjacent tasks merely because they look
 related.
 
-The first paid product is a multi-tenant operating system for one type of
-agricultural wholesaler/distributor in one city or province. The first useful
-workflow is:
+The approved pilot serves Helmand fruit-and-nut wholesalers, Pashto-first. Its
+workflow follows [ADR 0003](adr/0003-helmand-pilot-workflow.md):
 
 ```text
-buy from supplier → receive stock → sell to customer → record payment → see balances
+purchase → accept receipt → see stock and supplier debt → record supplier payment → reconcile
 ```
 
-Everything outside that loop is deferred unless pilot evidence makes it necessary.
+Sales, customer payments, multiple warehouses, returns, lot/grade tracking, and
+offline mode are deferred. Accepted ADRs govern product policy; this plan governs
+task readiness and order. Update both when an approved decision changes the scope.
 
-## Current repository baseline (20 September 2026)
+## Current repository baseline (20 October 2026)
 
-- A minimal Next.js `16.3.5` App Router project in `src/app`.
-- React `19.2.8`, TypeScript strict mode, Tailwind CSS 4, and ESLint are present.
-- PostgreSQL, Drizzle, authentication, testing libraries, and UI-component
-  libraries are not installed yet.
-- Preserve the existing dirty worktree. Do not overwrite unrelated changes.
+- The application shell, localization plumbing, Clerk authentication, environment
+  validation, Vitest tests, and CI are implemented (Tasks 01–06).
+- Exact dependency versions and quality commands live in `package.json` and its
+  lockfile. The application uses App Router in `src/app` and strict TypeScript.
+- PostgreSQL, Drizzle, business persistence, and a UI-component library are absent.
+- Preserve unrelated worktree changes.
 
 The project rules in `AGENTS.md` and `docs/` are mandatory. In particular:
 
@@ -36,8 +38,10 @@ The project rules in `AGENTS.md` and `docs/` are mandatory. In particular:
 
 ## Non-negotiable operating rules
 
-1. **Discovery before feature work.** Do not start database or UI implementation
-   until the discovery gate below is passed.
+1. **Check task readiness first.** Tasks 01–12 may proceed before G1 only when
+   their specific G3/G4 prerequisites below are approved. Tasks 13–35 require G1
+   evidence as well. Documentation, dependency patches, and CI maintenance may
+   proceed independently; deferred features require a new scope decision.
 2. **One task, one concern.** A task must not silently add a second module,
    redesign the app, change deployment, or introduce a speculative abstraction.
 3. **Inspect first.** Every agent starts by reading the current files, `git diff`,
@@ -64,8 +68,8 @@ Copy this, then replace the bracketed task reference with exactly one task below
 You are continuing the Afghanistan Agricultural Supply Chain OS repository.
 
 First inspect: AGENTS.md; the relevant docs/*.md rules; git diff; the current
-implementation; and the handoff note for the preceding task. Preserve unrelated
-changes.
+implementation; the gate status and pilot delivery order in this plan; and the
+latest prerequisite handoff. Preserve unrelated changes.
 
 Implement only [TASK ID AND TITLE] from docs/agent-sized-build-plan.md.
 
@@ -85,6 +89,30 @@ inventing a policy.
 
 ## Gates — these are decisions, not coding tasks
 
+### Current gate status
+
+This table is the task-readiness record. Update it with dated evidence when a
+gate changes; an accepted policy does not count as completed user research.
+Research records stay private; link a redacted evidence summary rather than names
+or interview transcripts.
+
+| Gate | Status and evidence (20 October 2026) | Owner | Blocks |
+| --- | --- | --- | --- |
+| G0 market | Accepted: [ADR 0003](adr/0003-helmand-pilot-workflow.md), 19 October | Founder | Market choice is resolved |
+| G1 research | Open: 20 interviews and 5 workflow observations have no recorded completion evidence | Founder/researcher | Tasks 13–35 and pilot release |
+| G2 scope | Founder-approved: [ADR 0003](adr/0003-helmand-pilot-workflow.md); user validation still depends on G1 | Founder/product lead | Features outside the approved pilot |
+| G3 domain policies | Partially resolved: [ADRs 0001–0012](adr/README.md); decimal scale/rounding remain open; terminology requires G1 validation | Founder/product lead | Task 12 until decimal policy is approved; dependent domain work and pilot labels until their policies/evidence exist |
+| G4 authentication | Accepted: [ADR 0002](adr/0002-clerk-authentication.md); development checks in [Task 06 handoff](handoffs/06-authentication.md); pilot sign-in method still needs validation | Founder | Pilot authentication until sign-in validation is recorded |
+| G4 database | Open: approve database environment, migration workflow, and initial data model in [database](database.md) | Technical lead/founder | Task 07 and subsequent persistence |
+| G4 mutation boundary | Open: [API conventions](api-conventions.md) | Technical lead/founder | Task 09 and subsequent protected mutations |
+| G4 permissions | Open: role matrix in [security](security.md) | Technical lead/founder | Task 10 and subsequent role-dependent work |
+| G4 deployment | Open: hosting, backup owner, retention, and monitoring in [deployment](deployment.md) | Technical lead/founder | Task 34 and pilot release |
+
+**Next implementation task:** 07, after its G4 database approval is recorded. G1
+does not block the infrastructure-only baseline in Task 07; it does block business
+modelling and screens starting at Task 13. Tasks 08–12 also need their listed
+architecture/policy approvals before starting.
+
 ### G0 — choose the initial market
 
 **Owner:** founder. **Done when:** the team has named one city/province and one
@@ -103,18 +131,21 @@ me the last transaction” to opinion questions.
 
 **Owner:** founder + product lead. **Done when:** one document names the top three
 pains, one highest-frequency/willingness-to-pay workflow, the pilot's success
-metric, and explicit MVP exclusions. The recommended first workflow remains
-purchase/receive/sell/payment unless evidence disproves it.
+metric, and explicit MVP exclusions. The accepted initial scope is purchasing,
+receiving, supplier payments, and stock/supplier balance reconciliation in ADR 0003.
 
 ### G3 — resolve domain policies that code cannot safely guess
 
-Answer these from interviews before Tasks 13, 18, and 21 respectively:
+Record founder-approved policies before their dependent tasks, then validate them
+against G1 research before domain implementation:
 
 | Decision | Required answer |
 | --- | --- |
 | Units | Are conversion rules needed, or is each product sold in one stock unit for the pilot? |
 | Product identity | Does grade, origin, harvest date, or quality create distinct stock? |
 | Receiving | Can receipt quantity differ from order quantity, and who may approve it? |
+| Supplier debt | Accepted receipt creates the supplier payable at the approved purchase price; see [ADR 0012](adr/0012-receipt-supplier-payables.md). |
+| Decimal policy | Approve currency/quantity scale and rounding before Task 12; record it in a decision record. |
 | Stock policy | Is negative stock ever allowed? Recommended pilot policy: no. |
 | Sale timing | Does stock leave at confirmation, dispatch, or delivery? |
 | Credit | Is payment applied to one invoice, oldest debt first, or manually allocated? |
@@ -135,6 +166,23 @@ by assumption.
 
 Tasks are intentionally small. “Verify” means evidence the agent must include in its
 handoff, not a promise that it looked correct.
+
+### Pilot delivery order
+
+Task IDs remain stable for existing handoffs. Execute pilot-required tasks in
+ascending order, skipping deferred tasks; each task still needs its gate approvals.
+The scope column also constrains the detailed task descriptions below.
+
+| Tasks | Classification | Pilot scope |
+| --- | --- | --- |
+| 01–06 | Complete | Foundation and authentication; see [handoffs](README.md) |
+| 07–15 | Pilot required | Persistence, tenancy, permissions, primitives, products, suppliers |
+| 16 | Deferred | Customers |
+| 17–22 | Pilot required | One warehouse, purchases, accepted receipts/payables, stock, owner-approved corrections |
+| 23–24 | Deferred | Sales drafts and fulfilment |
+| 25–28 | Pilot required | Supplier payments/statements, audit logging, purchasing dashboard |
+| 29 | Deferred | CSV/report suite until pilot evidence requires it |
+| 30–35 | Pilot required | Reliability, focused tests, purchase-to-receipt E2E, staging, onboarding |
 
 ### Foundation
 
@@ -161,7 +209,7 @@ assumption.
 type checking, unit tests, and a production build locally and in CI. Add a small CI
 workflow that uses the lockfile and runs those checks.
 
-**Do not:** add browser E2E infrastructure yet; that is Task 28.
+**Do not:** add browser E2E infrastructure yet; that is Task 33.
 
 **Verify:** a clean checkout can run every listed command; CI configuration matches
 those commands.
@@ -204,9 +252,10 @@ lint, and type checks pass.
 
 **Goal:** Make translation and right-to-left support a foundation, not a late rewrite.
 
-**Do:** Choose and document one localization approach after G3. Add a minimal
-translation provider, locale preference storage plan, direction switching, and
-English plus clearly marked placeholder resources for validated launch language(s).
+**Do:** Use the approved localization approach and G3 launch-language decision.
+Add a minimal translation provider, locale preference storage plan, direction
+switching, and English plus clearly marked placeholder resources for validated
+launch language(s).
 
 **Do not:** machine-translate business terms, localize every future screen, or make
 locale a client-controlled authorization input.
@@ -379,6 +428,8 @@ validation are covered.
 
 #### 16 — Implement customers
 
+**Scope:** Deferred under ADR 0003; a new scope decision is required to start.
+
 **Goal:** Manage sales counterparties.
 
 **Do:** Add customer schema/services/screens with name, phone, location, type, notes,
@@ -395,15 +446,16 @@ its rule is undecided.
 
 **Goal:** Identify stock locations for pilot transactions.
 
-**Do:** Add warehouse schema/services/screens, an active/default warehouse policy,
-and authorization for warehouse access if G3 requires staff restrictions.
+**Do:** Add one organization-owned warehouse and the minimal setup needed to choose
+it for purchases and receipts. Enforce approved staff permissions.
 
-**Do not:** build bin locations, warehouse transfer, or stock quantities.
+**Do not:** add multiple warehouses, warehouse switching/transfers, bins, or stock
+quantities in this task.
 
 **Verify:** an inactive warehouse cannot be chosen for new transactions and tenant
 isolation is tested.
 
-**Handoff:** state whether the pilot has one warehouse or multiple.
+**Handoff:** record the single-warehouse constraint from ADR 0003.
 
 ### Procurement and inventory
 
@@ -440,23 +492,29 @@ scope.
 
 **Handoff:** list exact preconditions for Task 20 receipt.
 
-#### 20 — Receive goods and append inventory movements
+#### 20 — Accept receipts, append stock movements, and create supplier payables
 
-**Goal:** Turn physical receipt into durable stock history.
+**Goal:** Turn an accepted physical receipt into stock history and supplier debt.
 
-**Do:** Add goods receipt and inventory movement schema, then a single transactional
-service/UI to receive quantities against an eligible purchase. Validate supplier,
-warehouse, active product, remaining ordered quantity (unless G3 allows variance),
-and stock unit. Append one inbound movement per received line. Update purchase status
-inside the same transaction.
+**Do:** Add goods receipt, inventory movement, and supplier payable schema, then a
+single transactional service/UI to accept quantities against an eligible purchase.
+Validate supplier, warehouse, active product, remaining ordered quantity, stock unit,
+and owner approval for variances. Append inbound movements and create one payable
+per accepted receipt using accepted quantities and approved purchase-price snapshots
+under [ADR 0012](adr/0012-receipt-supplier-payables.md). Update purchase status in the
+same transaction. Enforce receipt-request uniqueness and concurrent quantity limits
+in the database so retries cannot duplicate stock or debt.
 
-**Do not:** overwrite a `stock_quantity` field as the source of truth, create
-payables, or support returns.
+**Do not:** overwrite a `stock_quantity` field as the source of truth, recognize
+debt at draft/order creation, add supplier invoice entry, or support returns.
 
-**Verify:** transaction tests prove a failed line creates no receipt/movement/status
-change; receiving twice cannot exceed approved limits; stock history is tenant scoped.
+**Verify:** integration tests cover partial receipts and approved variances at the
+approved price; failure at any write leaves no receipt/movement/payable/status
+change; concurrent/repeated requests neither duplicate stock/debt nor exceed
+approved limits; receipt, stock, and payable references remain tenant scoped.
 
-**Handoff:** record movement fields and receipt-number strategy.
+**Handoff:** record movement/payable fields, receipt-number and idempotency strategy,
+and evidence that stock and supplier debt reconcile to accepted receipt lines.
 
 #### 21 — Add inventory balances and stock history read models
 
@@ -495,6 +553,8 @@ negative stock policy and audit trail are tested.
 
 #### 23 — Create sales orders as drafts
 
+**Scope:** Deferred under ADR 0003; a new scope decision is required to start.
+
 **Goal:** Capture a proposed sale without moving stock or changing balances.
 
 **Do:** Add sales order/item schema and draft create/list/detail screens. Validate
@@ -509,6 +569,8 @@ authorization are covered by tests.
 **Handoff:** document sale statuses and chosen sale-timing policy.
 
 #### 24 — Confirm and fulfil a sale
+
+**Scope:** Deferred under ADR 0003; a new scope decision is required to start.
 
 **Goal:** Make the approved physical-sale event reduce stock exactly once.
 
@@ -525,33 +587,36 @@ cannot double-decrement stock; a successful sale appears in stock history.
 
 **Handoff:** specify the idempotency strategy and later reversal requirements.
 
-#### 25 — Record and allocate payments
+#### 25 — Record and allocate supplier payments
 
-**Goal:** Track customer receipts and supplier payments without corrupting balances.
+**Goal:** Settle receipt-based supplier debt without corrupting balances.
 
-**Do:** Add payments and payment allocations according to the G3 credit policy.
-Support the smallest validated payment path: direction, counterparty, date, amount,
-reference/note, and allocation to one or more obligations if policy requires it. Make
-the command transactional and server-authorized.
+**Do:** Add supplier payments and payment allocations under ADR 0009. Record the
+supplier, date, exact positive amount, reference/note, and exactly one selected receipt
+payable from Task 20. Make allocation transactional, server-authorized, and protected
+against concurrent over-allocation and duplicate requests.
 
-**Do not:** integrate online payment rails, mutate a balance field as sole truth, or
-allow allocations exceeding payment or outstanding amount.
+**Do not:** add customer payments, split payments across payables, introduce unapplied
+credit, integrate online payment rails, overwrite balances, or allow allocations
+exceeding the selected payable's outstanding amount.
 
-**Verify:** partial payment, full payment, overpayment rejection, duplicate request,
-and tenant isolation are integration tested.
+**Verify:** partial/full payment, overpayment rejection, concurrent allocation,
+duplicate requests, and tenant isolation are integration tested against Task 20
+payables. A failed payment leaves both payment and allocation unchanged.
 
-**Handoff:** document balance derivation and any approved unapplied-credit behavior.
+**Handoff:** document balance derivation and payment idempotency; customer receipts
+and unapplied credit remain deferred.
 
 #### 26 — Implement balances and transaction statements
 
-**Goal:** Give staff a trustworthy customer/supplier account view.
+**Goal:** Give staff a trustworthy supplier account view.
 
-**Do:** Build read-only balance calculations and a paginated statement using invoices/
-payables and payment allocations. Show outstanding amount, due date where available,
-and links to source transactions.
+**Do:** Build read-only supplier balances and paginated statements using Task 20
+receipt payables and Task 25 payment allocations. Show outstanding amounts and links
+to accepted receipts and supplier payments; show due dates only under approved terms.
 
-**Do not:** introduce complex accounting journals, interest, installment plans, or
-changing historical obligations.
+**Do not:** add customer statements, complex accounting journals, interest,
+installment plans, or changes to historical obligations.
 
 **Verify:** expected balances for no, partial, and full payments are tested; sum of
 statement entries reconciles to the displayed balance.
@@ -567,7 +632,8 @@ statement entries reconciles to the displayed balance.
 **Do:** Add `audit_logs` schema and a small server-only audit writer. Record actor,
 organization, action, entity/type/id, timestamp, request/correlation ID, and safe
 before/after snapshots for the listed sensitive events. Wire it into organization
-staff changes, master-data changes, receipts, adjustments, fulfilment, and payments.
+staff changes, master-data changes, receipts/payables, adjustments, and supplier
+payments. Fulfilment/customer-payment events belong to the deferred sales work.
 
 **Do not:** log passwords, sessions, secrets, or unlimited sensitive personal data;
 do not make audit writes silently optional for critical completed transactions.
@@ -581,13 +647,12 @@ critical operations; unauthorized failure does not create a success event.
 
 **Goal:** Surface only metrics supported by trusted data.
 
-**Do:** Implement a server-rendered dashboard for today’s sales/purchases, outstanding
-customer and supplier balances, stock value only if valuation policy is approved,
-low-stock products only if threshold policy is approved, and recent transactions.
-Use real empty/error/loading states.
+**Do:** Implement a server-rendered dashboard for purchases, accepted receipts,
+current stock quantities, outstanding supplier balances, and recent pilot
+transactions. Use real empty/error/loading states.
 
-**Do not:** add fabricated forecasts, charts without a decision they answer, or an
-N+1 query per card.
+**Do not:** add sales/customer metrics, stock valuation, speculative low-stock
+thresholds, fabricated forecasts, or an N+1 query per card.
 
 **Verify:** numbers match fixture/integration data, tenant filters are enforced, and
 small screens remain usable.
@@ -595,6 +660,9 @@ small screens remain usable.
 **Handoff:** identify each metric's source query and policy assumptions.
 
 #### 29 — Add core reports and CSV exports
+
+**Scope:** Deferred until pilot evidence requires reports beyond Task 26 statements
+and Task 28 dashboard; a scope decision must select each report before starting.
 
 **Goal:** Provide the pilot's validated reporting needs.
 
@@ -631,8 +699,8 @@ safe message while logs contain a correlatable internal event.
 **Goal:** Protect authentication and high-value mutations at pilot scale.
 
 **Do:** Choose a deployment-compatible rate-limit mechanism, apply it to auth and
-high-risk mutation endpoints/actions, and add duplicate-submission protection to
-receipt, fulfilment, and payment flows where not already complete.
+high-risk mutation endpoints/actions. Verify the duplicate-submission protections
+already required by receipt/payable and supplier-payment tasks; close any gaps.
 
 **Do not:** build a distributed queue or claim rate limiting works across instances
 without a shared store.
@@ -644,12 +712,13 @@ handled by the idempotency policy; implementation limits are documented.
 
 #### 32 — Add focused unit and integration test coverage
 
-**Goal:** Lock down the financial, inventory, tenancy, and permission invariants.
+**Goal:** Lock down the pilot's financial, inventory, tenancy, and permission invariants.
 
 **Do:** Add test helpers/fixtures and tests for only the critical domain services:
-tenant access, RBAC, totals, status transitions, receiving, adjustment, fulfilment,
-and payment allocation. Use a disposable test database if integration tests require
-one.
+tenant access, RBAC, totals, purchase transitions, receiving/payable creation,
+adjustments, and supplier-payment allocation. Use a disposable test database for
+integration tests. Each implementation task already requires its own behavior tests;
+this task closes remaining pilot gaps rather than deferring those tests until here.
 
 **Do not:** chase coverage percentages or test framework internals.
 
@@ -663,11 +732,13 @@ critical invariant has a named failing-case test.
 **Goal:** Test the founder's most important real-user path in a browser.
 
 **Do:** Add Playwright (or the approved E2E tool) and exactly one deterministic
-scenario: authenticate → organization → product/supplier/customer/warehouse → purchase
-→ receive → sale → payment → verify stock and balance. Use seeded isolated data.
+scenario: authenticate → organization → product/supplier/one warehouse → purchase
+→ accept partial receipt → verify stock and payable → pay supplier → verify stock
+unchanged and outstanding supplier balance reduced. Use seeded isolated data and
+include a retry that proves a receipt cannot duplicate stock or debt.
 
-**Do not:** add a brittle screenshot suite for every page or depend on a shared dev
-database.
+**Do not:** require customers, sales, multiple warehouses, a brittle screenshot
+suite for every page, or a shared development database.
 
 **Verify:** the scenario runs headlessly in CI and produces artifacts on failure.
 
@@ -732,14 +803,23 @@ an unrelated milestone.
 Before allowing a real business to depend on the app, confirm:
 
 - [ ] G0–G4 are documented and approved.
+- [ ] G1 evidence validates the founder-approved purchasing scope and Pashto terms.
+- [ ] Only pilot-required tasks are included; deferred features have not become
+      release prerequisites.
 - [ ] Only invited, authenticated members can access one organization’s data.
 - [ ] Owner/admin/operational permissions have denial tests.
-- [ ] Purchase receipt, stock adjustment, sale fulfilment, and payment allocation are
+- [ ] Accepted receipt, inventory movements, supplier payable, and purchase status
+      commit atomically; retries/concurrent receipt requests cannot duplicate stock
+      or debt.
+- [ ] Owner-approved stock adjustments and supplier-payment allocations are
       transactional and idempotent where retries can occur.
 - [ ] Stock and balances reconcile from their source records for representative data.
+- [ ] Partial/full supplier payments reconcile to receipt payables without exceeding
+      the outstanding amount, including concurrent requests.
 - [ ] Audit events exist for sensitive completed actions.
 - [ ] User-facing errors are safe; logs contain correlation IDs without secrets.
 - [ ] The critical E2E workflow passes in staging.
+- [ ] Production dependencies pass `npm audit --omit=dev --audit-level=high`.
 - [ ] A database backup and a non-production restore have been verified.
 - [ ] A founder can onboard and support the pilot business manually.
 
@@ -754,5 +834,7 @@ Before allowing a real business to depend on the app, confirm:
 5. Record a handoff note with: completed acceptance checks, changed files, migrations
    and environment variables, test commands/results, known limitation, and next task.
 
-The plan is successful when it produces three paying pilot businesses using real
-transactions—not when every future module exists.
+The first pilot succeeds when one business records every purchase and receipt for
+four weeks and can verify stock and supplier balances, as defined in ADR 0003.
+Three paying businesses remain a later expansion goal; deferred sales features do
+not block this pilot.

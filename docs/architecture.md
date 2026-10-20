@@ -2,8 +2,9 @@
 
 ## Confirmed baseline
 
-- The repository is a minimal Next.js `16.3.5` App Router application with React
-  `19.2.8`, strict TypeScript, Tailwind CSS 4, and ESLint.
+- The repository is a Next.js 16 App Router application with React 19, strict
+  TypeScript, Tailwind CSS 4, and ESLint. Exact versions live in `package.json` and
+  its lockfile.
 - Routes and layouts live in `src/app`; the Clerk integration lives in `src/auth`.
 - Clerk supplies identity and session management. Each application page calls the
   server-only `requireSession()` guard; the sign-in page uses `getSession()`.

@@ -18,6 +18,9 @@ that must be reviewed against G1 evidence.
   C (sales/accounts lead) as anonymized prospective contacts; do not record their
   personal information in the repository.
 - Validate only the purchase-to-receipt workflow first.
+- Include receipt-based supplier debt, supplier payments, and supplier statements
+  needed to verify amounts owed; [ADR 0012](0012-receipt-supplier-payables.md)
+  records the founder-approved recognition policy on 20 October 2026.
 - Address inaccurate stock counts, receipt quantities that differ from purchases,
   and unreliable supplier amounts owed.
 - Define success as one pilot business recording every purchase and receipt in the

@@ -35,3 +35,29 @@ logging, and incident responsibilities with the deployment plan.
 Rate limiting, user-facing request identifiers, structured logs, and formal audit
 logging are scheduled in later build-plan tasks. Their absence does not authorize
 unsafe authentication or mutation handling.
+
+## Dependency advisories
+
+Production dependencies must pass the high/critical audit gate described in
+[Testing](testing.md#dependency-gate) before deployment. There are currently no
+approved advisory exceptions. Record any future owner-approved exception here with
+its advisory ID, affected path/reachability, mitigation, owner, and expiry/review date.
+
+### Development-tooling advisory tracked on 20 October 2026
+
+[GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)
+affects `braces` through 3.0.3; the advisory lists no patched release. The installed
+path is `eslint-config-next → @next/eslint-plugin-next → fast-glob → micromatch →
+braces`. The full audit reports five high entries for this one development-only
+dependency chain; `npm ls braces --omit=dev` confirms it is absent from the
+production dependency tree.
+
+The failure case is a deeply nested, attacker-controlled brace pattern exhausting
+the parser's call stack. The current lint command uses the fixed `src` path;
+application requests do not supply patterns to this tooling. Keep lint patterns
+repository-controlled and review untrusted lint configuration before execution.
+The repository owner must recheck this advisory on the next dependency update or
+before accepting externally supplied patterns. Track a compatible upstream fix;
+the audit's suggested downgrade to `eslint-config-next` 14 is incompatible with
+this project's Next.js 16 lint stack. This is tracked development-tooling exposure,
+not an exception to the production audit gate.

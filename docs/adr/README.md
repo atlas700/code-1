@@ -29,6 +29,8 @@ records the no-negative-stock policy. [ADR 0008](0008-dispatch-stock-timing.md)
 records the conditional dispatch stock-timing policy. [ADR 0009](0009-specific-obligation-payment-allocation.md)
 records the payment-allocation policy. [ADR 0010](0010-owner-approval-for-corrections.md)
 records the corrections-approval policy. [ADR 0011](0011-validate-purchase-receipt-terminology.md)
-records the terminology-validation scope. G1 and the remaining G4 decisions stay
+records the terminology-validation scope. [ADR 0012](0012-receipt-supplier-payables.md)
+records receipt-based supplier debt recognition. The [build plan's gate status](../agent-sized-build-plan.md#current-gate-status)
+is the task-readiness record. G1 and the remaining G4 decisions stay
 open until evidence or founder approval exists. Record each decision before starting
 a task that depends on it.

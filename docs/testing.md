@@ -6,11 +6,13 @@
 - Install locked dependencies with `npm ci`.
 - Run `npm run lint`, `npm run typecheck`, `npm run test`, and `npm run build`.
 - CI runs those same commands on every push and pull request.
+- CI also runs `npm audit --omit=dev --audit-level=high` after installation. Run it
+  locally for dependency or CI changes and before deployment.
 
 ## Strategy
 
 - Vitest is the unit-test runner. `npm run test` uses `vitest run` for a
-  non-interactive one-shot run and temporarily permits no matching test files.
+  non-interactive one-shot run and fails if no test files are discovered.
 - Configuration and authentication tests cover missing/malformed keys, origin
   validation, sanitized session lookup, guard denial/acceptance, all six protected
   pages, and the sign-in page. Auth unit tests mock Clerk; they do not establish
@@ -19,7 +21,21 @@
 - Later tasks add focused tests for tenancy, authorization, exact totals, status
   transitions, inventory, and payments as those behaviors are introduced.
 - Browser end-to-end coverage is deferred to Task 33; it must use isolated seeded
-  data rather than a shared development database.
+  data for purchasing, accepted receipt/payable creation, supplier payment, and
+  stock/supplier balance reconciliation rather than a shared development database.
+
+## Dependency gate
+
+- The audit checks production dependencies and fails for high or critical
+  advisories. Lower-severity findings remain visible for review.
+- Update compatible affected packages and commit the lockfile; keep Next.js and
+  `eslint-config-next` on the same version. Run all four quality commands after
+  dependency changes.
+- There are no advisory exceptions. If a fix is unavailable, obtain owner approval
+  and record the advisory ID, affected path/reachability, mitigation, owner, and
+  expiry/review date in `docs/security.md` before changing the gate. A failed audit
+  remains a release blocker until fixed or an approved, narrowly scoped exception
+  is implemented; never bypass it with `continue-on-error` or a broad severity change.
 
 ## Scope
 
