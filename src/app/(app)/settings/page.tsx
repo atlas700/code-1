@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { requireSession } from "@/auth/server";
 import { PlaceholderPage } from "../_components/placeholder-page";
 
 export const metadata: Metadata = {
   title: "Settings",
 };
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  await requireSession();
   return (
     <PlaceholderPage
       title="Settings"

@@ -24,3 +24,7 @@
 The repair is covered by the existing CI typecheck rather than a new unit test.
 The exact next task remains **06 — Decide and integrate authentication only**,
 which is blocked until G4 approves an authentication provider.
+
+**Update (20 October 2026):** [ADR 0002](../adr/0002-clerk-authentication.md)
+approved Clerk. The provider-approval blocker above no longer applies; see the
+[Task 06 handoff](06-authentication.md).

@@ -1,7 +1,11 @@
-import { createNextMiddleware } from "gt-next/middleware";
+import { authMiddleware } from "@/auth/middleware";
 
-export default createNextMiddleware({ localeRouting: false });
+export default authMiddleware;
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/(api|trpc)(.*)",
+    "/__clerk/(.*)",
+  ],
 };
