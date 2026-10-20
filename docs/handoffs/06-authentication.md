@@ -4,10 +4,12 @@ Date: 20 October 2026.
 
 ## Status
 
-Implementation and automated checks are ready. **Task 06 acceptance is pending
-live sign-in/sign-out verification.** The current local application fails safely
-with a missing/malformed `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`; no credential value
-was displayed or committed. Do not treat CI placeholders as working credentials.
+**Task 06 is complete.** Automated checks and development authentication,
+protected-page access, sign-out, keyboard access, and mobile/RTL checks passed.
+The user created the development account and completed authentication; no account
+identifier or credential value was recorded or committed. Production deployment
+and production-cookie inspection remain part of the staging rehearsal. CI
+placeholders are not working credentials.
 
 ## Implemented
 
@@ -41,28 +43,47 @@ was displayed or committed. Do not treat CI placeholders as working credentials.
   regenerated for the new optional catch-all sign-in route.
 - `npm run test`: passed, **30 tests across 4 files**. Coverage includes signed-out/
   pending session lookup, sanitized identity, guard denial/acceptance on all six
-  pages, sign-in accessibility/redirect decisions, missing/malformed keys, mixed
+  pages, sign-in availability/redirect decisions, missing/malformed keys, mixed
   key modes, origin validation, and live-instance HTTPS requirements.
-- `npm run build`: passed with the explicitly nonfunctional CI key placeholders.
-  This demonstrates compilation, not live authentication. The ordinary build with
-  the current `.env.local` reports a missing/malformed publishable key.
-- An HTTP request to `http://localhost:3000/sign-in` with current local config
-  returned 500 from the configuration guard, confirming fail-closed behavior.
-- Browser automation was attempted but its connection repeatedly failed with
-  `Unable to load browser request-header policy`. No visual, mobile, keyboard,
-  console, or browser-session verification is claimed.
+- `npm run build`: passed both with nonfunctional CI placeholders and with the
+  configured development keys. Compilation does not establish live authentication.
+- Before key setup, `/sign-in` returned 500 from the configuration guard. After
+  setup, `/` and `/sign-in` return 200 and the real Clerk form renders in Chrome.
+- Anonymous requests to all six app URLs returned 307 to the local `/sign-in`,
+  preserving each original URL in `redirect_url`. A malformed session cookie is
+  also denied. Browser-like requests may first follow Clerk's development-browser
+  handshake; Chrome reaches the local sign-in page with the return URL preserved.
+- English/Pashto HTTP checks passed for `/`, `/sign-in`, and the catch-all
+  `/sign-in/factor-one`: 200 responses with `lang="en-US" dir="ltr"` and
+  `lang="ps-AF" dir="rtl"`, respectively.
+- Earlier browser connection failures were resolved on retry. Chrome rendered the
+  real sign-in form and the authenticated workspace without a framework overlay.
+- The user reported successful email account sign-up. The browser returned to the
+  original `/purchases` destination with an authenticated session; all six app pages
+  then rendered. Visiting `/sign-in` while authenticated redirected to `/dashboard`.
+- Keyboard activation of the mobile **Sign out** button returned to `/`. Fresh
+  browser navigation to each of the six protected URLs then returned to sign-in,
+  confirming that the signed-out session could no longer enter the workspace.
+- Desktop keyboard focus reached the skip link. At a 390×844 mobile viewport, the
+  workspace and the fully loaded sign-in form had no document horizontal overflow;
+  the email field's Tab key moved focus to **Continue**. Selecting Pashto through
+  the locale control persisted `lang="ps-AF" dir="rtl"` through workspace access,
+  sign-out, and sign-in. English and the normal viewport were restored afterward.
+- Browser diagnostics reported no local application console errors. Clerk's
+  development-key warning was expected. Browser-extension errors and a hosted
+  Clerk Account Portal CSS warning were outside the local application.
 - A separate read-only implementation review found no actionable auth bypass or
   SDK misuse. Mocked tests do not establish actual Clerk credential delivery or
   session revocation.
 
-## Remaining acceptance checks
+## Completed acceptance checks
 
-- [ ] Configure valid Clerk development keys and a disposable test account with an
-  explicitly chosen development sign-in method.
-- [ ] Verify anonymous access to all six protected URLs redirects to `/sign-in`.
-- [ ] Sign in, visit the protected pages, and confirm sign-out removes access.
-- [ ] Verify direct-route return destinations and the sign-in catch-all steps.
-- [ ] Verify GT locale selection, English LTR/Pashto RTL, and keyboard/mobile
+- [x] Configure valid Clerk development keys and render the real sign-in form.
+- [x] Verify anonymous access to all six protected URLs redirects to `/sign-in`.
+- [x] Complete sign-in with a test account using the configured development method.
+- [x] Sign in, visit the protected pages, and confirm sign-out removes access.
+- [x] Verify direct-route return destinations and the sign-in catch-all steps.
+- [x] Verify GT locale selection, English LTR/Pashto RTL, and keyboard/mobile
   usability through the real sign-in flow.
 
 Clerk manages credential validation, session issuance/refresh/revocation, and
@@ -112,7 +133,7 @@ and [Clerk's cookie guidance](https://clerk.com/docs/guides/how-clerk-works/cook
   (including a critical `next/og` ImageResponse advisory), sharp, and source-map-js.
   None concerns the added Clerk packages. Dependency patching was kept outside
   this authentication task; review before any deployment.
-- Finish the remaining **Task 06 live acceptance checks** first. Then proceed to
-  **07 — Introduce PostgreSQL, Drizzle, and migration workflow**, subject to the
+- The exact next task is **07 — Introduce PostgreSQL, Drizzle, and migration
+  workflow**, subject to the
   required database/infrastructure decisions. G1 discovery remains outstanding
   before dependent business-domain implementation.
