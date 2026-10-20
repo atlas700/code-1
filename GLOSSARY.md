@@ -15,6 +15,10 @@ An inventory state in which a product's recorded quantity is below zero.
 The unpaid amount remaining on one invoice or payable.
 _Avoid_: separate debt record
 
+**Supplier payable**:
+The amount owed to a supplier for goods received and accepted at the approved
+purchase price.
+
 **Correction**:
 A recorded change that resolves a stock discrepancy or reverses an operational
 transaction.

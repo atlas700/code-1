@@ -4,8 +4,9 @@
 
 - The first paid product is a multi-tenant operating system for one type of
   agricultural wholesaler or distributor in one Afghan city or province.
-- The roadmap's candidate first workflow is: buy from supplier, receive stock,
-  sell to customer, record payment, and see balances.
+- The approved pilot workflow is: purchase, accept receipt, track stock and supplier
+  debt, record supplier payment, and reconcile supplier balances. Sales and customer
+  payments remain deferred under ADR 0003.
 - Features outside that workflow remain deferred unless pilot evidence makes them
   necessary.
 
@@ -58,15 +59,23 @@ oldest-debt allocation, payment splitting, and a separate debt record; see
 corrections, transaction cancellations, and any future return. Returns remain
 excluded from the pilot; see [ADR 0010](adr/0010-owner-approval-for-corrections.md).
 
-**Decided — G3 terminology validation:** validate Pashto terms for product, stock
-unit, supplier, purchase, receipt, receipt variance, stock balance, supplier
-balance, and correction before shipping pilot labels. Defer sales/payment terms;
-see [ADR 0011](adr/0011-validate-purchase-receipt-terminology.md).
+**Decided — G3 supplier debt:** accepted receipts create supplier payables from
+accepted quantities and approved purchase-price snapshots. Partial receipts create
+only partial debt; supplier payments reduce the selected payable's outstanding
+balance. See [ADR 0012](adr/0012-receipt-supplier-payables.md).
 
-**G3 complete — policy decisions:** the remaining G3 work is user validation of the
-chosen terminology, as part of G1 evidence. The localization approach remains
-General Translation with `en-US` and `ps-AF`; see
-[ADR 0001](adr/0001-launch-localization.md).
+**Decided — G3 terminology validation:** validate Pashto terms for product, stock
+unit, supplier, purchase, receipt, receipt variance, stock balance, supplier payable,
+supplier payment, supplier balance, and correction before shipping pilot labels.
+Defer sales/customer-payment terms; see
+[ADR 0011](adr/0011-validate-purchase-receipt-terminology.md).
+
+**Open — G3 remaining evidence and decimal policy:** validate chosen terminology as
+part of G1 and approve money/quantity scale and rounding before Task 12. The
+localization approach remains General Translation with `en-US` and `ps-AF`; see
+[ADR 0001](adr/0001-launch-localization.md). Consult the
+[build plan's gate status](agent-sized-build-plan.md#current-gate-status) for current
+task readiness; founder-approved policies do not constitute completed research.
 
 ## Product boundaries
 

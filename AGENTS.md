@@ -16,6 +16,10 @@ Before implementing a feature or change, use the `find-skills` skill to search
 for a task-specific skill. If a relevant skill is found, use it; otherwise,
 continue with the default workflow below.
 
+Before selecting an implementation task, check the build plan's current gate
+status and pilot delivery order against accepted ADRs. Record approved policy
+changes and update the affected task scope together; preserve open evidence gates.
+
 Before creating, updating, refactoring, fixing, reviewing, or designing any
 project code, use the Ponytail plugin's `ponytail:ponytail` skill at its default
 **full** intensity. Follow its simplicity ladder and preserve its safety,
@@ -49,6 +53,9 @@ Run only the checks affected by the change while working:
 For application, dependency, CI, or quality-configuration changes, run all four
 commands before handoff. Documentation-only changes do not require these commands
 unless they change the documented commands or their configuration.
+
+For dependency or CI changes, also run `npm audit --omit=dev --audit-level=high`.
+See [Testing](docs/testing.md) for the dependency gate and exception policy.
 
 ### Feature completion and review
 
