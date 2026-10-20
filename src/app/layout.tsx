@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { GTProvider } from "gt-next";
 import { getLocale, getLocaleDirection } from "gt-next/server";
+import { AuthProvider } from "@/auth/components";
 import "@/env";
 import "./globals.css";
 
@@ -40,7 +41,13 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     >
       <GTProvider>
         <body className="min-h-full bg-page font-sans text-ink">
-          {children}
+          <AuthProvider
+            signInUrl="/sign-in"
+            signInFallbackRedirectUrl="/dashboard"
+            afterSignOutUrl="/"
+          >
+            {children}
+          </AuthProvider>
         </body>
       </GTProvider>
     </html>

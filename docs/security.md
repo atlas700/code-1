@@ -18,6 +18,12 @@ enabled sign-in method remains a pilot-validation decision. Application organiza
 membership and business permissions remain server-side records, not client-controlled
 Clerk organization state.
 
+Task 06 uses Clerk's SDK-managed sessions, per-page server guards, and an explicit
+`authorizedParties` origin. Authentication returns an external user identity only;
+organization membership and permissions remain unimplemented. The Clerk publishable
+key may use `NEXT_PUBLIC_`; its secret key must never do so. Missing or malformed
+configuration fails without echoing credential values.
+
 **Open — G4 role matrix:** approve the roles, allowed actions, and authorization
 guard behavior before Task 10.
 

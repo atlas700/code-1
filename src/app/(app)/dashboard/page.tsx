@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { requireSession } from "@/auth/server";
 import { PlaceholderPage } from "../_components/placeholder-page";
 
 export const metadata: Metadata = {
   title: "Dashboard",
 };
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  await requireSession();
   return (
     <PlaceholderPage
       title="Dashboard"

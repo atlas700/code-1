@@ -41,3 +41,7 @@
   GT credentials are supplied.
 - The exact next task is **06 — Decide and integrate authentication only**, which
   remains blocked until G4 approves an authentication provider.
+
+**Update (20 October 2026):** [ADR 0002](../adr/0002-clerk-authentication.md)
+approved Clerk and supersedes the provider-approval blocker above. See the
+[Task 06 handoff](06-authentication.md) for implementation and validation status.

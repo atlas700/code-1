@@ -15,7 +15,7 @@ export default function Home() {
         <p className="mt-5 max-w-lg text-base leading-7 text-ink-muted">
           <T>
             Manage buying, receiving, selling, and payments from one workspace.
-            Authentication will be introduced in Task 6.
+            Sign in to access your workspace.
           </T>
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -23,13 +23,14 @@ export default function Home() {
             className="inline-flex min-h-11 items-center justify-center rounded-lg bg-primary px-5 font-semibold text-on-primary transition-colors hover:bg-primary-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             href="/sign-in"
           >
-            <T>Go to sign-in placeholder</T>
+            <T>Sign in</T>
           </Link>
           <Link
             className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border px-5 font-semibold text-ink transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             href="/dashboard"
+            prefetch={false}
           >
-            <T>View app shell</T>
+            <T>Open workspace</T>
           </Link>
         </div>
         <div className="mt-8 border-t border-border pt-6">
