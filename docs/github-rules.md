@@ -9,7 +9,8 @@
 After a feature's acceptance checks pass and its handoff is marked complete:
 
 1. Confirm the handoff states the completed acceptance checks, changed files,
-   verification evidence, known limitations, and exact next task.
+   pre-validation review scope and finding dispositions, verification evidence,
+   known limitations, and exact next task.
 2. Commit only that feature's changes on a new branch; never push directly to
    `main`.
 3. Push the branch to GitHub and open a pull request for review. Include the handoff

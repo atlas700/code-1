@@ -1,5 +1,28 @@
 # Testing
 
+## Pre-validation code review
+
+After implementing a feature or code/configuration change, and before the final
+quality-command pass:
+
+1. Use `ponytail:ponytail-review` to review the complete task diff and connected
+   callers and tests against the task's acceptance criteria and repository rules.
+2. Trace affected security boundaries: input validation, authentication,
+   authorization and tenant isolation, injection risks, and secret or sensitive
+   data exposure. Check transaction safety, error handling, regressions, and
+   missing tests where relevant.
+3. Fix all must-fix findings and recheck the fixes before running the final
+   quality commands. Record the review scope, findings and their disposition, and
+   any remaining limitations in the handoff; explicitly state when no findings
+   were found.
+4. Run the required quality commands below and task-specific acceptance checks.
+   If a validation fix changes code, review the changed paths again before
+   rerunning the affected checks.
+
+Keep tests and focused checks running during development, including test-first
+work. This review complements the dependency audit and GitHub PR review. It is
+an agent workflow requirement; CI continues to run the existing automated checks.
+
 ## Quality commands
 
 - **Node.js:** 24.x (the current local baseline is 24.20.0).

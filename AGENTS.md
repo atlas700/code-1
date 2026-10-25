@@ -43,6 +43,10 @@ Read the relevant rule file before changing code in that area:
 
 ### Quality checks
 
+After implementation, complete the [pre-validation code review](docs/testing.md#pre-validation-code-review)
+before the final lint, typecheck, test, and build pass. Earlier checks during
+development remain encouraged.
+
 Run only the checks affected by the change while working:
 
 - Run `npm run lint` after changing application TypeScript, JavaScript, or ESLint configuration.
@@ -60,8 +64,9 @@ See [Testing](docs/testing.md) for the dependency gate and exception policy.
 ### Feature completion and review
 
 Do not call an implementation feature complete until its handoff note records the
-completed acceptance checks, changed files, verification evidence, limitations, and
-next task. Then follow the [GitHub review delivery workflow](docs/github-rules.md)
+completed acceptance checks, changed files, review findings and their disposition,
+verification evidence, limitations, and next task. Then follow the
+[GitHub review delivery workflow](docs/github-rules.md)
 to commit the work on its feature branch, push it to GitHub, and request review.
 
 ## Agent skills

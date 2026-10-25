@@ -81,10 +81,12 @@ Constraints:
 - Do not add functionality from later tasks or new dependencies without need.
 - Use a DB transaction for an all-or-nothing financial or inventory operation.
 
-Before finishing: run the task's checks plus the relevant existing checks. Summarize
-files changed, migration impact, test evidence, known limitations, and the exact
-next task. If a product decision is missing, stop and document it rather than
-inventing a policy.
+Before the final quality-command pass: complete the pre-validation code review in
+docs/testing.md and fix all must-fix findings. Then run the task's checks plus the
+relevant existing checks. Summarize files changed, migration impact, review scope
+and finding dispositions, test evidence, known limitations, and the exact next
+task. If a product decision is missing, stop and document it rather than inventing
+a policy.
 ```
 
 ## Gates — these are decisions, not coding tasks
