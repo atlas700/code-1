@@ -18,13 +18,15 @@ Sales, customer payments, multiple warehouses, returns, lot/grade tracking, and
 offline mode are deferred. Accepted ADRs govern product policy; this plan governs
 task readiness and order. Update both when an approved decision changes the scope.
 
-## Current repository baseline (20 October 2026)
+## Current repository baseline (25 October 2026)
 
 - The application shell, localization plumbing, Clerk authentication, environment
   validation, Vitest tests, and CI are implemented (Tasks 01–06).
 - Exact dependency versions and quality commands live in `package.json` and its
   lockfile. The application uses App Router in `src/app` and strict TypeScript.
-- PostgreSQL, Drizzle, business persistence, and a UI-component library are absent.
+- Task 07 adds the PostgreSQL/Drizzle client, explicit migration tooling, and a
+  harmless baseline; see its [handoff](handoffs/07-database-foundation.md). Business
+  tables and a UI-component library are absent.
 - Preserve unrelated worktree changes.
 
 The project rules in `AGENTS.md` and `docs/` are mandatory. In particular:
@@ -96,22 +98,22 @@ gate changes; an accepted policy does not count as completed user research.
 Research records stay private; link a redacted evidence summary rather than names
 or interview transcripts.
 
-| Gate | Status and evidence (20 October 2026) | Owner | Blocks |
+| Gate | Status and evidence (updated 25 October 2026) | Owner | Blocks |
 | --- | --- | --- | --- |
 | G0 market | Accepted: [ADR 0003](adr/0003-helmand-pilot-workflow.md), 19 October | Founder | Market choice is resolved |
 | G1 research | Open: 20 interviews and 5 workflow observations have no recorded completion evidence | Founder/researcher | Tasks 13–35 and pilot release |
 | G2 scope | Founder-approved: [ADR 0003](adr/0003-helmand-pilot-workflow.md); user validation still depends on G1 | Founder/product lead | Features outside the approved pilot |
 | G3 domain policies | Partially resolved: [ADRs 0001–0012](adr/README.md); decimal scale/rounding remain open; terminology requires G1 validation | Founder/product lead | Task 12 until decimal policy is approved; dependent domain work and pilot labels until their policies/evidence exist |
 | G4 authentication | Accepted: [ADR 0002](adr/0002-clerk-authentication.md); development checks in [Task 06 handoff](handoffs/06-authentication.md); pilot sign-in method still needs validation | Founder | Pilot authentication until sign-in validation is recorded |
-| G4 database | Open: approve database environment, migration workflow, and initial data model in [database](database.md) | Technical lead/founder | Task 07 and subsequent persistence |
+| G4 database | Accepted, 21 October: [ADR 0013](adr/0013-local-postgresql-foundation.md) approves local PostgreSQL, structural ownership model, and migration/recovery workflow; [Task 07 verification](handoffs/07-database-foundation.md) completed 25 October | Technical lead/founder | Detailed business schema still requires G1; other G4 gates remain open |
 | G4 mutation boundary | Open: [API conventions](api-conventions.md) | Technical lead/founder | Task 09 and subsequent protected mutations |
 | G4 permissions | Open: role matrix in [security](security.md) | Technical lead/founder | Task 10 and subsequent role-dependent work |
 | G4 deployment | Open: hosting, backup owner, retention, and monitoring in [deployment](deployment.md) | Technical lead/founder | Task 34 and pilot release |
 
-**Next implementation task:** 07, after its G4 database approval is recorded. G1
-does not block the infrastructure-only baseline in Task 07; it does block business
-modelling and screens starting at Task 13. Tasks 08–12 also need their listed
-architecture/policy approvals before starting.
+**Next implementation task:** 08 — organization membership and tenant context,
+under ADR 0013's approved structural ownership model. G1 still blocks business
+modelling and screens starting at Task 13. Tasks 09–12 also need their listed
+architecture/policy approvals before starting; Task 07 does not close those gates.
 
 ### G0 — choose the initial market
 

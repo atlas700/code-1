@@ -1,4 +1,5 @@
 import "server-only";
+import { validateDatabaseUrl } from "@/db/environment";
 
 const nodeEnvironments = ["development", "production", "test"] as const;
 
@@ -62,7 +63,15 @@ export function validateServerEnvironment(
     );
   }
 
-  return { nodeEnvironment, clerkPublishableKey, clerkSecretKey, appOrigin } as const;
+  const databaseUrl = validateDatabaseUrl(environment.DATABASE_URL);
+
+  return {
+    nodeEnvironment,
+    clerkPublishableKey,
+    clerkSecretKey,
+    appOrigin,
+    databaseUrl,
+  } as const;
 }
 
 export const env = validateServerEnvironment();

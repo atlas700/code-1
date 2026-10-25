@@ -22,6 +22,7 @@ pilot evidence are labelled **Open**.
 - [Task 05 handoff](handoffs/05-localization-and-rtl.md)
 - [Task 05 CI fix handoff](handoffs/05-localization-and-rtl-ci-fix.md)
 - [Task 06 handoff](handoffs/06-authentication.md)
+- [Task 07 handoff](handoffs/07-database-foundation.md)
 - [Pilot-plan and quality maintenance handoff](handoffs/pilot-plan-and-quality.md)
 
 ## Existing project guidance

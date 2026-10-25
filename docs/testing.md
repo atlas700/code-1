@@ -18,6 +18,10 @@
   pages, and the sign-in page. Auth unit tests mock Clerk; they do not establish
   real credential delivery, session revocation, or production-cookie behavior.
 - `vitest.config.mts` resolves the same `@/` source alias used by application code.
+- Database unit tests cover URL validation, lazy pool creation, development reload
+  reuse, and sanitized background errors without connecting to PostgreSQL. Task 07
+  separately verifies its baseline migration on a fresh local database and then
+  development; CI does not provision or migrate a database.
 - Later tasks add focused tests for tenancy, authorization, exact totals, status
   transitions, inventory, and payments as those behaviors are introduced.
 - Browser end-to-end coverage is deferred to Task 33; it must use isolated seeded

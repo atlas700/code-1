@@ -30,7 +30,9 @@ records the conditional dispatch stock-timing policy. [ADR 0009](0009-specific-o
 records the payment-allocation policy. [ADR 0010](0010-owner-approval-for-corrections.md)
 records the corrections-approval policy. [ADR 0011](0011-validate-purchase-receipt-terminology.md)
 records the terminology-validation scope. [ADR 0012](0012-receipt-supplier-payables.md)
-records receipt-based supplier debt recognition. The [build plan's gate status](../agent-sized-build-plan.md#current-gate-status)
+records receipt-based supplier debt recognition. [ADR 0013](0013-local-postgresql-foundation.md)
+records local PostgreSQL, the structural ownership model, and reviewed migration
+and recovery policy. The [build plan's gate status](../agent-sized-build-plan.md#current-gate-status)
 is the task-readiness record. G1 and the remaining G4 decisions stay
 open until evidence or founder approval exists. Record each decision before starting
 a task that depends on it.

@@ -2,7 +2,7 @@
 
 ## Scope and layout
 
-- PostgreSQL and Drizzle ORM are not installed yet. Apply these rules when database work is introduced; do not add either dependency without a concrete feature that needs persistence.
+- PostgreSQL and Drizzle ORM provide the Task 07 foundation; follow [local setup and migration workflow](database.md). Add domain tables only in their approved build-plan tasks.
 - Keep database-only code under `src/db`, with the Drizzle schema in `src/db/schema` and the database client in `src/db/index.ts`. Keep generated SQL migrations in `drizzle/` and commit them.
 - Keep the database client server-only. Never import it into a Client Component or expose database credentials through `NEXT_PUBLIC_*` variables.
 - Read the connection string from a server environment variable and validate required configuration at startup.
