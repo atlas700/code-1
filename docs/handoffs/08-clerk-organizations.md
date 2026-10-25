@@ -38,6 +38,8 @@ organization/member creation is included.
   nonfunctional Clerk keys and unreachable database URL; it needs no live services.
 - [x] All 179 local Markdown links/anchors across 47 project documents and
   `git diff --check` pass.
+- [x] GitHub push and PR quality jobs pass, including the production dependency
+  audit, on the implementation commit `35a45f8`.
 - [ ] Development Clerk Organizations enabled, membership optional, automatic
   organization creation off. See the remaining setup below.
 
@@ -87,6 +89,11 @@ to enable Organizations with **Membership optional** in the development Dashboar
 and leave **Create first organization automatically** off. Verify all three values
 afterward using the procedure in [deployment](../deployment.md#development-organization-settings).
 Do not repeat the Backend API enable call: it reinstates required membership.
+
+The user subsequently enabled Organizations in the Dashboard. The latest API
+check confirms Organizations on and automatic creation off, but membership is
+still required. The user identified a remaining **Save changes** step; complete
+that save for membership optional, then verify before marking PR #16 ready.
 
 ## Migration, limitations, and next task
 
