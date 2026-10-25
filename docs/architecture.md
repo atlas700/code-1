@@ -11,7 +11,9 @@
 - The proxy composes Clerk session handling with General Translation locale
   handling. Route protection stays in each resource, following Clerk 7 guidance.
 - Vitest covers configuration validation, the session boundary, and page access.
-- PostgreSQL, Drizzle, and a general UI-component library are not installed.
+- PostgreSQL persistence uses a server-only Drizzle/`pg` pool under `src/db`, with
+  explicit reviewed migrations. The schema has no domain tables yet. A general
+  UI-component library is not installed.
 - Localization uses General Translation with English and Pashto; its runtime
   translation service remains disabled until terminology and credentials are ready.
 - Future application work follows the App Router and favors Server Components with
@@ -21,8 +23,10 @@
 
 **Partially decided — G4 architecture approval:** Clerk is the approved pilot
 authentication provider; see [ADR 0002](adr/0002-clerk-authentication.md). The
-initial data model, role matrix, mutation boundary, deployment target, and backup
-owner remain open before their dependent infrastructure work. The owning details are
+structural ownership model and local migration/recovery workflow are approved in
+[ADR 0013](adr/0013-local-postgresql-foundation.md). Detailed business modelling,
+role matrix, mutation boundary, deployment target, and backup owner remain open
+before their dependent work. The owning details are
 tracked in [database](database.md), [security](security.md),
 [API conventions](api-conventions.md), and [deployment](deployment.md).
 

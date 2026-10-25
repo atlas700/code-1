@@ -7,6 +7,7 @@ const configuration = {
   NODE_ENV: "test",
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_Y2xlcmsuZXhhbXBsZS5pbnZhbGlkJA==",
   CLERK_SECRET_KEY: "sk_test_unitTestPlaceholder",
+  DATABASE_URL: "postgresql://test:placeholder@127.0.0.1:1/afcs_test",
 };
 
 vi.stubEnv(
@@ -14,10 +15,23 @@ vi.stubEnv(
   configuration.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
 );
 vi.stubEnv("CLERK_SECRET_KEY", configuration.CLERK_SECRET_KEY);
+vi.stubEnv("DATABASE_URL", configuration.DATABASE_URL);
 const { validateServerEnvironment } = await import("./env");
 afterAll(() => vi.unstubAllEnvs());
 
 describe("validateServerEnvironment", () => {
+  it("requires DATABASE_URL at startup without exposing invalid values", () => {
+    for (const value of [undefined, "private-invalid-value"]) {
+      const validate = () =>
+        validateServerEnvironment({ ...configuration, DATABASE_URL: value });
+      expect(validate).toThrow("DATABASE_URL");
+      expect(validate).not.toThrow("private-invalid-value");
+    }
+    expect(validateServerEnvironment(configuration).databaseUrl).toBe(
+      configuration.DATABASE_URL,
+    );
+  });
+
   it("rejects an unsupported NODE_ENV with an actionable error", () => {
     expect(() =>
       validateServerEnvironment({ ...configuration, NODE_ENV: "preview" }),

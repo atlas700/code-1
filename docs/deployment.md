@@ -19,6 +19,10 @@
   port or deploying. Do not include a path, credentials, or trailing slash. Live
   Clerk instances require an HTTPS origin.
 - Local-only values belong in the ignored root `.env.local` file.
+- `DATABASE_URL` is required at startup and by migration tooling. Keep it
+  server-only; follow the [database setup](database.md). Apply reviewed migrations
+  explicitly, separately from startup and builds. Quality CI uses an unreachable
+  placeholder and never connects to or migrates a database.
 - Staging and production values will be set in the approved deployment target's
   encrypted environment configuration after G4 selects that target. They must not
   be committed to the repository. Secrets must never use a `NEXT_PUBLIC_` prefix.

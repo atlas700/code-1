@@ -61,3 +61,21 @@ before accepting externally supplied patterns. Track a compatible upstream fix;
 the audit's suggested downgrade to `eslint-config-next` 14 is incompatible with
 this project's Next.js 16 lint stack. This is tracked development-tooling exposure,
 not an exception to the production audit gate.
+
+### Development-tooling audit update — 25 October 2026
+
+Task 07's production audit reports zero vulnerabilities. The full audit now
+reports four moderate entries from
+`drizzle-kit → @esbuild-kit/esm-loader → @esbuild-kit/core-utils → esbuild`
+([GHSA-67mh-4wv8-2f99](https://github.com/advisories/GHSA-67mh-4wv8-2f99)).
+The affected esbuild version is 0.18.20; the advisory concerns its development
+HTTP server. This project uses Drizzle Kit only for local generation/migration,
+not an esbuild HTTP server or exposed Drizzle Studio. It is absent from production
+dependencies. Recheck on the next tooling update; the audit's proposed Drizzle Kit
+0.18.1 downgrade would replace the current migration tooling and is not applied.
+
+The existing ESLint dependency's Zod was updated from 4.6.5 to 4.6.7 to resolve
+[GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5).
+No high/critical entries remain in the full audit. The older `braces` entry above
+is a historical report; the current audit does not report it. The production gate
+and its no-exceptions policy are unchanged.
