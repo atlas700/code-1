@@ -24,9 +24,10 @@ task readiness and order. Update both when an approved decision changes the scop
   validation, Vitest tests, and CI are implemented (Tasks 01–06).
 - Exact dependency versions and quality commands live in `package.json` and its
   lockfile. The application uses App Router in `src/app` and strict TypeScript.
-- Task 07 adds the PostgreSQL/Drizzle client, explicit migration tooling, and a
-  harmless baseline; see its [handoff](handoffs/07-database-foundation.md). Business
-  tables and a UI-component library are absent.
+- Task 07 supplies the PostgreSQL/Drizzle client and explicit migration tooling;
+  see its [handoff](handoffs/07-database-foundation.md). Task 08 adds a local
+  organization mapping and verified Clerk membership lookup under ADR 0014.
+  Purchasing tables and a UI-component library are absent.
 - Preserve unrelated worktree changes.
 
 The project rules in `AGENTS.md` and `docs/` are mandatory. In particular:
@@ -107,15 +108,17 @@ or interview transcripts.
 | G2 scope | Founder-approved: [ADR 0003](adr/0003-helmand-pilot-workflow.md); user validation still depends on G1 | Founder/product lead | Features outside the approved pilot |
 | G3 domain policies | Partially resolved: [ADRs 0001–0012](adr/README.md); decimal scale/rounding remain open; terminology requires G1 validation | Founder/product lead | Task 12 until decimal policy is approved; dependent domain work and pilot labels until their policies/evidence exist |
 | G4 authentication | Accepted: [ADR 0002](adr/0002-clerk-authentication.md); development checks in [Task 06 handoff](handoffs/06-authentication.md); pilot sign-in method still needs validation | Founder | Pilot authentication until sign-in validation is recorded |
-| G4 database | Accepted, 21 October: [ADR 0013](adr/0013-local-postgresql-foundation.md) approves local PostgreSQL, structural ownership model, and migration/recovery workflow; [Task 07 verification](handoffs/07-database-foundation.md) completed 25 October | Technical lead/founder | Detailed business schema still requires G1; other G4 gates remain open |
+| G4 database | Accepted: [ADR 0013](adr/0013-local-postgresql-foundation.md) approves local PostgreSQL and reviewed migrations; [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md), 25 October, replaces local membership ownership with verified Clerk membership and a local organization mapping | Technical lead/founder | Detailed business schema still requires G1; other G4 gates remain open |
 | G4 mutation boundary | Open: [API conventions](api-conventions.md) | Technical lead/founder | Task 09 and subsequent protected mutations |
 | G4 permissions | Open: role matrix in [security](security.md) | Technical lead/founder | Task 10 and subsequent role-dependent work |
 | G4 deployment | Open: hosting, backup owner, retention, and monitoring in [deployment](deployment.md) | Technical lead/founder | Task 34 and pilot release |
 
-**Next implementation task:** 08 — organization membership and tenant context,
-under ADR 0013's approved structural ownership model. G1 still blocks business
-modelling and screens starting at Task 13. Tasks 09–12 also need their listed
-architecture/policy approvals before starting; Task 07 does not close those gates.
+**Current task:** 08 — organization membership and tenant context under ADR 0014.
+Code and local database checks are recorded in the [handoff](handoffs/08-clerk-organizations.md);
+development Clerk enablement with membership optional still needs Dashboard setup.
+After that acceptance check, the next implementation task is **09 — first-organization
+onboarding**, blocked until G4 mutation-boundary approval. G1 still blocks Tasks
+13–35; permissions, decimal policy, pilot sign-in, and deployment gates remain open.
 
 ### G0 — choose the initial market
 
@@ -179,8 +182,9 @@ The scope column also constrains the detailed task descriptions below.
 
 | Tasks | Classification | Pilot scope |
 | --- | --- | --- |
-| 01–06 | Complete | Foundation and authentication; see [handoffs](README.md) |
-| 07–15 | Pilot required | Persistence, tenancy, permissions, primitives, products, suppliers |
+| 01–07 | Complete | Foundation, authentication, persistence; see [handoffs](README.md) |
+| 08 | Pilot required | Tenancy code verified; development Clerk configuration pending |
+| 09–15 | Pilot required | Onboarding, permissions, primitives, products, suppliers |
 | 16 | Deferred | Customers |
 | 17–22 | Pilot required | One warehouse, purchases, accepted receipts/payables, stock, owner-approved corrections |
 | 23–24 | Deferred | Sales drafts and fulfilment |
@@ -307,11 +311,16 @@ and committed; production build has no client DB import.
 
 **Goal:** Make an organization the ownership boundary for all future business data.
 
-**Do:** Add `organizations` and `organization_members` schema, migration, server-side
-current-membership lookup, and the rule for selecting an active organization. Design
-the schema to link to the chosen auth user identity without duplicating passwords.
+**Do:** Follow [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md): add
+one local `organizations` table with generated UUID, unique required Clerk
+organization ID, and UTC creation timestamp. Clerk owns membership. Verify the
+session's active organization/user pair through the Backend API before resolving
+the local UUID. Return no context for absent/mismatched membership or missing local
+mapping; fail closed with sanitized errors on service failures. Reads never create
+organizations or choose a different membership.
 
-**Do not:** trust organization ID from a form/query string or add roles yet.
+**Do not:** trust organization ID from a form/query string, mirror memberships,
+cache membership across requests, add roles, or expose organization management UI.
 
 **Verify:** a user with no membership has no active organization; membership lookup
 cannot return another tenant's organization.
@@ -322,14 +331,18 @@ cannot return another tenant's organization.
 
 **Goal:** Let an authenticated owner create their business safely.
 
-**Do:** Add a validated server-side onboarding mutation and minimal form. Create the
-organization and owner membership atomically. Include name, business type, timezone,
+**Do:** After mutation-boundary approval, add a validated onboarding mutation and
+minimal form. Use Clerk organization creation and its creator membership, then
+idempotently provision the local organization/settings. Remote Clerk provisioning
+cannot share a PostgreSQL transaction: define recovery for partial success and
+retries without duplicating organizations. Include name, business type, timezone,
 base currency (`AFN` by default), and locale only where G3 has approved defaults.
 
 **Do not:** expose general organization switching, invitations, or billing.
 
 **Verify:** duplicate submission does not create duplicate owner organizations;
-invalid input is shown safely; created organization becomes active.
+invalid input is shown safely; partial remote/local success is recoverable; created
+organization becomes active only after local provisioning succeeds.
 
 **Handoff:** describe the idempotency/duplicate-submission behavior.
 
@@ -340,7 +353,9 @@ invalid input is shown safely; created organization becomes active.
 **Do:** Add a documented permission catalogue, roles/mappings (or a deliberately
 simple equivalent approved at G4), seed owner/admin/manager/warehouse/sales/accountant
 /viewer defaults, and an authorization function used by mutations and protected data
-queries.
+queries. Business roles stay local under ADR 0014, bound to verified Clerk
+membership identity; Clerk Admin/Member roles are not business authorization.
+Removal/rejoining must not restore old business grants.
 
 **Do not:** rely on hiding buttons as authorization or build staff management UI.
 
@@ -353,8 +368,10 @@ forbidden actions are enforced server-side.
 
 **Goal:** Let an owner/admin manage pilot staff without weakening tenant isolation.
 
-**Do:** Build add/invite, role change, deactivate, and list flows using the approved
-auth provider's supported approach. Prevent removal/demotion of the last active owner.
+**Do:** Use Clerk's membership/invitation APIs behind the approved local permission
+guards. Build add/invite, local business-role change, deactivate, and list flows.
+Prevent removal/demotion of the last active owner; remote removal must revoke
+access even while a session still carries the former organization claim.
 
 **Do not:** create arbitrary custom roles or send real email/SMS if no provider is
 configured; show a safe manual-invite workflow if necessary.

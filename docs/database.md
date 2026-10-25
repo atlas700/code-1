@@ -5,8 +5,12 @@
 - PostgreSQL 16 and Drizzle with the `pg` driver provide the Task 07 foundation.
 - `src/db/index.ts` exports a server-only, lazy pooled client. Development reloads
   reuse the pool; importing it does not connect, query, or apply migrations.
-- `src/db/schema/index.ts` is intentionally empty. The baseline migration runs
-  only `SELECT 1`; applying it creates Drizzle's migration ledger, no domain tables.
+- `src/db/schema/index.ts` defines only `organizations`: generated UUID primary
+  key, unique required `clerk_organization_id`, and required `created_at`
+  (`timestamptz`, default `now()`). Clerk owns membership; no local membership
+  table is created. See [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md).
+- `0000_baseline.sql` runs only `SELECT 1`; `0001_organizations.sql` adds the local
+  mapping. Business settings and provisioning remain Task 09.
 - `DATABASE_URL` is required by application startup and migration tooling. It is
   server-only and must never use a `NEXT_PUBLIC_` prefix.
 - SQL and metadata live in `drizzle/`. Migrations are explicit operations, separate
@@ -59,8 +63,9 @@ Do not regenerate or edit it after application. Do not use `drizzle-kit push`.
 Use `npm.cmd` when forwarding flags in Windows PowerShell; in other shells use
 `npm`. This avoids the PowerShell `npm.ps1` wrapper consuming migration flags.
 
-Verify reviewed migrations on a separate fresh database before development. For
-the baseline, first confirm that `afcs_task07_verify` has no user tables. In a
+Verify reviewed migrations on a separate database before development. The retained
+`afcs_task07_verify` has Task 07's baseline ledger; before Task 08 it has no domain
+tables. A fresh checkout may instead use a newly provisioned empty database. In a
 dedicated PowerShell terminal, set a process-only override without recording the
 connection string in shell history:
 
@@ -71,8 +76,11 @@ npm run db:migrate
 Remove-Item Env:DATABASE_URL
 ```
 
-Both runs must succeed, with exactly one baseline row in
-`drizzle.__drizzle_migrations` and no domain tables. Stop on any failure. Removing
+Both runs must succeed, with exactly two migration rows in
+`drizzle.__drizzle_migrations` and only `public.organizations` plus the ledger.
+Check UUID/time defaults and rejection of duplicate/null Clerk organization IDs
+using synthetic rows inside a transaction, then roll those rows back. Stop on any
+failure. Removing
 the override restores `.env.local` loading for the development command:
 
 ```powershell
@@ -89,7 +97,8 @@ SELECT schemaname, tablename FROM pg_tables
 WHERE schemaname NOT IN ('pg_catalog', 'information_schema');
 ```
 
-Later migrations increase the ledger count. Commit generated history unchanged;
+Task 08 leaves the mapping table empty; reads never provision it. Later migrations
+increase the ledger count. Commit generated history unchanged;
 never rewrite an applied migration. See [Drizzle migration guidance](https://orm.drizzle.team/docs/migrations).
 
 ## Recovery
@@ -107,6 +116,19 @@ and verify its data before considering a switch. Keep backups outside the repo.
 See [PostgreSQL backup guidance](https://www.postgresql.org/docs/16/app-pgdump.html).
 Production backup ownership, retention, and restore rehearsal remain G4 deployment
 decisions; Task 07 does not establish production readiness.
+
+## Tenant-context contract
+
+`getTenantContext()` from `src/db/tenant.ts` is server-only, takes no client input,
+and returns `Promise<{ userId: string; organizationId: string; membershipId: string }
+| null>`. It first verifies the active Clerk membership through the auth adapter,
+then selects only the matching local UUID using a parameterized query. Missing
+membership or mapping returns `null`; database failures throw a sanitized error.
+No writes, alternate-organization selection, or persistent membership cache occur.
+Task 09 must provision local mappings idempotently after Clerk creation; remote
+Clerk operations cannot participate in a PostgreSQL transaction. Keep local data
+and history if the remote organization disappears. Business roles remain local
+and require the separate Task 10 permission guard after membership verification.
 
 ## Principles for future work
 

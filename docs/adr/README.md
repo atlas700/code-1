@@ -32,7 +32,10 @@ records the corrections-approval policy. [ADR 0011](0011-validate-purchase-recei
 records the terminology-validation scope. [ADR 0012](0012-receipt-supplier-payables.md)
 records receipt-based supplier debt recognition. [ADR 0013](0013-local-postgresql-foundation.md)
 records local PostgreSQL, the structural ownership model, and reviewed migration
-and recovery policy. The [build plan's gate status](../agent-sized-build-plan.md#current-gate-status)
+and recovery policy. [ADR 0014](0014-clerk-organizations-local-business-roles.md)
+replaces local membership ownership with Clerk organizations and memberships,
+retaining local business-data ownership and later business roles.
+The [build plan's gate status](../agent-sized-build-plan.md#current-gate-status)
 is the task-readiness record. G1 and the remaining G4 decisions stay
 open until evidence or founder approval exists. Record each decision before starting
 a task that depends on it.

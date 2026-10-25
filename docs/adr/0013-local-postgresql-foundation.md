@@ -3,6 +3,10 @@
 - **Date:** 2026-10-21
 - **Status:** Accepted
 
+The application-owned membership provision below is superseded by
+[ADR 0014](0014-clerk-organizations-local-business-roles.md). Local organization
+UUIDs still own business data; Clerk owns membership. Other decisions still apply.
+
 ## Context
 
 The founder approved Task 07's implementation plan on 21 October 2026. Local

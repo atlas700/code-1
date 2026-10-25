@@ -59,6 +59,31 @@ and [production guidance](https://clerk.com/docs/guides/development/deployment/p
 
 ## Future deployment requirements
 
+### Development organization settings
+
+For Task 08, enable Organizations in the **development** Clerk instance with
+**Membership optional** and **Create first organization automatically** off.
+This preserves sign-in before Task 09 onboarding; personal mode has no business
+tenant context. Use the existing default five-member cap; no paid feature is
+required. Revisit plan costs before exceeding Clerk's included membership limit.
+Do not enable verified-domain enrollment or introduce business-role mappings here.
+
+Inspect the Dashboard settings after enabling. The Backend API's enable operation
+can turn membership required on; it cannot configure membership optional through
+the installed SDK. Do not treat a successful enable response as proof of the
+required defaults. Clerk's public environment configuration exposes
+`force_organization_selection` and
+`organization_creation_defaults.automatic_organization_creation.enabled` for
+verification. See [configuration](https://clerk.com/docs/guides/organizations/configure).
+
+Organization/membership creation and management remain Tasks 09/11. No switcher,
+profile-management UI, or webhooks are needed for this foundation. Future
+background tenant requests must explicitly bind their intended organization to
+the verified session context; Clerk documents a shared-cookie caveat for multiple
+tabs in its [organization overview](https://clerk.com/docs/guides/organizations/overview).
+
+### Staging and production
+
 - A deployment target and backup owner require G4 approval before infrastructure is
   configured.
 - Production changes must not auto-run destructive migrations.

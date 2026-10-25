@@ -3,6 +3,10 @@
 - **Date:** 2026-10-19
 - **Status:** Accepted
 
+The membership/organization-selection provisions below are superseded by
+[ADR 0014](0014-clerk-organizations-local-business-roles.md). Clerk now owns
+membership; business roles remain local. Other decisions in this ADR still apply.
+
 ## Context
 
 The pilot needs secure sign-in before its database and business-domain schema are

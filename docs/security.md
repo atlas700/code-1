@@ -14,13 +14,20 @@
 
 **Decided — G4 authentication:** Clerk is the approved managed identity and secure
 session provider for Task 06; see [ADR 0002](adr/0002-clerk-authentication.md). The
-enabled sign-in method remains a pilot-validation decision. Application organization
-membership and business permissions remain server-side records, not client-controlled
-Clerk organization state.
+enabled sign-in method remains a pilot-validation decision. Under
+[ADR 0014](adr/0014-clerk-organizations-local-business-roles.md), Clerk owns
+membership and the application will own business permissions. Neither a
+client-controlled organization ID nor Clerk Admin/Member roles grant business access.
 
 Task 06 uses Clerk's SDK-managed sessions, per-page server guards, and an explicit
 `authorizedParties` origin. Authentication returns an external user identity only;
-organization membership and permissions remain unimplemented. The Clerk publishable
+the separate Task 08 adapter verifies current active-organization membership against
+Clerk's Backend API before resolving a local organization UUID. Missing/deleted or
+mismatched membership and absent local mappings deny tenant access; outages throw
+sanitized errors without exposing provider details, SQL, or credentials. Membership
+is rechecked on every lookup, not cached across requests or mirrored by webhooks.
+Business-role checks remain Task 10; present pages contain no business data.
+The Clerk publishable
 key may use `NEXT_PUBLIC_`; its secret key must never do so. Missing or malformed
 configuration fails without echoing credential values.
 

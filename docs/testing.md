@@ -47,6 +47,12 @@ an agent workflow requirement; CI continues to run the existing automated checks
   development; CI does not provision or migrate a database.
 - Later tasks add focused tests for tenancy, authorization, exact totals, status
   transitions, inventory, and payments as those behaviors are introduced.
+- Task 08 tests mock Clerk and the PostgreSQL transport while using Drizzle's real
+  query generation. They cover exact organization/user filtering, absent/deleted
+  or mismatched membership, stale claims, sanitized failures, the parameterized
+  local mapping read, and rechecking after removal or organization change. Local
+  acceptance separately applies/reapplies reviewed SQL and checks defaults and
+  constraints in a rolled-back transaction on the isolated verification database.
 - Browser end-to-end coverage is deferred to Task 33; it must use isolated seeded
   data for purchasing, accepted receipt/payable creation, supplier payment, and
   stock/supplier balance reconciliation rather than a shared development database.
