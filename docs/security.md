@@ -27,6 +27,13 @@ mismatched membership and absent local mappings deny tenant access; outages thro
 sanitized errors without exposing provider details, SQL, or credentials. Membership
 is rechecked on every lookup, not cached across requests or mirrored by webhooks.
 Business-role checks remain Task 10; present pages contain no business data.
+Task 09 validates its authenticated bootstrap action with Zod, verifies remote
+creator identity and current membership, and provisions only that creator's saved
+request. Client tenant/role IDs and previous action state never grant authority.
+Creation retries use one durable request and a unique Clerk slug; recovery does
+not restore removed memberships or grant local business roles. Only confirmed
+local provisioning exposes the activation control. Failure diagnostics contain
+operation, stage, and correlation UUID, without raw inputs, errors, SQL, or PII.
 The Clerk publishable
 key may use `NEXT_PUBLIC_`; its secret key must never do so. Missing or malformed
 configuration fails without echoing credential values.

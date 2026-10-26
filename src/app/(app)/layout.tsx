@@ -1,13 +1,18 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { SignOut } from "@/auth/components";
+import { requireSession } from "@/auth/server";
+import { getTenantContext } from "@/db/tenant";
 import { AppNavigation } from "./_components/app-navigation";
 
 type AppLayoutProps = {
   children: ReactNode;
 };
 
-export default function AppLayout({ children }: AppLayoutProps) {
+export default async function AppLayout({ children }: AppLayoutProps) {
+  await requireSession();
+  if (!await getTenantContext()) redirect("/onboarding");
   return (
     <div className="min-h-screen bg-page lg:grid lg:grid-cols-[16rem_1fr]">
       <a

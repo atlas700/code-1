@@ -42,8 +42,10 @@
    staff invitations remain Task 11. The application exposes sign-in only.
 3. Run `npm run dev`, visit `/sign-in`, and authenticate using the configured
    development method. The fallback destination is `/dashboard`; direct access to
-   another protected page preserves Clerk's return destination.
-4. Confirm all six application pages are accessible while signed in. Select
+   another protected page preserves Clerk's return destination. An authenticated
+   account without an active verified local business goes to `/onboarding`.
+4. Complete first-business setup, then select **Open workspace**. Confirm the six
+   placeholder pages are accessible with that verified active local tenant. Select
    **Sign out** in desktop or mobile navigation, then revisit a protected URL and
    verify it redirects to `/sign-in`. Try a fresh private window as well.
 5. Repeat an anonymous protected request with Pashto selected; verify the sign-in
@@ -88,6 +90,35 @@ profile-management UI, or webhooks are needed for this foundation. Future
 background tenant requests must explicitly bind their intended organization to
 the verified session context; Clerk documents a shared-cookie caveat for multiple
 tabs in its [organization overview](https://clerk.com/docs/guides/organizations/overview).
+
+### Onboarding recovery slugs
+
+Task 09 requires Clerk **Enable organization slugs** for its stable recovery key.
+Clerk disables slugs by default for newer applications. Enable them in Organization
+settings before using onboarding; this adds no organization-specific routes or
+switcher. Keep each reserved `afcs-<onboarding UUID>` slug unchanged until its remote
+ID is pinned locally. Renaming an unpinned slug or editing its private recovery
+marker outside the app requires operator reconciliation before another retry.
+After pinning, retries use the Clerk ID and tolerate slug changes.
+
+On 26 October, the first development smoke submission returned the safe failure
+path because Clerk reported `organization_slugs_disabled`. Verified the configured
+instance was development, then sent only `{"slug_disabled":false}` to
+`PATCH /v1/instance/organization_settings`. The installed SDK omits this update
+field; it is documented by Clerk's
+[official Backend API specification](https://github.com/clerk/openapi-specs/blob/main/bapi/2021-02-05.yml).
+A fresh public environment read confirmed `organization_settings.slug.disabled`
+was `false`, Organizations remained enabled, membership remained optional,
+automatic creation remained off, and the five-member cap was unchanged.
+The retry then created exactly one business. This setting is a prerequisite for
+each future environment; the app never changes provider settings at startup.
+
+The development browser smoke used a temporary, explicitly marked test account and
+Clerk's reserved test email-code flow. It verified creation, delayed activation,
+dashboard access, saved-detail recovery, mobile RTL layout, repeated submission,
+membership-removal denial, and sign-out. The synthetic remote account/organization
+and their local rows were deleted afterward. This is development evidence; pilot
+phone OTP, production cookies, backup restoration, and deployment remain open.
 
 ### Staging and production
 

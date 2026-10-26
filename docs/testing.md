@@ -53,6 +53,17 @@ an agent workflow requirement; CI continues to run the existing automated checks
   local mapping read, and rechecking after removal or organization change. Local
   acceptance separately applies/reapplies reviewed SQL and checks defaults and
   constraints in a rolled-back transaction on the isolated verification database.
+- Task 09 unit tests cover validated creator-only bootstrap, remote recovery,
+  current membership denial, safe correlation, preserved framework redirects, and
+  onboarding routing. Eight opt-in PostgreSQL tests cover actual concurrent
+  reservation/completion, pinned IDs, uniqueness, tenant-scoped reads, rollback,
+  and non-overwrite behavior. Follow the
+  [isolated command](database.md#onboarding-persistence-and-verification); CI skips
+  these database tests unless `AFCS_TEST_DATABASE_URL` is explicitly supplied.
+- Task 09's manual development browser smoke covers real sign-in/onboarding,
+  validation and retained values, activation after persistence, idempotent resume,
+  mobile RTL layout, membership-removal denial, and sign-out. It adds no E2E
+  framework or CI browser suite; those retain Task 33's scope.
 - Browser end-to-end coverage is deferred to Task 33; it must use isolated seeded
   data for purchasing, accepted receipt/payable creation, supplier payment, and
   stock/supplier balance reconciliation rather than a shared development database.

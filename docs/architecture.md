@@ -11,11 +11,14 @@
 - The proxy composes Clerk session handling with General Translation locale
   handling. Route protection stays in each resource, following Clerk 7 guidance.
 - Vitest covers configuration validation, session/page access, verified Clerk
-  membership, and the tenant-context database query.
+  membership, tenant context, and onboarding; opt-in PostgreSQL tests cover real
+  onboarding concurrency and rollback.
 - PostgreSQL persistence uses a server-only Drizzle/`pg` pool under `src/db`, with
   explicit reviewed migrations. The sole business-ownership table is
   `organizations`, mapping a generated local UUID to a unique Clerk organization
-  ID. Membership lives in Clerk. A general UI-component library is not installed.
+  ID. `organization_settings` holds business settings; `organization_onboarding`
+  holds one durable setup request per creator, not a membership mirror. Membership
+  lives in Clerk. A general UI-component library is not installed.
 - Localization uses General Translation with English and Pashto; its runtime
   translation service remains disabled until terminology and credentials are ready.
 - Future application work follows the App Router and favors Server Components with
@@ -58,6 +61,8 @@ tracked in [database](database.md), [security](security.md),
   validation, authorization, and safe-error contract in [API conventions](api-conventions.md).
   Task 09 alone has a first-organization bootstrap exception before a local tenant
   exists; verified creator authority permits provisioning, not business access.
+  `/onboarding` authenticates before reading saved setup. The app layout routes a
+  missing active local tenant there; resource-level guards remain mandatory.
 - Clerk Admin/Member roles are membership-management roles, not purchasing
   permissions. Local business-role definitions and assignments remain Task 10;
   verify membership first and bind grants to its identity so rejoining cannot
