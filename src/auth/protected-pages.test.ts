@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-const { requireSession } = vi.hoisted(() => ({ requireSession: vi.fn() }));
-vi.mock("@/auth/server", () => ({ requireSession }));
+const { requirePermission } = vi.hoisted(() => ({ requirePermission: vi.fn() }));
+vi.mock("@/db/authorization", () => ({ requirePermission }));
 
 import DashboardPage from "../app/(app)/dashboard/page";
 import InventoryPage from "../app/(app)/inventory/page";
@@ -13,22 +13,22 @@ import SettingsPage from "../app/(app)/settings/page";
 afterEach(() => vi.resetAllMocks());
 
 describe.each([
-  ["dashboard", DashboardPage],
-  ["inventory", InventoryPage],
-  ["purchases", PurchasesPage],
-  ["sales", SalesPage],
-  ["payments", PaymentsPage],
-  ["settings", SettingsPage],
-])("protected %s page", (_name, Page) => {
-  it("does not render when the session guard denies access", async () => {
-    const denied = new Error("Sign-in required");
-    requireSession.mockRejectedValue(denied);
+  ["dashboard", DashboardPage, "organization.read"],
+  ["inventory", InventoryPage, "inventory.read"],
+  ["purchases", PurchasesPage, "purchases.read"],
+  ["sales", SalesPage, "organization.read"],
+  ["payments", PaymentsPage, "supplier_payments.read"],
+  ["settings", SettingsPage, "organization.read"],
+])("protected %s page", (_name, Page, permission) => {
+  it("does not render when the permission guard denies access", async () => {
+    const denied = new Error("Access denied");
+    requirePermission.mockRejectedValue(denied);
     await expect(Page()).rejects.toBe(denied);
   });
 
-  it("renders when the session guard accepts the user", async () => {
-    requireSession.mockResolvedValue({ userId: "user_123" });
+  it("renders only after checking its action permission", async () => {
+    requirePermission.mockResolvedValue({ userId: "user_123" });
     expect(await Page()).toBeTruthy();
-    expect(requireSession).toHaveBeenCalledOnce();
+    expect(requirePermission).toHaveBeenCalledExactlyOnceWith(permission);
   });
 });

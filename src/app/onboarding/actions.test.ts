@@ -13,8 +13,9 @@ vi.mock("@/db/onboarding", () => mocks);
 import { createFirstOrganization } from "./actions";
 
 const details = { name: "Example business", businessType: "Fruit wholesaler", timezone: "Asia/Kabul", baseCurrency: "AFN", locale: "ps-AF" };
-const request = { ...details, userId: "user_a", id: "21e2c06c-30fa-4a2a-b8da-49e9e4c0e802", clerkOrganizationId: null };
+const request = { ...details, userId: "user_a", id: "21e2c06c-30fa-4a2a-b8da-49e9e4c0e802", clerkOrganizationId: null, ownerMembershipId: null };
 const pinned = { ...request, clerkOrganizationId: "org_a" };
+const membership = { userId: "user_a", clerkOrganizationId: "org_a", membershipId: "membership_a" };
 function form(overrides: Record<string, string> = {}) {
   const data = new FormData();
   Object.entries({ ...details, ...overrides }).forEach(([key, value]) => data.set(key, value));
@@ -24,9 +25,9 @@ function form(overrides: Record<string, string> = {}) {
 beforeEach(() => {
   mocks.requireSession.mockResolvedValue({ userId: "user_a" });
   mocks.reserveOnboarding.mockResolvedValue(request);
-  mocks.getOrCreateCreatorOrganization.mockResolvedValue("org_a");
+  mocks.getOrCreateCreatorOrganization.mockResolvedValue(membership);
   mocks.pinOnboardingOrganization.mockResolvedValue(pinned);
-  mocks.completeOnboarding.mockResolvedValue(undefined);
+  mocks.completeOnboarding.mockResolvedValue(true);
 });
 afterEach(() => { vi.resetAllMocks(); vi.restoreAllMocks(); });
 
@@ -37,7 +38,7 @@ describe("first organization action", () => {
     expect(mocks.reserveOnboarding).toHaveBeenCalledExactlyOnceWith("user_a", details);
     expect(mocks.getOrCreateCreatorOrganization).toHaveBeenCalledWith(request);
     expect(mocks.pinOnboardingOrganization).toHaveBeenCalledWith(request, "org_a");
-    expect(mocks.completeOnboarding).toHaveBeenCalledWith(pinned);
+    expect(mocks.completeOnboarding).toHaveBeenCalledWith(pinned, membership);
     expect(mocks.completeOnboarding.mock.invocationCallOrder[0]).toBeGreaterThan(mocks.pinOnboardingOrganization.mock.invocationCallOrder[0]);
   });
 
@@ -80,6 +81,13 @@ describe("first organization action", () => {
     expect(await createFirstOrganization({ status: "idle" }, form())).toEqual({ status: "denied" });
     expect(mocks.pinOnboardingOrganization).not.toHaveBeenCalled();
     expect(mocks.completeOnboarding).not.toHaveBeenCalled();
+  });
+
+  it("does not expose activation data when the one-time bootstrap rejects a stale membership", async () => {
+    mocks.completeOnboarding.mockResolvedValue(false);
+    expect(await createFirstOrganization({ status: "success", clerkOrganizationId: "org_attacker" }, form({ membershipId: "member_attacker" })))
+      .toEqual({ status: "denied" });
+    expect(mocks.completeOnboarding).toHaveBeenCalledExactlyOnceWith(pinned, membership);
   });
 
   it.each([

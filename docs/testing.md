@@ -64,6 +64,12 @@ an agent workflow requirement; CI continues to run the existing automated checks
   validation and retained values, activation after persistence, idempotent resume,
   mobile RTL layout, membership-removal denial, and sign-out. It adds no E2E
   framework or CI browser suite; those retain Task 33's scope.
+- Task 10 adds permission-default tests, current tenant/role guard tests with
+  parameterized real Drizzle queries, and per-page permission checks. The isolated
+  PostgreSQL suite now has fifteen tests: it also verifies explicit legacy setup resume, one-time owner
+  bootstrap, concurrent membership claims, rollback, non-restoration after role
+  deletion/downgrade/rejoin, constraints, and actual grant query isolation. The
+  guard preserves sign-in/framework exceptions and sanitizes service failures.
 - Browser end-to-end coverage is deferred to Task 33; it must use isolated seeded
   data for purchasing, accepted receipt/payable creation, supplier payment, and
   stock/supplier balance reconciliation rather than a shared development database.

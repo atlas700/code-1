@@ -18,7 +18,7 @@ Sales, customer payments, multiple warehouses, returns, lot/grade tracking, and
 offline mode are deferred. Accepted ADRs govern product policy; this plan governs
 task readiness and order. Update both when an approved decision changes the scope.
 
-## Current repository baseline (26 October 2026)
+## Current repository baseline (27 October 2026)
 
 - The application shell, localization plumbing, Clerk authentication, environment
   validation, Vitest tests, and CI are implemented (Tasks 01–06).
@@ -28,6 +28,7 @@ task readiness and order. Update both when an approved decision changes the scop
   see its [handoff](handoffs/07-database-foundation.md). Task 08 adds a local
   organization mapping and verified Clerk membership lookup under ADR 0014.
   Task 09 supplies first-organization onboarding and local business settings.
+  Task 10 supplies fixed business roles, membership-bound grants, and server guards.
   Purchasing tables and a UI-component library are absent.
 - Preserve unrelated worktree changes.
 
@@ -102,7 +103,7 @@ gate changes; an accepted policy does not count as completed user research.
 Research records stay private; link a redacted evidence summary rather than names
 or interview transcripts.
 
-| Gate | Status and evidence (updated 26 October 2026) | Owner | Blocks |
+| Gate | Status and evidence (updated 27 October 2026) | Owner | Blocks |
 | --- | --- | --- | --- |
 | G0 market | Accepted: [ADR 0003](adr/0003-helmand-pilot-workflow.md), 19 October | Founder | Market choice is resolved |
 | G1 research | Open: 20 interviews and 5 workflow observations have no recorded completion evidence | Founder/researcher | Tasks 13–35 and pilot release |
@@ -111,17 +112,18 @@ or interview transcripts.
 | G4 authentication | Accepted: [ADR 0002](adr/0002-clerk-authentication.md); development checks in [Task 06 handoff](handoffs/06-authentication.md); pilot sign-in method still needs validation | Founder | Pilot authentication until sign-in validation is recorded |
 | G4 database | Accepted: [ADR 0013](adr/0013-local-postgresql-foundation.md) approves local PostgreSQL and reviewed migrations; [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md), 25 October, replaces local membership ownership with verified Clerk membership and a local organization mapping | Technical lead/founder | Detailed business schema still requires G1; other G4 gates remain open |
 | G4 mutation boundary | Accepted: [ADR 0015](adr/0015-server-action-mutation-boundary.md), 26 October; native Server Actions with the [mutation contract](api-conventions.md#mutation-contract) and a narrow first-organization bootstrap exception | Technical lead/founder | Boundary decision resolved; each mutation still needs its task's authorization and recovery checks |
-| G4 permissions | Open: role matrix in [security](security.md) | Technical lead/founder | Task 10 and subsequent role-dependent work |
+| G4 permissions | Accepted: [ADR 0016](adr/0016-local-business-authorization.md), founder-approved 27 October; Task 10 implements fixed roles, the action matrix, membership-bound grants, one-time owner bootstrap, and server guards | Technical lead/founder | Policy and foundation resolved; each new workflow still needs its own permission and resource-ownership checks |
 | G4 deployment | Open: hosting, backup owner, retention, and monitoring in [deployment](deployment.md) | Technical lead/founder | Task 34 and pilot release |
 
-**Next task:** 10 — roles, permissions, and the authorization guard, **blocked until
-the G4 permission matrix is approved**. Task 09 onboarding is implemented under
+**Next task:** 11 — staff invitation and membership management, under ADRs 0014/0016
+and the last-active-owner invariant. Task 10 is complete; see its
+[handoff](handoffs/10-business-authorization.md). Task 09 onboarding is implemented under
 ADR 0015; see its [handoff](handoffs/09-first-organization-onboarding.md). Task 08's
 [handoff](handoffs/08-clerk-organizations.md) and the
 [readiness handoff](handoffs/task-08-09-readiness.md) record its completion.
 Development Organizations and recovery slugs are on, membership is optional, and
 automatic creation is off; Task 09 verifies these settings and its live flow.
-G1 still blocks Tasks 13–35; permissions, decimal policy, pilot sign-in, and
+G1 still blocks Tasks 13–35; decimal policy, pilot sign-in, and
 deployment gates remain open.
 
 ### G0 — choose the initial market
@@ -186,8 +188,8 @@ The scope column also constrains the detailed task descriptions below.
 
 | Tasks | Classification | Pilot scope |
 | --- | --- | --- |
-| 01–09 | Complete | Foundation, authentication, persistence, tenancy, development organization settings, and onboarding; see [handoffs](README.md) |
-| 10–15 | Pilot required | Permissions, staff, primitives, products, suppliers |
+| 01–10 | Complete | Foundation, authentication, persistence, tenancy, onboarding, and local business authorization; see [handoffs](README.md) |
+| 11–15 | Pilot required | Staff, primitives, products, suppliers |
 | 16 | Deferred | Customers |
 | 17–22 | Pilot required | One warehouse, purchases, accepted receipts/payables, stock, owner-approved corrections |
 | 23–24 | Deferred | Sales drafts and fulfilment |
@@ -356,12 +358,14 @@ and correlatable; the organization becomes active only after local provisioning 
 
 **Goal:** Enforce action-based RBAC on the server.
 
-**Do:** Add a documented permission catalogue, roles/mappings (or a deliberately
-simple equivalent approved at G4), seed owner/admin/manager/warehouse/sales/accountant
-/viewer defaults, and an authorization function used by mutations and protected data
-queries. Business roles stay local under ADR 0014, bound to verified Clerk
-membership identity; Clerk Admin/Member roles are not business authorization.
-Removal/rejoining must not restore old business grants.
+**Do:** Follow [ADR 0016](adr/0016-local-business-authorization.md): define the seven
+owner/admin/manager/warehouse/sales/accountant/viewer defaults and action catalogue
+in code, store one local role per verified membership, and add a server-only
+`requirePermission()` guard for mutations and protected data queries. Bootstrap
+the first owner once through verified onboarding, with a durable marker committed
+atomically with the grant; reads and retries never restore changed/deleted grants.
+Business roles stay local under ADR 0014; Clerk Admin/Member roles are not business
+authorization. Removal/rejoining must not restore old business grants.
 
 **Do not:** rely on hiding buttons as authorization or build staff management UI.
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { requireSession } from "@/auth/server";
+import { requirePermission } from "@/db/authorization";
 import { PlaceholderPage } from "../_components/placeholder-page";
 
 export const metadata: Metadata = {
@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 export default async function PurchasesPage() {
-  await requireSession();
+  await requirePermission("purchases.read");
   return (
     <PlaceholderPage
       title="Purchases"

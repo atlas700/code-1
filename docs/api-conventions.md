@@ -15,10 +15,10 @@
 - Validate all untrusted input with Zod before side effects, including form fields
   and client-supplied resource or retry identifiers. Explicitly select permitted
   fields; schema validation alone does not establish resource ownership.
-- For an existing tenant, obtain `getTenantContext()` on each invocation, deny a
-  missing tenant, scope resource reads/writes to its local organization UUID, and
-  enforce Task 10's local action permission once introduced. General business
-  mutations wait for that guard. Client-provided user, organization, membership,
+- For an existing tenant, call `requirePermission(permission)` inside the action's
+  server operation. It authenticates and obtains `getTenantContext()` on each
+  invocation. Scope resource reads/writes to its returned local organization UUID.
+  The permission is a server-owned catalogue literal. Client-provided user, organization, membership,
   or role IDs never grant authority; Clerk Admin/Member roles are not business roles.
 - Keep actions small, client components as interactive leaves, Clerk calls in
   `src/auth`, and database operations in `src/db`. Use server-only helpers rather
@@ -59,8 +59,10 @@ organization and its local provisioning:
 - Keep local organization/settings writes atomic where needed. Clerk and PostgreSQL
   do not share a transaction; document the recovery path for each partial outcome.
   Make the organization active only after local provisioning succeeds.
-- This exception grants no general business access. Local business roles and
-  permissions remain gated on Task 10; tenant reads still never provision data.
+- [ADR 0016](adr/0016-local-business-authorization.md) extends this exception only
+  to bootstrap the initial local owner role once in the provisioning transaction.
+  General business operations require their own permission check; tenant reads
+  still never provision data or roles.
 
 Task 09 must verify unauthenticated and mismatched-creator denial, invalid input,
 duplicate/concurrent requests, partial-success recovery, sanitized failures with
@@ -88,6 +90,16 @@ unique constraints arbitrate concurrent requests. Every attempt verifies Clerk's
 `createdBy`, marker, and exact current membership; neither the marker nor slug is
 authority alone. The verified remote ID is pinned before atomic local
 organization/settings writes. A pinned ID can never be replaced by onboarding.
+The provider adapter now returns only verified `{ userId, clerkOrganizationId,
+membershipId }` to the server operation. These IDs are never accepted from the form.
+
+`completeOnboarding(request, membership)` locks the saved request and returns
+`true` after local completion or `false` for a missing/mismatched saved request or
+membership. The transaction creates settings/mapping and, only when the durable
+`owner_membership_id` is absent, the first owner assignment and marker. A retry
+with the same membership preserves any later downgrade/deletion; another membership
+is denied. Database failures roll everything back. The action exposes no activation
+data after a `false` result.
 
 - Before reservation or after a confirmed failed remote creation: retry the same
   details. No local business exists yet, and the reserved slug stays the same.
@@ -104,13 +116,14 @@ organization/settings writes. A pinned ID can never be replaced by onboarding.
 
 `OrganizationActivation` calls Clerk `setActive` only after `success`, then performs
 a full navigation to `/dashboard`. Dynamic tenant reads therefore use fresh
-membership and local data. This provides no Task 10 business permission. Reserved
+membership and local data. Subsequent page/data access requires the local business
+permission separately; activation alone grants none. Reserved
 slugs must remain unchanged until their remote IDs are pinned; see the
 [operational prerequisite](deployment.md#onboarding-recovery-slugs).
 
 ## Decision status
 
 **Accepted — G4 mutation boundary:** [ADR 0015](adr/0015-server-action-mutation-boundary.md).
-Task 09 is implemented; Task 10 requires permission approval. G1 research, decimal policy,
+Task 09 and the approved Task 10 permission boundary follow ADRs 0015/0016. G1 research, decimal policy,
 pilot sign-in validation, and deployment gates remain open in the
 [build plan](agent-sized-build-plan.md#current-gate-status).

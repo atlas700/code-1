@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { requireSession } from "@/auth/server";
+import { requirePermission } from "@/db/authorization";
 import { PlaceholderPage } from "../_components/placeholder-page";
 
 export const metadata: Metadata = {
@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SettingsPage() {
-  await requireSession();
+  await requirePermission("organization.read");
   return (
     <PlaceholderPage
       title="Settings"

@@ -1,8 +1,9 @@
 import "server-only";
 
 import { and, eq, isNull, or } from "drizzle-orm";
+import type { ActiveOrganizationMembership } from "@/auth/organizations";
 import { db } from "./index";
-import { organizationOnboarding, organizations, organizationSettings } from "./schema";
+import { organizationOnboarding, organizationRoleAssignments, organizations, organizationSettings } from "./schema";
 
 export type OrganizationDetails = Omit<typeof organizationSettings.$inferInsert, "organizationId">;
 export type OnboardingRequest = typeof organizationOnboarding.$inferSelect;
@@ -32,11 +33,20 @@ export async function pinOnboardingOrganization(request: OnboardingRequest, cler
   return pinned;
 }
 
-export async function completeOnboarding(request: OnboardingRequest) {
+export async function completeOnboarding(request: OnboardingRequest, membership: ActiveOrganizationMembership): Promise<boolean> {
   const { clerkOrganizationId, name, businessType, timezone, baseCurrency, locale } = request;
   if (!clerkOrganizationId) throw new Error("Onboarding organization unavailable.");
+  if (membership.clerkOrganizationId !== clerkOrganizationId || membership.userId !== request.userId || !membership.membershipId) return false;
 
-  await db.transaction(async (tx) => {
+  return db.transaction(async (tx) => {
+    // Serialize bootstrap even when concurrent callers hold the same stale request.
+    const [saved] = await tx.select().from(organizationOnboarding).where(and(
+      eq(organizationOnboarding.userId, request.userId),
+      eq(organizationOnboarding.id, request.id),
+      eq(organizationOnboarding.clerkOrganizationId, clerkOrganizationId),
+    )).for("update");
+    if (!saved || (saved.ownerMembershipId && saved.ownerMembershipId !== membership.membershipId)) return false;
+
     await tx.insert(organizations).values({ clerkOrganizationId })
       .onConflictDoNothing({ target: organizations.clerkOrganizationId });
     const [organization] = await tx.select({ id: organizations.id }).from(organizations)
@@ -52,5 +62,14 @@ export async function completeOnboarding(request: OnboardingRequest) {
       settings.timezone !== timezone || settings.baseCurrency !== baseCurrency || settings.locale !== locale) {
       throw new Error("Organization settings conflict.");
     }
+
+    if (!saved.ownerMembershipId) {
+      await tx.insert(organizationRoleAssignments).values({
+        organizationId: organization.id, membershipId: membership.membershipId, userId: membership.userId, role: "owner",
+      }).onConflictDoNothing({ target: [organizationRoleAssignments.organizationId, organizationRoleAssignments.membershipId] });
+      await tx.update(organizationOnboarding).set({ ownerMembershipId: membership.membershipId })
+        .where(eq(organizationOnboarding.userId, request.userId));
+    }
+    return true;
   });
 }
