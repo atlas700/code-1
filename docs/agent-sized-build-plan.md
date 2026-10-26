@@ -27,6 +27,7 @@ task readiness and order. Update both when an approved decision changes the scop
 - Task 07 supplies the PostgreSQL/Drizzle client and explicit migration tooling;
   see its [handoff](handoffs/07-database-foundation.md). Task 08 adds a local
   organization mapping and verified Clerk membership lookup under ADR 0014.
+  Task 09 supplies first-organization onboarding and local business settings.
   Purchasing tables and a UI-component library are absent.
 - Preserve unrelated worktree changes.
 
@@ -113,11 +114,13 @@ or interview transcripts.
 | G4 permissions | Open: role matrix in [security](security.md) | Technical lead/founder | Task 10 and subsequent role-dependent work |
 | G4 deployment | Open: hosting, backup owner, retention, and monitoring in [deployment](deployment.md) | Technical lead/founder | Task 34 and pilot release |
 
-**Next implementation task:** 09 — first-organization onboarding, using the approved
-Server Action boundary in ADR 0015. Task 08 is complete: its
-[handoff](handoffs/08-clerk-organizations.md) records code/database acceptance and
-26 October verification of development Organizations on, membership optional, and
-automatic creation off. See the [readiness handoff](handoffs/task-08-09-readiness.md).
+**Next task:** 10 — roles, permissions, and the authorization guard, **blocked until
+the G4 permission matrix is approved**. Task 09 onboarding is implemented under
+ADR 0015; see its [handoff](handoffs/09-first-organization-onboarding.md). Task 08's
+[handoff](handoffs/08-clerk-organizations.md) and the
+[readiness handoff](handoffs/task-08-09-readiness.md) record its completion.
+Development Organizations and recovery slugs are on, membership is optional, and
+automatic creation is off; Task 09 verifies these settings and its live flow.
 G1 still blocks Tasks 13–35; permissions, decimal policy, pilot sign-in, and
 deployment gates remain open.
 
@@ -183,8 +186,8 @@ The scope column also constrains the detailed task descriptions below.
 
 | Tasks | Classification | Pilot scope |
 | --- | --- | --- |
-| 01–08 | Complete | Foundation, authentication, persistence, tenancy, and development organization settings; see [handoffs](README.md) |
-| 09–15 | Pilot required | Onboarding, permissions, primitives, products, suppliers |
+| 01–09 | Complete | Foundation, authentication, persistence, tenancy, development organization settings, and onboarding; see [handoffs](README.md) |
+| 10–15 | Pilot required | Permissions, staff, primitives, products, suppliers |
 | 16 | Deferred | Customers |
 | 17–22 | Pilot required | One warehouse, purchases, accepted receipts/payables, stock, owner-approved corrections |
 | 23–24 | Deferred | Sales drafts and fulfilment |

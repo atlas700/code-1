@@ -5,12 +5,15 @@
 - PostgreSQL 16 and Drizzle with the `pg` driver provide the Task 07 foundation.
 - `src/db/index.ts` exports a server-only, lazy pooled client. Development reloads
   reuse the pool; importing it does not connect, query, or apply migrations.
-- `src/db/schema/index.ts` defines only `organizations`: generated UUID primary
-  key, unique required `clerk_organization_id`, and required `created_at`
-  (`timestamptz`, default `now()`). Clerk owns membership; no local membership
-  table is created. See [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md).
+- `src/db/schema/index.ts` defines `organizations` (generated local UUID, unique
+  Clerk organization ID, UTC creation timestamp), `organization_settings` (one
+  business-settings row per local organization), and `organization_onboarding`
+  (one durable request per creator, including the stable UUID and pinned remote ID).
+  Clerk owns membership; setup records are not a membership mirror. See
+  [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md).
 - `0000_baseline.sql` runs only `SELECT 1`; `0001_organizations.sql` adds the local
-  mapping. Business settings and provisioning remain Task 09.
+  mapping. `0002_organization_onboarding.sql` adds Task 09 settings and durable
+  requests without modifying existing mapping rows or migration history.
 - `DATABASE_URL` is required by application startup and migration tooling. It is
   server-only and must never use a `NEXT_PUBLIC_` prefix.
 - SQL and metadata live in `drizzle/`. Migrations are explicit operations, separate
@@ -64,8 +67,8 @@ Use `npm.cmd` when forwarding flags in Windows PowerShell; in other shells use
 `npm`. This avoids the PowerShell `npm.ps1` wrapper consuming migration flags.
 
 Verify reviewed migrations on a separate database before development. The retained
-`afcs_task07_verify` has Task 07's baseline ledger; before Task 08 it has no domain
-tables. A fresh checkout may instead use a newly provisioned empty database. In a
+`afcs_task07_verify` has all three migrations through Task 09. A fresh checkout may
+instead use a newly provisioned empty database. In a
 dedicated PowerShell terminal, set a process-only override without recording the
 connection string in shell history:
 
@@ -76,10 +79,10 @@ npm run db:migrate
 Remove-Item Env:DATABASE_URL
 ```
 
-Both runs must succeed, with exactly two migration rows in
-`drizzle.__drizzle_migrations` and only `public.organizations` plus the ledger.
-Check UUID/time defaults and rejection of duplicate/null Clerk organization IDs
-using synthetic rows inside a transaction, then roll those rows back. Stop on any
+Both runs must succeed, with exactly three migration rows in
+`drizzle.__drizzle_migrations` and the three public tables above plus the ledger.
+Verify prior migration hashes remain unchanged. Run the isolated onboarding tests
+below for uniqueness, concurrency, settings constraints, and rollback. Stop on any
 failure. Removing
 the override restores `.env.local` loading for the development command:
 
@@ -97,8 +100,9 @@ SELECT schemaname, tablename FROM pg_tables
 WHERE schemaname NOT IN ('pg_catalog', 'information_schema');
 ```
 
-Task 08 leaves the mapping table empty; reads never provision it. Later migrations
-increase the ledger count. Commit generated history unchanged;
+Task 08 left the mapping table empty; Task 09 writes it only through authenticated
+onboarding. Reads never provision it. Later migrations increase the ledger count.
+Commit generated history unchanged;
 never rewrite an applied migration. See [Drizzle migration guidance](https://orm.drizzle.team/docs/migrations).
 
 ## Recovery
@@ -129,6 +133,35 @@ Task 09 must provision local mappings idempotently after Clerk creation; remote
 Clerk operations cannot participate in a PostgreSQL transaction. Keep local data
 and history if the remote organization disappears. Business roles remain local
 and require the separate Task 10 permission guard after membership verification.
+
+## Onboarding persistence and verification
+
+`src/db/onboarding.ts` reserves an immutable request with `user_id` as its primary
+key. A generated unique UUID is the server-owned retry identity. A unique nullable
+Clerk ID records verified remote success before local business writes; a
+conditional update prevents replacing that pinned ID. Business details from the
+first validated submission remain fixed across retries.
+
+Local mapping/settings writes share one transaction. Unique Clerk IDs and the
+settings organization primary key arbitrate concurrent writes. Settings require a
+valid organization foreign key, nonempty bounded names/types, `AFN`, and a supported
+locale. Retries confirm existing values rather than overwriting them. No remote
+call holds a database transaction or connection open. See the full
+[recovery contract](api-conventions.md#implemented-onboarding-contract).
+
+Run the opt-in tests only against the isolated verification database:
+
+```powershell
+$env:AFCS_TEST_DATABASE_URL = Read-Host 'Full PostgreSQL URL for afcs_task07_verify' -MaskInput
+npm.cmd run test -- src/db/onboarding.integration.test.ts
+Remove-Item Env:AFCS_TEST_DATABASE_URL
+```
+
+The suite checks `current_database()` before writes, uses unique synthetic fixtures,
+and deletes only its fixtures afterward. Without the variable, its eight tests are
+explicitly skipped; ordinary unit tests and CI need no running database. After the
+26 October local migration, concurrency/rollback tests, and browser smoke checks,
+all three public tables are empty in both local databases.
 
 ## Principles for future work
 

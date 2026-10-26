@@ -2,8 +2,8 @@
 
 ## Confirmed baseline
 
-- The application has no API routes, route handlers, server actions, or external API
-  contract yet.
+- The first application mutation is `createFirstOrganization()` in
+  `src/app/onboarding/actions.ts`. There are no API routes or external API contracts.
 - The approved boundary for application UI mutations is Next.js Server Actions;
   see [ADR 0015](adr/0015-server-action-mutation-boundary.md), accepted 26 October 2026.
 
@@ -67,9 +67,50 @@ duplicate/concurrent requests, partial-success recovery, sanitized failures with
 correlation, and successful activation after local provisioning. Define its exact
 input/result shapes and recovery mechanism during implementation.
 
+### Implemented onboarding contract
+
+`createFirstOrganization(previousState, formData)` ignores client state as
+authority and explicitly validates `name` and `businessType` (trimmed, 1–100
+characters), `timezone` (accepted by `Intl.DateTimeFormat`, at most 100 characters),
+`baseCurrency` (`AFN`), and `locale` (`en-US` or `ps-AF`). Business type and timezone
+have no inferred defaults; the language starts at the current approved UI locale.
+Client user/organization/role/retry fields are not used.
+
+The result is a discriminated union: `idle`; `invalid` with field names;
+`conflict` when saved details differ; `denied` when creator authority fails;
+`error` with a correlation UUID; or `success` with only the Clerk organization ID
+needed by the activation control. No provider errors or local records are returned.
+
+The server reserves one immutable `organization_onboarding` row per creator before
+contacting Clerk. Its database-generated UUID determines the unique Clerk slug
+`afcs-<UUID>` and private `afcsOnboardingId` marker. Clerk slug uniqueness and local
+unique constraints arbitrate concurrent requests. Every attempt verifies Clerk's
+`createdBy`, marker, and exact current membership; neither the marker nor slug is
+authority alone. The verified remote ID is pinned before atomic local
+organization/settings writes. A pinned ID can never be replaced by onboarding.
+
+- Before reservation or after a confirmed failed remote creation: retry the same
+  details. No local business exists yet, and the reserved slug stays the same.
+- An ambiguous remote result or remote success before the pin: look up the same
+  slug, reverify creator membership, and pin the existing organization.
+- A local write failure: retain the pinned remote ID and retry its local transaction;
+  never delete the remote organization as compensation.
+- A retry after completion: reverify membership and confirm the existing settings;
+  do not overwrite them. Changed details return `conflict` with reload guidance.
+- A removed creator membership or deleted pinned organization: deny recovery and
+  retain local history. Do not silently create a replacement.
+- Activation failure: the business remains saved. Retry **Open workspace** or
+  return to onboarding; activation never reruns organization creation itself.
+
+`OrganizationActivation` calls Clerk `setActive` only after `success`, then performs
+a full navigation to `/dashboard`. Dynamic tenant reads therefore use fresh
+membership and local data. This provides no Task 10 business permission. Reserved
+slugs must remain unchanged until their remote IDs are pinned; see the
+[operational prerequisite](deployment.md#onboarding-recovery-slugs).
+
 ## Decision status
 
 **Accepted — G4 mutation boundary:** [ADR 0015](adr/0015-server-action-mutation-boundary.md).
-Task 09 implementation remains next; G1 research, permissions, decimal policy,
+Task 09 is implemented; Task 10 requires permission approval. G1 research, decimal policy,
 pilot sign-in validation, and deployment gates remain open in the
 [build plan](agent-sized-build-plan.md#current-gate-status).

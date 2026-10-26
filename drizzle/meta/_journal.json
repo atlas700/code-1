@@ -15,6 +15,13 @@
       "when": 1792929431647,
       "tag": "0001_organizations",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793020049236,
+      "tag": "0002_organization_onboarding",
+      "breakpoints": true
     }
   ]
 }
