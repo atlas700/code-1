@@ -28,9 +28,10 @@ authentication provider; see [ADR 0002](adr/0002-clerk-authentication.md). The
 structural ownership model and local migration/recovery workflow are approved in
 [ADR 0013](adr/0013-local-postgresql-foundation.md), with membership ownership
 revised by [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md).
-Detailed business modelling,
-role matrix, mutation boundary, deployment target, and backup owner remain open
-before their dependent work. The owning details are
+UI mutations use Next.js Server Actions under
+[ADR 0015](adr/0015-server-action-mutation-boundary.md).
+Detailed business modelling, role matrix, deployment target, and backup owner
+remain open before their dependent work. The owning details are
 tracked in [database](database.md), [security](security.md),
 [API conventions](api-conventions.md), and [deployment](deployment.md).
 
@@ -53,6 +54,10 @@ tracked in [database](database.md), [security](security.md),
   errors. Reads never provision, fall back to another organization, or cache
   membership across requests. Future business queries/mutations must call this
   boundary and enforce Task 10's local permissions; current pages are placeholders.
+- UI mutations use Server Actions with the per-invocation authentication,
+  validation, authorization, and safe-error contract in [API conventions](api-conventions.md).
+  Task 09 alone has a first-organization bootstrap exception before a local tenant
+  exists; verified creator authority permits provisioning, not business access.
 - Clerk Admin/Member roles are membership-management roles, not purchasing
   permissions. Local business-role definitions and assignments remain Task 10;
   verify membership first and bind grants to its identity so rejoining cannot

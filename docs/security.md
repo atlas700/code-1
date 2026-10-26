@@ -39,9 +39,10 @@ logging, and incident responsibilities with the deployment plan.
 
 ## Deferred controls
 
-Rate limiting, user-facing request identifiers, structured logs, and formal audit
-logging are scheduled in later build-plan tasks. Their absence does not authorize
-unsafe authentication or mutation handling.
+The first mutation must meet the safe error and correlation requirements in the
+[mutation contract](api-conventions.md#mutation-contract), approved by
+[ADR 0015](adr/0015-server-action-mutation-boundary.md). General request logging,
+rate limiting, and formal audit logging retain their later build-plan scope.
 
 ## Dependency advisories
 

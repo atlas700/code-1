@@ -35,6 +35,9 @@ records local PostgreSQL, the structural ownership model, and reviewed migration
 and recovery policy. [ADR 0014](0014-clerk-organizations-local-business-roles.md)
 replaces local membership ownership with Clerk organizations and memberships,
 retaining local business-data ownership and later business roles.
+[ADR 0015](0015-server-action-mutation-boundary.md) approves Server Actions for UI
+mutations, the required server checks and observability, and Task 09's narrow
+first-organization bootstrap exception.
 The [build plan's gate status](../agent-sized-build-plan.md#current-gate-status)
 is the task-readiness record. G1 and the remaining G4 decisions stay
 open until evidence or founder approval exists. Record each decision before starting

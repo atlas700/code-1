@@ -4,23 +4,72 @@
 
 - The application has no API routes, route handlers, server actions, or external API
   contract yet.
-- Future server boundaries must validate untrusted input and enforce organization
-  membership and permission checks on the server.
-- A client-provided `organizationId` is never an authorization source.
+- The approved boundary for application UI mutations is Next.js Server Actions;
+  see [ADR 0015](adr/0015-server-action-mutation-boundary.md), accepted 26 October 2026.
 
-## Conventions for future work
+## Mutation contract
 
-- Introduce the smallest server boundary that serves the required workflow; choose
-  the final mutation boundary only after G4 approval.
-- Keep client components as interactive leaves and keep authority, validation, and
-  business rules on the server.
-- Calculate business totals on the server and use transactions for all-or-nothing
-  financial and inventory events.
-- Define request, error, pagination, and idempotency details only in the task that
-  introduces the relevant endpoint or mutation.
+- Treat each action as a directly callable server entry point. Call the local
+  `requireSession()` guard inside it; a page, layout, proxy, action ID, or hidden
+  control does not authorize a mutation.
+- Validate all untrusted input with Zod before side effects, including form fields
+  and client-supplied resource or retry identifiers. Explicitly select permitted
+  fields; schema validation alone does not establish resource ownership.
+- For an existing tenant, obtain `getTenantContext()` on each invocation, deny a
+  missing tenant, scope resource reads/writes to its local organization UUID, and
+  enforce Task 10's local action permission once introduced. General business
+  mutations wait for that guard. Client-provided user, organization, membership,
+  or role IDs never grant authority; Clerk Admin/Member roles are not business roles.
+- Keep actions small, client components as interactive leaves, Clerk calls in
+  `src/auth`, and database operations in `src/db`. Use server-only helpers rather
+  than an internal HTTP API or a new action framework. Route Handlers require an
+  approved external HTTP use case.
+- Preserve Next.js's same-origin Server Action protections. Any deployment that
+  needs an `allowedOrigins` override must approve its exact origins first.
+- Calculate business totals on the server. Use a local database transaction for
+  each all-or-nothing financial or inventory event. Define idempotency and
+  concurrency behavior with the task introducing the mutation.
+- Return minimal serializable UI results and safe validation/conflict messages.
+  Unexpected failures must provide a safe error and a correlation identifier
+  linked to a server diagnostic with operation and failure stage. Exclude secrets,
+  raw form data, SQL, provider payloads, and personal data from those diagnostics
+  and client errors; never return raw records or caught errors.
+- Preserve framework control flow: keep `redirect()` outside error-catching
+  blocks, or rethrow Next.js control-flow exceptions before sanitizing failures.
+  Refresh/revalidate affected data and navigate only after confirmed success.
+
+The first mutation must include the error/correlation behavior above. A general
+logging platform, formal business audit trail, and rate limiting retain their
+later build-plan scope.
+
+## Task 09 bootstrap
+
+First-organization onboarding cannot require an existing local tenant. Its sole
+exception is an authenticated action that creates or resumes the caller's first
+organization and its local provisioning:
+
+- Derive the creator from `requireSession()`. Before local provisioning or recovery,
+  verify through Clerk's Backend API that the remote organization was created by
+  that user and that their creator membership is current. Treat any submitted
+  organization/retry reference only as a lookup hint, never as authority.
+- Define durable retry and concurrency behavior in Task 09. Duplicate submissions,
+  ambiguous remote outcomes, and remote success followed by local failure must
+  recover the same organization without duplicating it or adopting another user's
+  organization. A pending button alone is insufficient.
+- Keep local organization/settings writes atomic where needed. Clerk and PostgreSQL
+  do not share a transaction; document the recovery path for each partial outcome.
+  Make the organization active only after local provisioning succeeds.
+- This exception grants no general business access. Local business roles and
+  permissions remain gated on Task 10; tenant reads still never provision data.
+
+Task 09 must verify unauthenticated and mismatched-creator denial, invalid input,
+duplicate/concurrent requests, partial-success recovery, sanitized failures with
+correlation, and successful activation after local provisioning. Define its exact
+input/result shapes and recovery mechanism during implementation.
 
 ## Decision status
 
-**Open — G4 mutation boundary:** decide the approved boundary and its authentication,
-authorization, validation, and observability requirements before protected mutations
-are implemented.
+**Accepted — G4 mutation boundary:** [ADR 0015](adr/0015-server-action-mutation-boundary.md).
+Task 09 implementation remains next; G1 research, permissions, decimal policy,
+pilot sign-in validation, and deployment gates remain open in the
+[build plan](agent-sized-build-plan.md#current-gate-status).

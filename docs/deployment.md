@@ -68,13 +68,20 @@ tenant context. Use the existing default five-member cap; no paid feature is
 required. Revisit plan costs before exceeding Clerk's included membership limit.
 Do not enable verified-domain enrollment or introduce business-role mappings here.
 
-Inspect the Dashboard settings after enabling. The Backend API's enable operation
-can turn membership required on; it cannot configure membership optional through
-the installed SDK. Do not treat a successful enable response as proof of the
-required defaults. Clerk's public environment configuration exposes
+Inspect the settings after enabling. The Backend API's enable operation can turn
+membership required on. The installed SDK does not expose the selection update,
+but a targeted `PATCH /v1/instance/organization_settings` with only
+`{"force_organization_selection":false}` was verified on the development instance
+on 26 October 2026; see the [Task 08 handoff](handoffs/08-clerk-organizations.md#development-configuration-acceptance).
+Verify the instance is development before changing it, and do not repeat the
+enable toggle to correct membership selection. Treat neither HTTP 200 nor a
+successful enable response alone as proof of the required defaults.
+Clerk's public environment configuration exposes
 `force_organization_selection` and
 `organization_creation_defaults.automatic_organization_creation.enabled` for
-verification. See [configuration](https://clerk.com/docs/guides/organizations/configure).
+verification; read both values again and also verify Organizations remain enabled.
+The Dashboard's Membership optional setting is an alternative. See
+[configuration](https://clerk.com/docs/guides/organizations/configure).
 
 Organization/membership creation and management remain Tasks 09/11. No switcher,
 profile-management UI, or webhooks are needed for this foundation. Future
