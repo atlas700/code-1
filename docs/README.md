@@ -24,6 +24,7 @@ pilot evidence are labelled **Open**.
 - [Task 06 handoff](handoffs/06-authentication.md)
 - [Task 07 handoff](handoffs/07-database-foundation.md)
 - [Task 08 handoff](handoffs/08-clerk-organizations.md)
+- [Task 08 completion and Task 09 readiness](handoffs/task-08-09-readiness.md)
 - [Pilot-plan and quality maintenance handoff](handoffs/pilot-plan-and-quality.md)
 - [Pre-validation review workflow handoff](handoffs/pre-validation-review.md)
 

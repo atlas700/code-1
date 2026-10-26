@@ -18,7 +18,7 @@ Sales, customer payments, multiple warehouses, returns, lot/grade tracking, and
 offline mode are deferred. Accepted ADRs govern product policy; this plan governs
 task readiness and order. Update both when an approved decision changes the scope.
 
-## Current repository baseline (25 October 2026)
+## Current repository baseline (26 October 2026)
 
 - The application shell, localization plumbing, Clerk authentication, environment
   validation, Vitest tests, and CI are implemented (Tasks 01–06).
@@ -101,7 +101,7 @@ gate changes; an accepted policy does not count as completed user research.
 Research records stay private; link a redacted evidence summary rather than names
 or interview transcripts.
 
-| Gate | Status and evidence (updated 25 October 2026) | Owner | Blocks |
+| Gate | Status and evidence (updated 26 October 2026) | Owner | Blocks |
 | --- | --- | --- | --- |
 | G0 market | Accepted: [ADR 0003](adr/0003-helmand-pilot-workflow.md), 19 October | Founder | Market choice is resolved |
 | G1 research | Open: 20 interviews and 5 workflow observations have no recorded completion evidence | Founder/researcher | Tasks 13–35 and pilot release |
@@ -109,16 +109,17 @@ or interview transcripts.
 | G3 domain policies | Partially resolved: [ADRs 0001–0012](adr/README.md); decimal scale/rounding remain open; terminology requires G1 validation | Founder/product lead | Task 12 until decimal policy is approved; dependent domain work and pilot labels until their policies/evidence exist |
 | G4 authentication | Accepted: [ADR 0002](adr/0002-clerk-authentication.md); development checks in [Task 06 handoff](handoffs/06-authentication.md); pilot sign-in method still needs validation | Founder | Pilot authentication until sign-in validation is recorded |
 | G4 database | Accepted: [ADR 0013](adr/0013-local-postgresql-foundation.md) approves local PostgreSQL and reviewed migrations; [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md), 25 October, replaces local membership ownership with verified Clerk membership and a local organization mapping | Technical lead/founder | Detailed business schema still requires G1; other G4 gates remain open |
-| G4 mutation boundary | Open: [API conventions](api-conventions.md) | Technical lead/founder | Task 09 and subsequent protected mutations |
+| G4 mutation boundary | Accepted: [ADR 0015](adr/0015-server-action-mutation-boundary.md), 26 October; native Server Actions with the [mutation contract](api-conventions.md#mutation-contract) and a narrow first-organization bootstrap exception | Technical lead/founder | Boundary decision resolved; each mutation still needs its task's authorization and recovery checks |
 | G4 permissions | Open: role matrix in [security](security.md) | Technical lead/founder | Task 10 and subsequent role-dependent work |
 | G4 deployment | Open: hosting, backup owner, retention, and monitoring in [deployment](deployment.md) | Technical lead/founder | Task 34 and pilot release |
 
-**Current task:** 08 — organization membership and tenant context under ADR 0014.
-Code and local database checks are recorded in the [handoff](handoffs/08-clerk-organizations.md);
-development Clerk enablement with membership optional still needs Dashboard setup.
-After that acceptance check, the next implementation task is **09 — first-organization
-onboarding**, blocked until G4 mutation-boundary approval. G1 still blocks Tasks
-13–35; permissions, decimal policy, pilot sign-in, and deployment gates remain open.
+**Next implementation task:** 09 — first-organization onboarding, using the approved
+Server Action boundary in ADR 0015. Task 08 is complete: its
+[handoff](handoffs/08-clerk-organizations.md) records code/database acceptance and
+26 October verification of development Organizations on, membership optional, and
+automatic creation off. See the [readiness handoff](handoffs/task-08-09-readiness.md).
+G1 still blocks Tasks 13–35; permissions, decimal policy, pilot sign-in, and
+deployment gates remain open.
 
 ### G0 — choose the initial market
 
@@ -182,8 +183,7 @@ The scope column also constrains the detailed task descriptions below.
 
 | Tasks | Classification | Pilot scope |
 | --- | --- | --- |
-| 01–07 | Complete | Foundation, authentication, persistence; see [handoffs](README.md) |
-| 08 | Pilot required | Tenancy code verified; development Clerk configuration pending |
+| 01–08 | Complete | Foundation, authentication, persistence, tenancy, and development organization settings; see [handoffs](README.md) |
 | 09–15 | Pilot required | Onboarding, permissions, primitives, products, suppliers |
 | 16 | Deferred | Customers |
 | 17–22 | Pilot required | One warehouse, purchases, accepted receipts/payables, stock, owner-approved corrections |
@@ -331,8 +331,10 @@ cannot return another tenant's organization.
 
 **Goal:** Let an authenticated owner create their business safely.
 
-**Do:** After mutation-boundary approval, add a validated onboarding mutation and
-minimal form. Use Clerk organization creation and its creator membership, then
+**Do:** Follow ADR 0015 and the [Task 09 bootstrap contract](api-conventions.md#task-09-bootstrap)
+to add a validated Server Action and minimal form. Derive the authenticated creator
+on the server and verify their current creator membership before provisioning or
+recovery. Use Clerk organization creation and its creator membership, then
 idempotently provision the local organization/settings. Remote Clerk provisioning
 cannot share a PostgreSQL transaction: define recovery for partial success and
 retries without duplicating organizations. Include name, business type, timezone,
@@ -340,9 +342,10 @@ base currency (`AFN` by default), and locale only where G3 has approved defaults
 
 **Do not:** expose general organization switching, invitations, or billing.
 
-**Verify:** duplicate submission does not create duplicate owner organizations;
-invalid input is shown safely; partial remote/local success is recoverable; created
-organization becomes active only after local provisioning succeeds.
+**Verify:** unauthenticated or mismatched creators are denied; duplicate/concurrent
+submission does not create duplicate owner organizations; invalid input is shown
+safely; partial remote/local success is recoverable; unexpected failures are safe
+and correlatable; the organization becomes active only after local provisioning succeeds.
 
 **Handoff:** describe the idempotency/duplicate-submission behavior.
 
