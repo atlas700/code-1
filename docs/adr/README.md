@@ -38,6 +38,9 @@ retaining local business-data ownership and later business roles.
 [ADR 0015](0015-server-action-mutation-boundary.md) approves Server Actions for UI
 mutations, the required server checks and observability, and Task 09's narrow
 first-organization bootstrap exception.
+[ADR 0016](0016-local-business-authorization.md) approves Task 10's fixed business
+roles, permission matrix, first-owner bootstrap, and authorization guard. It is
+accepted on 27 October and closes the G4 permission-policy gate.
 The [build plan's gate status](../agent-sized-build-plan.md#current-gate-status)
 is the task-readiness record. G1 and the remaining G4 decisions stay
 open until evidence or founder approval exists. Record each decision before starting

@@ -3,15 +3,17 @@ import "server-only";
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
 import { clerkClient } from "@clerk/nextjs/server";
 import { unstable_rethrow } from "next/navigation";
+import type { ActiveOrganizationMembership } from "./organizations";
 
 type CreatorOrganizationRequest = {
   userId: string;
   id: string;
   name: string;
   clerkOrganizationId: string | null;
+  ownerMembershipId: string | null;
 };
 
-export async function getOrCreateCreatorOrganization(request: CreatorOrganizationRequest): Promise<string | null> {
+export async function getOrCreateCreatorOrganization(request: CreatorOrganizationRequest): Promise<ActiveOrganizationMembership | null> {
   const client = await clerkClient();
   // shortcut: unpinned recovery needs the reserved slug unchanged; reconcile before adding slug edits.
   const slug = `afcs-${request.id}`;
@@ -55,6 +57,7 @@ export async function getOrCreateCreatorOrganization(request: CreatorOrganizatio
     limit: 1,
   });
   const membership = data[0];
-  if (membership?.organization.id !== organization.id || membership.publicUserData?.userId !== request.userId) return null;
-  return organization.id;
+  if (membership?.organization.id !== organization.id || membership.publicUserData?.userId !== request.userId ||
+    !membership.id || (request.ownerMembershipId && request.ownerMembershipId !== membership.id)) return null;
+  return { userId: request.userId, clerkOrganizationId: organization.id, membershipId: membership.id };
 }

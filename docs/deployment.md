@@ -120,6 +120,21 @@ membership-removal denial, and sign-out. The synthetic remote account/organizati
 and their local rows were deleted afterward. This is development evidence; pilot
 phone OTP, production cookies, backup restoration, and deployment remain open.
 
+### Business authorization rollout
+
+Apply reviewed `0003_business_roles.sql` before deploying the Task 10 guard. It
+adds local assignments and the one-time owner-bootstrap marker without granting
+roles to existing users. Existing Task 09 creators must explicitly resume their
+saved setup, with the same details, and pass current creator/membership verification
+for the initial grant. Active Clerk membership alone no longer opens protected
+pages. Do not solve a denial by assigning Clerk Admin or resetting bootstrap
+markers. Staff assignment and last-owner management arrive in Task 11.
+
+Keep the migration, assignments, and markers if application code needs a forward
+fix. Rolling back to an application that lacks the guard removes permission
+enforcement; it is not an authorization recovery procedure. G4 deployment, backups,
+and pilot sign-in validation remain separate open gates.
+
 ### Staging and production
 
 - A deployment target and backup owner require G4 approval before infrastructure is

@@ -10,7 +10,8 @@ vi.mock("@clerk/nextjs/server", () => clerk);
 
 import { getOrCreateCreatorOrganization } from "./onboarding";
 
-const request = { userId: "user_a", id: "21e2c06c-30fa-4a2a-b8da-49e9e4c0e802", name: "Example business", clerkOrganizationId: null };
+const request = { userId: "user_a", id: "21e2c06c-30fa-4a2a-b8da-49e9e4c0e802", name: "Example business", clerkOrganizationId: null, ownerMembershipId: null };
+const verifiedMembership = { userId: "user_a", clerkOrganizationId: "org_a", membershipId: "membership_a" };
 const organization = { id: "org_a", createdBy: "user_a", privateMetadata: { afcsOnboardingId: request.id } };
 const missing = () => new ClerkAPIResponseError("Private provider data", { status: 404, data: [] });
 
@@ -26,7 +27,7 @@ afterEach(() => vi.resetAllMocks());
 
 describe("first organization provider provisioning", () => {
   it("recovers the reserved slug and verifies exact current creator membership without creating", async () => {
-    expect(await getOrCreateCreatorOrganization(request)).toBe("org_a");
+    expect(await getOrCreateCreatorOrganization(request)).toEqual(verifiedMembership);
     expect(clerk.getOrganization).toHaveBeenCalledWith({ slug: `afcs-${request.id}` });
     expect(clerk.createOrganization).not.toHaveBeenCalled();
     expect(clerk.getOrganizationMembershipList).toHaveBeenCalledWith({ organizationId: "org_a", userId: ["user_a"], limit: 1 });
@@ -34,7 +35,7 @@ describe("first organization provider provisioning", () => {
 
   it("creates through Clerk with server-derived creator and stable unique recovery marker", async () => {
     clerk.getOrganization.mockRejectedValueOnce(missing());
-    expect(await getOrCreateCreatorOrganization(request)).toBe("org_a");
+    expect(await getOrCreateCreatorOrganization(request)).toEqual(verifiedMembership);
     expect(clerk.createOrganization).toHaveBeenCalledExactlyOnceWith({
       name: request.name, slug: `afcs-${request.id}`, createdBy: "user_a", privateMetadata: { afcsOnboardingId: request.id },
     });
@@ -45,14 +46,14 @@ describe("first organization provider provisioning", () => {
     "recovers ambiguous success or a concurrent slug conflict", async (error) => {
       clerk.getOrganization.mockRejectedValueOnce(missing());
       clerk.createOrganization.mockRejectedValueOnce(error);
-      expect(await getOrCreateCreatorOrganization(request)).toBe("org_a");
+      expect(await getOrCreateCreatorOrganization(request)).toEqual(verifiedMembership);
       expect(clerk.getOrganization).toHaveBeenCalledTimes(2);
       expect(clerk.createOrganization).toHaveBeenCalledOnce();
     },
   );
 
   it("uses the pinned ID after a slug change", async () => {
-    expect(await getOrCreateCreatorOrganization({ ...request, clerkOrganizationId: "org_a" })).toBe("org_a");
+    expect(await getOrCreateCreatorOrganization({ ...request, clerkOrganizationId: "org_a" })).toEqual(verifiedMembership);
     expect(clerk.getOrganization).toHaveBeenCalledWith({ organizationId: "org_a" });
   });
 
@@ -78,13 +79,18 @@ describe("first organization provider provisioning", () => {
       return organization;
     });
     expect(await Promise.all([getOrCreateCreatorOrganization(request), getOrCreateCreatorOrganization(request)]))
-      .toEqual(["org_a", "org_a"]);
+      .toEqual([verifiedMembership, verifiedMembership]);
     expect(organizationsCreated).toBe(1);
   });
 
   it("does not replace a deleted pinned organization", async () => {
     clerk.getOrganization.mockRejectedValueOnce(missing());
     expect(await getOrCreateCreatorOrganization({ ...request, clerkOrganizationId: "org_a" })).toBeNull();
+    expect(clerk.createOrganization).not.toHaveBeenCalled();
+  });
+
+  it("denies a rejoined creator's new membership after owner bootstrap", async () => {
+    expect(await getOrCreateCreatorOrganization({ ...request, ownerMembershipId: "membership_original" })).toBeNull();
     expect(clerk.createOrganization).not.toHaveBeenCalled();
   });
 

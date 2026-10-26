@@ -43,12 +43,13 @@ export async function createFirstOrganization(_previous: OnboardingState, formDa
       return { status: "conflict" };
     }
     stage = "clerk-provisioning";
-    const clerkOrganizationId = await getOrCreateCreatorOrganization(request);
-    if (!clerkOrganizationId) return { status: "denied" };
+    const membership = await getOrCreateCreatorOrganization(request);
+    if (!membership) return { status: "denied" };
+    const { clerkOrganizationId } = membership;
     stage = "clerk-reference";
     const pinned = await pinOnboardingOrganization(request, clerkOrganizationId);
     stage = "local-provisioning";
-    await completeOnboarding(pinned);
+    if (!await completeOnboarding(pinned, membership)) return { status: "denied" };
     return { status: "success", clerkOrganizationId };
   } catch (error) {
     unstable_rethrow(error);

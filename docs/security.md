@@ -26,20 +26,30 @@ Clerk's Backend API before resolving a local organization UUID. Missing/deleted 
 mismatched membership and absent local mappings deny tenant access; outages throw
 sanitized errors without exposing provider details, SQL, or credentials. Membership
 is rechecked on every lookup, not cached across requests or mirrored by webhooks.
-Business-role checks remain Task 10; present pages contain no business data.
+`requirePermission()` now checks the fixed ADR 0016 matrix and the exact local
+organization/membership/user assignment on every call. Existing pages use it;
+future data operations and mutations must call it themselves. Denials return the
+framework's missing-resource response; outages throw sanitized errors. No role is
+inferred from Clerk Admin/Member, and unknown roles/permissions deny access.
 Task 09 validates its authenticated bootstrap action with Zod, verifies remote
 creator identity and current membership, and provisions only that creator's saved
 request. Client tenant/role IDs and previous action state never grant authority.
 Creation retries use one durable request and a unique Clerk slug; recovery does
-not restore removed memberships or grant local business roles. Only confirmed
+not restore removed memberships. Under ADR 0016, successful provisioning also
+records the initial owner membership and its local grant atomically, once. The
+durable marker prevents retries from restoring a changed/deleted grant or giving
+it to a rejoined membership. Only confirmed
 local provisioning exposes the activation control. Failure diagnostics contain
 operation, stage, and correlation UUID, without raw inputs, errors, SQL, or PII.
 The Clerk publishable
 key may use `NEXT_PUBLIC_`; its secret key must never do so. Missing or malformed
 configuration fails without echoing credential values.
 
-**Open — G4 role matrix:** approve the roles, allowed actions, and authorization
-guard behavior before Task 10.
+**Decided — G4 role matrix:** the founder approved
+[ADR 0016](adr/0016-local-business-authorization.md) on 27 October: seven fixed local
+roles, an explicit action matrix, membership-bound assignments, one-time owner
+bootstrap, and a server-only guard. Task 10 implements this policy; G1 and the
+remaining operational gates stay open.
 
 **Open — G4 operational security:** assign a backup owner and approve access,
 logging, and incident responsibilities with the deployment plan.

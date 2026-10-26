@@ -9,11 +9,17 @@
   Clerk organization ID, UTC creation timestamp), `organization_settings` (one
   business-settings row per local organization), and `organization_onboarding`
   (one durable request per creator, including the stable UUID and pinned remote ID).
-  Clerk owns membership; setup records are not a membership mirror. See
+  Task 10 adds the one-time `owner_membership_id` bootstrap marker and
+  `organization_role_assignments` (local organization, verified membership/user,
+  one fixed role, UTC creation timestamp). Its composite primary key, role/identity
+  checks, and organization foreign key enforce grant invariants. Clerk owns
+  membership; setup/grant records are not a membership mirror. See
   [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md).
 - `0000_baseline.sql` runs only `SELECT 1`; `0001_organizations.sql` adds the local
   mapping. `0002_organization_onboarding.sql` adds Task 09 settings and durable
   requests without modifying existing mapping rows or migration history.
+  `0003_business_roles.sql` adds the grant table and nullable bootstrap marker;
+  it does not backfill or infer business roles.
 - `DATABASE_URL` is required by application startup and migration tooling. It is
   server-only and must never use a `NEXT_PUBLIC_` prefix.
 - SQL and metadata live in `drizzle/`. Migrations are explicit operations, separate
@@ -67,7 +73,7 @@ Use `npm.cmd` when forwarding flags in Windows PowerShell; in other shells use
 `npm`. This avoids the PowerShell `npm.ps1` wrapper consuming migration flags.
 
 Verify reviewed migrations on a separate database before development. The retained
-`afcs_task07_verify` has all three migrations through Task 09. A fresh checkout may
+`afcs_task07_verify` receives the fourth migration for Task 10. A fresh checkout may
 instead use a newly provisioned empty database. In a
 dedicated PowerShell terminal, set a process-only override without recording the
 connection string in shell history:
@@ -79,8 +85,8 @@ npm run db:migrate
 Remove-Item Env:DATABASE_URL
 ```
 
-Both runs must succeed, with exactly three migration rows in
-`drizzle.__drizzle_migrations` and the three public tables above plus the ledger.
+Both runs must succeed, with exactly four migration rows in
+`drizzle.__drizzle_migrations` and the four public tables above plus the ledger.
 Verify prior migration hashes remain unchanged. Run the isolated onboarding tests
 below for uniqueness, concurrency, settings constraints, and rollback. Stop on any
 failure. Removing
@@ -142,7 +148,10 @@ Clerk ID records verified remote success before local business writes; a
 conditional update prevents replacing that pinned ID. Business details from the
 first validated submission remain fixed across retries.
 
-Local mapping/settings writes share one transaction. Unique Clerk IDs and the
+Local mapping/settings/first-owner writes share one transaction. Locking the saved
+request serializes concurrent bootstrap attempts, including stale callers. The
+first verified membership is recorded only with its grant; subsequent attempts
+cannot restore a changed/deleted role or bootstrap a rejoined membership. Unique Clerk IDs and the
 settings organization primary key arbitrate concurrent writes. Settings require a
 valid organization foreign key, nonempty bounded names/types, `AFN`, and a supported
 locale. Retries confirm existing values rather than overwriting them. No remote
@@ -158,10 +167,23 @@ Remove-Item Env:AFCS_TEST_DATABASE_URL
 ```
 
 The suite checks `current_database()` before writes, uses unique synthetic fixtures,
-and deletes only its fixtures afterward. Without the variable, its eight tests are
+and deletes only its grants/settings/mappings/requests afterward. Without the variable, its fifteen tests are
 explicitly skipped; ordinary unit tests and CI need no running database. After the
 26 October local migration, concurrency/rollback tests, and browser smoke checks,
 all three public tables are empty in both local databases.
+
+On 27 October, Task 10 applied/reapplied the reviewed fourth migration on the
+verification database and applied it to development. Both retained their three
+prior migration hashes; the fourth hash matches the reviewed SQL. After the
+extended tests, all four application tables are empty in both databases.
+
+The extended suite verifies actual guard queries across organization, membership,
+and user boundaries, role/foreign-key constraints, first-owner concurrency,
+bootstrap rollback, and retry non-escalation. Existing Task 09 businesses must
+explicitly resume their saved setup for the first owner grant after applying the
+new migration. Reads never perform that upgrade; there is no bulk grant migration.
+Keep bootstrap markers when changing/removing staff roles. Organizations without a
+verifiable saved setup require a separately reviewed recovery procedure.
 
 ## Principles for future work
 
