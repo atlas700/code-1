@@ -78,8 +78,12 @@ supplier payment, supplier balance, and correction before shipping pilot labels.
 Defer sales/customer-payment terms; see
 [ADR 0011](adr/0011-validate-purchase-receipt-terminology.md).
 
-**Open — G3 remaining evidence and decimal policy:** validate chosen terminology as
-part of G1 and approve money/quantity scale and rounding before Task 12. The
+**Partially resolved — G3 decimal policy:** monetary purchase-line totals use two
+decimal places and round half-up once per line for AFN/PKR; purchase totals sum
+the rounded lines. An exact 62.785 line amount becomes 62.79.
+Quantity/unit-price scales, canonical stock unit, price-entry conventions,
+partial-receipt reconciliation and fractional-cash treatment
+remain open under ADR 0017 before Task 12. Validate chosen terminology as part of G1. The
 localization approach remains General Translation with `en-US` and `ps-AF`; see
 [ADR 0001](adr/0001-launch-localization.md). Consult the
 [build plan's gate status](agent-sized-build-plan.md#current-gate-status) for current
