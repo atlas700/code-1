@@ -7,7 +7,7 @@
   its lockfile.
 - Routes and layouts live in `src/app`; the Clerk integration lives in `src/auth`.
 - Clerk supplies identity and session management. Each application page calls the
-  server-only `requirePermission()` guard; onboarding uses `requireSession()` and
+  server-only `requirePermission()` guard; onboarding and staff access use `requireSession()` and
   the sign-in page uses `getSession()`.
 - The proxy composes Clerk session handling with General Translation locale
   handling. Route protection stays in each resource, following Clerk 7 guidance.
@@ -65,7 +65,8 @@ tracked in [database](database.md), [security](security.md),
   membership, or local mapping means no tenant. Service failures throw sanitized
   errors. Reads never provision, fall back to another organization, or cache
   membership across requests. Future business queries/mutations must call this
-  boundary and enforce Task 10's local permissions; current pages are placeholders.
+  boundary and enforce Task 10's local permissions. Staff management is implemented;
+  purchasing/inventory/payment workflows remain placeholders.
 - `requirePermission(permission)` in `src/db/authorization.ts` authenticates,
   verifies current tenant membership, reads only that organization/membership/user
   assignment, and checks the fixed catalogue in `src/auth/permissions.ts`. Missing
@@ -83,5 +84,16 @@ tracked in [database](database.md), [security](security.md),
 - Clerk Admin/Member roles are membership-management roles, not purchasing
   permissions. The fixed Task 10 roles bind grants to verified membership identity so rejoining cannot
   revive old privileges. There is no local membership mirror or webhook sync.
+- `/settings/staff` reads staff behind `staff.read`. Its Server Action validates
+  commands and uses `src/db/staff.ts` behind `staff.manage`. Each mutation locks
+  the local organization row, then rechecks the actor's current Clerk membership
+  and local role before resolving targets. Ownership changes require
+  `ownership.manage`; demotion/removal counts only current membership-bound owners.
+  Provider calls remain in `src/auth/staff.ts`. Invitations/manual additions grant
+  no business role; an authorized owner/admin assigns one after membership exists.
+- `/join` authenticates staff without requiring an existing business grant. It
+  shows only their own account ID and Clerk memberships, and reuses organization
+  activation. Selecting a business grants no permissions; protected data still
+  requires a fresh local authorization check.
 - Financial and inventory business events must be atomic when those modules are
   introduced.
