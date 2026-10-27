@@ -28,6 +28,7 @@ pilot evidence are labelled **Open**.
 - [Task 09 handoff](handoffs/09-first-organization-onboarding.md)
 - [Task 10 handoff](handoffs/10-business-authorization.md)
 - [Pilot blocker clarifications](handoffs/pilot-blocker-clarifications.md)
+- [Completed numeric policy interview](handoffs/pilot-numeric-policy.md)
 - [Pilot-plan and quality maintenance handoff](handoffs/pilot-plan-and-quality.md)
 - [Pre-validation review workflow handoff](handoffs/pre-validation-review.md)
 

@@ -44,8 +44,10 @@ accepted on 27 October and closes the G4 permission-policy gate.
 [ADR 0017](0017-cash-currencies-local-measures.md) records cash-only payments,
 separate AFN/PKR balances, and local weight entry, amending ADR 0004.
 [ADR 0018](0018-managed-pilot-hosting.md) selects Vercel/Neon and founder-owned
-operations. Decimal policy, research evidence, pilot phone sign-in testing, and
-deployment readiness remain open.
+operations. [ADR 0019](0019-pilot-numeric-settlement-policy.md) completes the
+numeric policy, introduces custom weight measures and recorded mixed-currency
+settlement, and approves a future owner-only cash rounding reduction permission.
+Research evidence, pilot phone sign-in testing, and deployment readiness remain open.
 The [build plan's gate status](../agent-sized-build-plan.md#current-gate-status)
 is the task-readiness record. G1 and the remaining G4 decisions stay
 open until evidence or founder approval exists. Record each decision before starting

@@ -6,7 +6,8 @@
 **Amended 27 October 2026 by [ADR 0017](0017-cash-currencies-local-measures.md):**
 retain one stock unit per product, but accept equivalent local weight measures
 and fractional quantities with actual bag sizes. The conversion exclusions below
-are historical; decimal policy and G1 completion remain open.
+are historical. [ADR 0019](0019-pilot-numeric-settlement-policy.md) subsequently
+resolves the numeric policy, including custom weight measures; G1 remains open.
 
 ## Context
 

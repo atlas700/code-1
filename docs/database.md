@@ -198,16 +198,21 @@ verifiable saved setup require a separately reviewed recovery procedure.
 
 ## Decision status
 
-**Decided — G3 units and currency:** retain one stock unit per product while
-accepting exact local weight conversions, fractional quantities, and recorded
-bag sizes under [ADR 0017](adr/0017-cash-currencies-local-measures.md), which
-amends ADR 0004. Preserve original quantity/price meaning through receipts.
-Future payables, cash payments, and balances carry AFN or PKR; allocations must
-match the payable's currency and balances must never combine currencies.
-Monetary purchase-line totals use two decimal places, rounded half-up once per line;
-purchase totals sum those rounded lines. Canonical weight unit, quantity/unit-price
-scales, partial-receipt reconciliation, and fractional-cash treatment
-still block Task 12.
+**Decided — G3 numeric and settlement policy:**
+[ADR 0019](adr/0019-pilot-numeric-settlement-policy.md) resolves Task 12's numeric
+prerequisite. Use kg with one-gram precision, business-owned custom weight
+measures, two-decimal unit prices, exact conversions, two-decimal half-up purchase
+lines, and summed rounded purchase totals. Recognize each receipt line as its
+rounded cumulative accepted value less previously recognized value.
+
+Preserve original measure, bag-size, price-basis, currency, and exchange-rate
+snapshots. AFN/PKR payable balances remain separate; whole-cash payments may mix
+currencies at a supplier-agreed PKR-per-AFN rate with at most six decimals.
+Convert the combined amount exactly and round once for allocation in the debt's
+currency. Append owner-approved cash rounding reductions separately, with
+provenance and a lifetime cumulative cap of 0.99 in that currency. Serialize
+allocation/cap checks and writes, preserving idempotency and original debt/cash.
+No exchange, adjustment, or custom-measure schema has been implemented yet.
 
 **Decided — G3 product identity:** each product is one stock identity for the
 pilot; see [ADR 0005](adr/0005-product-stock-identity.md). Grade, origin,
@@ -244,6 +249,6 @@ same approval and a separate scope decision. See
 PostgreSQL 16, Drizzle with `pg`, the structural ownership model, and explicitly
 reviewed/run migrations with forward-fix and backup/restore recovery. See
 [ADR 0013](adr/0013-local-postgresql-foundation.md). Detailed business schema and
-screens beginning at Task 13 still require G1 evidence; decimal scale/rounding and
-the other G4 decisions remain open. Current eligibility is recorded in the
+screens beginning at Task 13 still require G1 evidence. ADR 0019 resolves the
+numeric policy; other G4 readiness gates remain open. Current eligibility is recorded in the
 [build plan's gate status](agent-sized-build-plan.md#current-gate-status).

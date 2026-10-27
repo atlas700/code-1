@@ -40,8 +40,10 @@ UI mutations use Next.js Server Actions under
 and one-time owner bootstrap. [ADR 0017](adr/0017-cash-currencies-local-measures.md)
 records the pilot's cash, currency, and local-weight requirements.
 [ADR 0018](adr/0018-managed-pilot-hosting.md) selects Vercel/Neon and the founder
-as operations/backup owner. Detailed business modelling, decimal policy, and
-remaining deployment readiness stay open before their dependent work. The owning details are
+as operations/backup owner. [ADR 0019](adr/0019-pilot-numeric-settlement-policy.md)
+resolves the numeric-policy prerequisite and approves custom weights and recorded
+mixed-currency cash settlement. Detailed business modelling still requires G1;
+remaining deployment readiness stays open. The owning details are
 tracked in [database](database.md), [security](security.md),
 [API conventions](api-conventions.md), and [deployment](deployment.md).
 

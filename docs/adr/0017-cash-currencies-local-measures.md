@@ -1,7 +1,13 @@
 # ADR 0017: Record cash in AFN or PKR and accept local weight measures
 
 - **Date:** 2026-10-27
-- **Status:** Accepted requirements and two-decimal half-up purchase-line totals; remaining numeric policy open
+- **Status:** Accepted; amended by ADR 0019
+
+**Amended by [ADR 0019](0019-pilot-numeric-settlement-policy.md):** the completed
+interview approves kg/gram stock, custom weight measures, two-decimal unit prices,
+cumulative receipt rounding, and mixed AFN/PKR cash settlement at recorded rates.
+It replaces the same-currency-only restriction and open numeric-policy statements
+below. Retain the original pilot measure definitions; G1 remains open.
 
 ## Context
 
