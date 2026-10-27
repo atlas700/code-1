@@ -108,11 +108,11 @@ or interview transcripts.
 | G0 market | Accepted: [ADR 0003](adr/0003-helmand-pilot-workflow.md), 19 October | Founder | Market choice is resolved |
 | G1 research | Open: founder reports interviews and about 40 findings, including notebook-based purchasing/sales; interview totals and the required 5 observations remain unconfirmed; see [clarifications](handoffs/pilot-blocker-clarifications.md) | Founder/researcher | Tasks 13–35 and pilot release |
 | G2 scope | Founder-approved: [ADR 0003](adr/0003-helmand-pilot-workflow.md); user validation still depends on G1 | Founder/product lead | Features outside the approved pilot |
-| G3 domain policies | Partially resolved: [ADRs 0001–0012 and 0017](adr/README.md); cash, AFN/PKR separation, local weight entry, and two-decimal purchase-line totals rounded half-up once per line are approved; remaining numeric policies and price basis remain open; terminology requires G1 validation | Founder/product lead | Task 12 until remaining numeric policy is approved; dependent domain work and pilot labels until their policies/evidence exist |
+| G3 domain policies | Numeric policy resolved by [ADR 0019](adr/0019-pilot-numeric-settlement-policy.md): kg/gram stock, custom weight measures, exact price conversions, cumulative receipt rounding, recorded mixed-currency cash, and capped owner-only reductions; other accepted domain ADRs remain in force; terminology requires G1 validation | Founder/product lead | Task 12's numeric prerequisite is resolved; Tasks 13–35 and pilot labels still require G1 evidence |
 | G4 authentication | Accepted: [ADR 0002](adr/0002-clerk-authentication.md); development checks in [Task 06 handoff](handoffs/06-authentication.md); Pilot A–C are available for phone OTP tests, but delivery/sign-in outcomes are not recorded | Founder | Pilot authentication until sign-in validation is recorded |
 | G4 database | Accepted: [ADR 0013](adr/0013-local-postgresql-foundation.md) approves local PostgreSQL and reviewed migrations; [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md), 25 October, replaces local membership ownership with verified Clerk membership and a local organization mapping | Technical lead/founder | Detailed business schema still requires G1; other G4 gates remain open |
 | G4 mutation boundary | Accepted: [ADR 0015](adr/0015-server-action-mutation-boundary.md), 26 October; native Server Actions with the [mutation contract](api-conventions.md#mutation-contract) and a narrow first-organization bootstrap exception | Technical lead/founder | Boundary decision resolved; each mutation still needs its task's authorization and recovery checks |
-| G4 permissions | Accepted: [ADR 0016](adr/0016-local-business-authorization.md), founder-approved 27 October; Task 10 implements fixed roles, the action matrix, membership-bound grants, one-time owner bootstrap, and server guards | Technical lead/founder | Policy and foundation resolved; each new workflow still needs its own permission and resource-ownership checks |
+| G4 permissions | Accepted: [ADR 0016](adr/0016-local-business-authorization.md); Task 10 implements fixed roles, membership-bound grants, and server guards. ADR 0019 approves a future owner-only rounding-reduction permission for Task 25 | Technical lead/founder | Policy and foundation resolved; each new workflow still needs its own permission and resource-ownership checks |
 | G4 deployment | Partially resolved: [ADR 0018](adr/0018-managed-pilot-hosting.md) selects Vercel Pro/Neon and founder-owned operations; retention/location, monitoring, recovery objectives, spending policy, configuration, and restore evidence remain open | Founder | Task 34 configuration until operating policies are approved; pilot release until verification passes |
 
 **Next task:** 11 — staff invitation and membership management, under ADRs 0014/0016
@@ -123,8 +123,8 @@ ADR 0015; see its [handoff](handoffs/09-first-organization-onboarding.md). Task 
 [readiness handoff](handoffs/task-08-09-readiness.md) record its completion.
 Development Organizations and recovery slugs are on, membership is optional, and
 automatic creation is off; Task 09 verifies these settings and its live flow.
-G1 still blocks Tasks 13–35; decimal policy, pilot sign-in, and
-deployment gates remain open.
+ADR 0019 resolves Task 12's numeric prerequisite; it follows Task 11. G1 still
+blocks Tasks 13–35; pilot sign-in and deployment readiness remain open.
 
 ### G0 — choose the initial market
 
@@ -154,12 +154,12 @@ against G1 research before domain implementation:
 
 | Decision | Required answer |
 | --- | --- |
-| Units | Accept local weight entry and actual bag sizes under ADR 0017; approve canonical stock unit and precision before Task 12. |
-| Currency and settlement | Cash only; AFN/PKR obligations and balances stay separate, with same-currency payment under ADR 0017. |
+| Units | Kg stock with one-gram precision; business-owned custom weight measures and actual bag-size snapshots under ADR 0019. |
+| Currency and settlement | Cash only; AFN/PKR debts stay separate, while mixed cash uses recorded PKR-per-AFN rates and capped owner-only residual reductions under ADR 0019. |
 | Product identity | Does grade, origin, harvest date, or quality create distinct stock? |
 | Receiving | Can receipt quantity differ from order quantity, and who may approve it? |
 | Supplier debt | Accepted receipt creates the supplier payable at the approved purchase price; see [ADR 0012](adr/0012-receipt-supplier-payables.md). |
-| Decimal policy | Two-decimal monetary purchase-line totals, rounded half-up once per line for AFN/PKR, are approved under ADR 0017; approve remaining quantity/unit-price scales, receipt reconciliation, and fractional-cash treatment before Task 12. |
+| Decimal policy | Resolved by ADR 0019: two-decimal unit prices/amounts, six-decimal rates, exact conversions, half-up purchase lines/payment allocation, and cumulative receipt reconciliation. |
 | Stock policy | Is negative stock ever allowed? Recommended pilot policy: no. |
 | Sale timing | Does stock leave at confirmation, dispatch, or delivery? |
 | Credit | Is payment applied to one invoice, oldest debt first, or manually allocated? |
@@ -401,11 +401,14 @@ framework.
 
 **Do:** Define narrowly scoped server-side helpers/types for decimal input/output,
 quantity validation, UTC timestamps, IDs, and explicit status-transition checks.
-Document approved rounding, decimal scales, canonical weight unit, and price basis
-from G3. Support exact AFN/PKR amounts and the limited pilot weight conversions
-in [ADR 0017](adr/0017-cash-currencies-local-measures.md).
-Monetary purchase-line totals use two decimals, rounded half-up once per line; purchase
-totals sum rounded lines. Remaining numeric policies must be approved first.
+Implement [ADR 0019](adr/0019-pilot-numeric-settlement-policy.md): kg/gram weight,
+two-decimal entered unit prices, separate quantity/price measures, exact conversion
+ratios, half-up two-decimal monetary lines, cumulative receipt reconciliation,
+and mixed-currency allocation at positive PKR-per-AFN rates of at most six decimals.
+Reject unsupported precision without silent rounding. Purchase totals sum rounded
+lines; rounded payment allocations use combined cash value in the debt's currency.
+Provide narrow pure checks for whole cash and the 0.99 lifetime reduction cap;
+Task 25 owns authorization and transactional enforcement.
 
 **Do not:** write a generic ORM repository, a client-side financial calculator, or
 convert values to JavaScript floats.
@@ -413,7 +416,9 @@ convert values to JavaScript floats.
 **Verify:** unit tests cover decimal parsing, rejected negative quantities, rounding,
 and invalid transitions. Include multiple lines whose rounded sum differs from
 rounding their unrounded aggregate; preserve the approved per-line result.
-Cover half-cent ties for both AFN and PKR under the approved half-up rule.
+Cover half-cent ties, gram precision/custom weights, differing price measures,
+cumulative receipts, both exchange directions, rejected rate precision, and
+cumulative reduction limits under ADR 0019. No live rates or payments are needed.
 
 **Handoff:** state where each primitive may be imported from.
 
@@ -424,14 +429,16 @@ Cover half-cent ties for both AFN and PKR under the approved half-up rule.
 **Do:** Add organization-owned units and categories, schema/migration, list/create/
 edit/deactivate services, and their minimal management screens. Seed only validated
 pilot defaults. Support kilograms, maan, khorwar, fractions, and actual bag sizes
-under ADR 0017, retaining one stock unit per product.
+under ADR 0019, normalized to kg with gram precision. Allow business-owned named
+weight measures under `catalog.manage`; snapshot definitions on transactions.
 
-**Do not:** build an arbitrary conversion-rule editor, global uncontrolled units,
-or product pricing.
+**Do not:** build arbitrary formulas or non-weight conversions, global uncontrolled
+units, or product pricing. Measure edits never rewrite historical transactions.
 
 **Verify:** tenant scoping, uniqueness rule, permissions, validation, and
 deactivation behavior have tests. Cover fractional weights, 10/11-maan bags, and
-equivalence of 100 maan and 440 kg without losing the entered measure.
+equivalence of 100 maan and 440 kg without losing the entered measure. Test custom
+measure isolation, sub-gram rejection, and historical snapshot preservation.
 
 **Handoff:** record the selected product-unit policy from G3.
 
@@ -442,7 +449,7 @@ equivalence of 100 maan and 440 kg without losing the entered measure.
 **Do:** Add products with validated name, optional SKU/code, category, stock unit,
 default purchase/selling price if validated, active state, and product list/detail/
 edit screens. Any default price must retain its currency and price measure under
-ADR 0017. Add appropriate per-organization uniqueness constraints.
+ADR 0019. Add appropriate per-organization uniqueness constraints.
 
 **Do not:** add batch/lot/grade/origin fields unless G3 says they define stock
 identity; do not compute inventory yet.
@@ -507,7 +514,7 @@ isolation is tested.
 **Do:** Add purchase order/item schema and a create/list/detail flow. Validate active
 supplier, products, warehouse, positive item quantities, non-negative prices, totals,
 and permitted draft status transitions. Record currency, entered weight measure,
-actual bag size when applicable, and agreed price basis under ADR 0017. Calculate
+actual bag size when applicable, and separate agreed price measure under ADR 0019. Calculate
 totals server-side in the purchase's currency.
 
 **Do not:** receive stock, create supplier payable, or accept client-calculated totals
@@ -548,7 +555,9 @@ under [ADR 0012](adr/0012-receipt-supplier-payables.md). Update purchase status 
 same transaction. Enforce receipt-request uniqueness and concurrent quantity limits
 in the database so retries cannot duplicate stock or debt. Compare quantities in
 the product's stock unit while preserving the entered weight/bag-size and price
-snapshots. Keep receipt payables in the purchase currency under ADR 0017.
+snapshots. Keep receipt payables in the purchase currency and derive each line's
+debt as rounded cumulative accepted value less previously recognized value under
+ADR 0019. Commit quantity/value reconciliation together across concurrent receipts.
 
 **Do not:** overwrite a `stock_quantity` field as the source of truth, recognize
 debt at draft/order creation, add supplier invoice entry, or support returns.
@@ -557,6 +566,7 @@ debt at draft/order creation, add supplier invoice entry, or support returns.
 approved price; failure at any write leaves no receipt/movement/payable/status
 change; concurrent/repeated requests neither duplicate stock/debt nor exceed
 approved limits; receipt, stock, and payable references remain tenant scoped.
+Test the 100 AFN three-receipt case (33.33/33.34/33.33) and exact full reconciliation.
 
 **Handoff:** record movement/payable fields, receipt-number and idempotency strategy,
 and evidence that stock and supplier debt reconcile to accepted receipt lines.
@@ -568,7 +578,7 @@ and evidence that stock and supplier debt reconcile to accepted receipt lines.
 **Do:** Implement a server-side aggregate/query for current quantity by
 organization/product/warehouse and a paginated movement history. Add indexes only for
 these demonstrated queries. Define and document available-stock calculation.
-Aggregate equivalent weight entries in the product's stock unit under ADR 0017;
+Aggregate equivalent weight entries in kg under ADR 0019;
 do not add bag counts with differing weights as if they were equivalent.
 
 **Do not:** cache or denormalize balances before profiling; implement transfers,
@@ -639,19 +649,27 @@ cannot double-decrement stock; a successful sale appears in stock history.
 **Goal:** Settle receipt-based supplier debt without corrupting balances.
 
 **Do:** Add supplier payments and payment allocations under ADR 0009. Record the
-supplier, date, exact positive cash amount, currency, reference/note, and exactly one
-selected receipt payable from Task 20. Require the payable's currency under ADR
-0017. Make allocation transactional, server-authorized, and protected against
-concurrent over-allocation and duplicate requests.
+supplier, date, whole AFN/PKR cash amounts, reference/note, and exactly one selected
+receipt payable from Task 20. Under ADR 0019, snapshot the supplier-agreed rate
+(PKR per AFN, at most six decimals) when converting, calculate combined value
+exactly, and allocate its half-up two-decimal value in the debt's currency.
+Reuse `supplier_payments.record` for payment/rate entry. Introduce the fixed
+owner-only `supplier_payments.adjust_rounding` permission for explicit residual
+reductions with reason/provenance. Cap all reductions cumulatively at 0.99 in
+the payable's currency; retain original debt/cash and append adjustments separately.
+Record adjustment audit evidence in this task, without waiting for Task 27.
+Serialize balance/cap checks and postings transactionally, with idempotency.
 
 **Do not:** add customer payments, split payments across payables, introduce unapplied
-credit, integrate online payment rails, exchange currencies, overwrite balances,
-or allow allocations exceeding the selected payable's outstanding amount.
+credit, integrate online payment rails or live rate feeds, revalue old payments,
+overwrite balances, silently discard residual debt, or allocate above the selected
+payable's outstanding balance. Larger rounding differences remain outstanding.
 
 **Verify:** partial/full payment, overpayment rejection, concurrent allocation,
-duplicate requests, currency-mismatch rejection, and tenant isolation are
-integration tested against Task 20 payables. A failed payment leaves both payment
-and allocation unchanged.
+duplicate requests, both exchange directions, immutable rates, whole cash/rate
+validation, unauthorized reduction denial, lifetime cap races/retries, separate
+adjustment audit, and tenant isolation are tested against Task 20 payables.
+A failed posting leaves cash, allocation, reduction, and balance unchanged.
 
 **Handoff:** document balance derivation and payment idempotency; customer receipts
 and unapplied credit remain deferred.
@@ -663,7 +681,9 @@ and unapplied credit remain deferred.
 **Do:** Build read-only supplier balances and paginated statements using Task 20
 receipt payables and Task 25 payment allocations. Show outstanding amounts and links
 to accepted receipts and supplier payments; show due dates only under approved terms.
-Keep AFN and PKR balances and statement totals separate under ADR 0017.
+Keep AFN and PKR balances and statement totals separate under ADR 0019. Show
+original cash, rate, converted allocation, and owner-approved reductions distinctly;
+reconcile debt less allocations and reductions without presenting reductions as cash.
 
 **Do not:** add customer statements, complex accounting journals, interest,
 installment plans, or changes to historical obligations.
@@ -699,7 +719,7 @@ critical operations; unauthorized failure does not create a success event.
 
 **Do:** Implement a server-rendered dashboard for purchases, accepted receipts,
 current stock quantities, outstanding supplier balances, and recent pilot
-transactions. Keep AFN/PKR amounts separate under ADR 0017. Use real
+transactions. Keep AFN/PKR amounts separate under ADR 0019. Use real
 empty/error/loading states.
 
 **Do not:** add sales/customer metrics, stock valuation, speculative low-stock
@@ -840,7 +860,7 @@ Do not schedule these until the pilot reaches repeated use and paid retention:
 - returns/cancellation reversals and stock transfers (bring forward only if pilots
   cannot operate without them);
 - batch/lot/quality/origin tracking;
-- multi-currency and exchange rates;
+- currencies beyond AFN/PKR and automatic exchange-rate feeds;
 - native mobile apps and full offline transaction queues/conflict resolution;
 - PDF invoices, attachments, images, SMS/WhatsApp, email campaigns;
 - public marketplace, farmer app, logistics/fleet, warehouse bins, public APIs;

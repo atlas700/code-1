@@ -51,6 +51,13 @@ roles, an explicit action matrix, membership-bound assignments, one-time owner
 bootstrap, and a server-only guard. Task 10 implements this policy; G1 and the
 remaining operational gates stay open.
 
+[ADR 0019](adr/0019-pilot-numeric-settlement-policy.md) approves a future fixed
+`supplier_payments.adjust_rounding` permission for owner only. Task 25 must enforce
+the lifetime 0.99 debt-currency cap atomically, retaining actor/reason/provenance.
+Current code does not yet implement that permission. Custom weight management
+and payment/rate entry reuse existing `catalog.manage` and
+`supplier_payments.record`; neither permits debt reductions.
+
 **Partially resolved — G4 operational security:** the founder owns operations and
 backup recovery under [ADR 0018](adr/0018-managed-pilot-hosting.md). Approve access,
 logging, retention, and incident procedures with the remaining deployment plan;

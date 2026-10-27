@@ -10,6 +10,10 @@ Documentation clarification is complete and ready for review. The clarified
 policies and dependent task scopes are recorded; evidence gates remain open and
 application behavior is unchanged.
 
+The subsequent [completed interview](pilot-numeric-policy.md) and ADR 0019
+resolve the numeric gate and replace the initial same-currency-only restriction.
+Earlier verification sections below retain their original review context.
+
 - [x] Record the founder's requirements and reported notebook findings without
   inventing research counts or successful authentication tests.
 - [x] Amend the old unit-entry exclusion and update dependent task scopes,
@@ -25,7 +29,7 @@ application behavior is unchanged.
   in notebooks. This does not establish 40 interviews or 5 workflow observations;
   counts and coverage of receiving, stock, debt, payments, and corrections remain
   unconfirmed. Sales remain outside the approved purchasing pilot.
-- Cash-only payments, separate AFN/PKR balances, same-currency settlement, exact
+- Cash-only payments, separate AFN/PKR balances, initially same-currency settlement, exact
   agreed amounts, and actual bag sizes were explicitly accepted. Purchases can
   use bags, maan, fractional measures, and kilograms. The pilot definitions are
   1 maan = 4.4 kg and 1 khorwar = 100 maan = 440 kg; 10/11-maan bags are
@@ -41,11 +45,10 @@ application behavior is unchanged.
 - G1 stays open until interview totals, five workflow observations, and a redacted
   workflow summary establish the build plan's required coverage. Do not invent
   counts or reinterpret findings as interview participants.
-- Monetary purchase-line totals use two decimal places, rounded half-up once per line;
-  purchase totals sum rounded lines. Task 12 stays blocked on canonical stock
-  unit, quantity/unit-price scales, agreed price basis,
-  partial-receipt reconciliation, and fractional-cash treatment. Approval of
-  line precision/stage alone does not settle the remaining policies.
+- ADR 0019 resolves Task 12's numeric prerequisite: kg/gram stock, custom weight
+  measures, differing quantity/price units, cumulative receipt reconciliation,
+  recorded mixed cash/rates, and owner-only capped residual reductions. Task 12
+  follows Task 11; no numeric interview questions remain.
 - Run each pilot contact's real phone sign-in test and record anonymous delivery
   and completion outcomes before approving the pilot sign-in method.
 - Agree backup retention/location, monitoring, recovery objectives, and spending

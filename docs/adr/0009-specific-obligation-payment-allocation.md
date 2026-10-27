@@ -3,6 +3,11 @@
 - **Date:** 2026-10-19
 - **Status:** Accepted
 
+[ADR 0019](0019-pilot-numeric-settlement-policy.md) extends settlement with
+recorded mixed-currency cash and explicit owner-approved residual reductions.
+The single-payable and no-unapplied-credit rules below remain in force; compare
+the rounded converted allocation with the remaining balance.
+
 ## Context
 
 The pilot needs an auditable payment policy without adding automatic allocation or

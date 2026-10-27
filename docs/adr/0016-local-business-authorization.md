@@ -3,6 +3,12 @@
 - **Date:** 2026-10-27
 - **Status:** Accepted; founder approved the complete proposal on 2026-10-27.
 
+**Future extension approved by [ADR 0019](0019-pilot-numeric-settlement-policy.md):**
+Task 25 must add `supplier_payments.adjust_rounding` for owner only. The original
+matrix below and Task 10's current twenty permissions are unchanged until that
+workflow is implemented. Existing catalogue/payment permissions govern custom
+weight measures and payment exchange-rate entry; they do not grant reductions.
+
 ## Context
 
 Task 09 is merged. The build plan names Task 10 as next and keeps its G4

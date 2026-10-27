@@ -31,14 +31,21 @@ research remains required before treating this founder-approved scope as
 pilot-validated.
 
 **Decided — G3 units:** accept bags with actual recorded size, maan, khorwar,
-kilograms, and fractional quantities while retaining one stock unit per product.
+kilograms, and fractional quantities using kg as the common stock unit with
+one-gram precision. Allow business-owned custom weight measures and different
+quantity/pricing units with immutable transaction snapshots under
+[ADR 0019](adr/0019-pilot-numeric-settlement-policy.md).
 The founder defines 1 maan as 4.4 kg and 1 khorwar as 100 maan for this pilot;
 [ADR 0017](adr/0017-cash-currencies-local-measures.md) amends ADR 0004.
 
 **Decided — G3 cash and currency:** record cash supplier payments; keep AFN and
-PKR balances separate and require payment in the payable's currency. Exchange
-and online payment integration remain excluded under ADR 0017. These are future
-workflow requirements; current onboarding still accepts AFN only.
+PKR balances separate by payable currency. ADR 0019 permits mixed whole AFN/PKR
+cash using a permanently recorded supplier-agreed rate, quoted as PKR per AFN
+with up to six decimals. Convert the combined value exactly and round half-up
+once to two decimals for allocation. Unpaid fractions stay outstanding unless
+the owner records an audited reduction, cumulatively capped at 0.99 in the
+payable's currency. Online payment integration and unapplied credit stay deferred.
+These are future workflow requirements; current onboarding still accepts AFN only.
 
 **Decided — G3 product identity:** each product is one stock identity for the
 pilot. Defer grade, origin, harvest-date, and quality distinctions unless G1
@@ -78,12 +85,11 @@ supplier payment, supplier balance, and correction before shipping pilot labels.
 Defer sales/customer-payment terms; see
 [ADR 0011](adr/0011-validate-purchase-receipt-terminology.md).
 
-**Partially resolved — G3 decimal policy:** monetary purchase-line totals use two
-decimal places and round half-up once per line for AFN/PKR; purchase totals sum
-the rounded lines. An exact 62.785 line amount becomes 62.79.
-Quantity/unit-price scales, canonical stock unit, price-entry conventions,
-partial-receipt reconciliation and fractional-cash treatment
-remain open under ADR 0017 before Task 12. Validate chosen terminology as part of G1. The
+**Decided — G3 numeric policy:** ADR 0019 resolves Task 12's numeric prerequisite:
+kg/gram stock, two-decimal entered unit prices, exact quantity/price conversions,
+half-up two-decimal purchase lines, summed rounded lines, cumulative partial-
+receipt reconciliation, and recorded mixed-currency cash settlement/reductions.
+Validate chosen terminology as part of G1. The
 localization approach remains General Translation with `en-US` and `ps-AF`; see
 [ADR 0001](adr/0001-launch-localization.md). Consult the
 [build plan's gate status](agent-sized-build-plan.md#current-gate-status) for current

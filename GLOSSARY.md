@@ -31,7 +31,7 @@ received.
 The physical handoff of sold goods from the warehouse.
 
 **Stock unit**:
-The single weight unit used to compare a product's quantities and stock balance,
+Kilograms, accurate to one gram, used to compare quantities and stock balances
 including purchases entered in equivalent local measures.
 
 **Maan**:
@@ -43,3 +43,11 @@ The pilot's local weight measure equal to 100 maan, or 440 kilograms.
 **Bag**:
 A package whose actual weight must be specified; pilot bags may contain 10 or
 11 maan, so bag count alone does not establish weight.
+
+**Custom measure**:
+A business's named weight measure with an explicitly defined kilogram weight;
+past transactions retain the definition used when they were recorded.
+
+**Cash rounding reduction**:
+An owner-approved reduction of residual debt, recorded separately from cash paid
+and limited cumulatively to 0.99 units of the debt's currency per payable.
