@@ -20,6 +20,9 @@ expected pilot contacts are recorded only as Pilot A (owner), Pilot B
 
 **Open — G1 workflow research:** record 20 interviews and 5 workflow observations
 covering purchase, receiving, stock, sale, debt, payment, correction, and reporting.
+The founder reports interviews and approximately 40 findings, including notebook
+records for purchases and sales. Counts and observation coverage are not yet
+confirmed; see the [clarification record](handoffs/pilot-blocker-clarifications.md).
 
 **Decided — G2 pilot workflow:** validate purchase-to-receipt first to improve stock
 accuracy and supplier balance visibility. The pains, four-week success metric, and
@@ -27,10 +30,15 @@ explicit exclusions are in [ADR 0003](adr/0003-helmand-pilot-workflow.md). G1
 research remains required before treating this founder-approved scope as
 pilot-validated.
 
-**Decided — G3 units:** each product uses one stock unit for the pilot. Defer unit
-conversions unless G1 observes routine differing purchase and physical-stock units
-with stable, trustworthy per-product conversions; see
-[ADR 0004](adr/0004-single-stock-unit.md).
+**Decided — G3 units:** accept bags with actual recorded size, maan, khorwar,
+kilograms, and fractional quantities while retaining one stock unit per product.
+The founder defines 1 maan as 4.4 kg and 1 khorwar as 100 maan for this pilot;
+[ADR 0017](adr/0017-cash-currencies-local-measures.md) amends ADR 0004.
+
+**Decided — G3 cash and currency:** record cash supplier payments; keep AFN and
+PKR balances separate and require payment in the payable's currency. Exchange
+and online payment integration remain excluded under ADR 0017. These are future
+workflow requirements; current onboarding still accepts AFN only.
 
 **Decided — G3 product identity:** each product is one stock identity for the
 pilot. Defer grade, origin, harvest-date, and quality distinctions unless G1

@@ -3,6 +3,11 @@
 - **Date:** 2026-10-19
 - **Status:** Accepted
 
+**Amended 27 October 2026 by [ADR 0017](0017-cash-currencies-local-measures.md):**
+retain one stock unit per product, but accept equivalent local weight measures
+and fractional quantities with actual bag sizes. The conversion exclusions below
+are historical; decimal policy and G1 completion remain open.
+
 ## Context
 
 The pilot needs a units policy before product, purchase, receipt, and inventory

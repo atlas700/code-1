@@ -198,10 +198,13 @@ verifiable saved setup require a separately reviewed recovery procedure.
 
 ## Decision status
 
-**Decided — G3 units:** each product uses one stock unit for the pilot; see
-[ADR 0004](adr/0004-single-stock-unit.md). Conversion support remains deferred
-unless G1 establishes routine differing units with stable, trustworthy per-product
-conversions.
+**Decided — G3 units and currency:** retain one stock unit per product while
+accepting exact local weight conversions, fractional quantities, and recorded
+bag sizes under [ADR 0017](adr/0017-cash-currencies-local-measures.md), which
+amends ADR 0004. Preserve original quantity/price meaning through receipts.
+Future payables, cash payments, and balances carry AFN or PKR; allocations must
+match the payable's currency and balances must never combine currencies.
+Canonical weight unit, decimal scales, and rounding still block Task 12.
 
 **Decided — G3 product identity:** each product is one stock identity for the
 pilot; see [ADR 0005](adr/0005-product-stock-identity.md). Grade, origin,

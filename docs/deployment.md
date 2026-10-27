@@ -4,6 +4,9 @@
 
 - No hosting service, deployment pipeline, staging environment, production database,
   backup configuration, or deployment environment variables are configured.
+- [ADR 0018](adr/0018-managed-pilot-hosting.md) selects Vercel Pro and Neon;
+  the founder owns hosting, billing, alerts, and backup recovery. Selection does
+  not establish deployed resources or an approved spending limit.
 - Staging deployment, migration handling, backup scheduling, restore verification,
   and monitoring are planned for Task 34.
 
@@ -24,8 +27,9 @@
   explicitly, separately from startup and builds. Quality CI uses an unreachable
   placeholder and never connects to or migrates a database.
 - Staging and production values will be set in the approved deployment target's
-  encrypted environment configuration after G4 selects that target. They must not
-  be committed to the repository. Secrets must never use a `NEXT_PUBLIC_` prefix.
+  encrypted environment configuration after remaining G4 operating policies are
+  approved. They must not be committed to the repository. Secrets must never use
+  a `NEXT_PUBLIC_` prefix.
 - Configure real build-time publishable keys before building a deployable artifact;
   Next.js embeds public environment values in browser bundles.
 
@@ -40,6 +44,10 @@
    [ADR 0002](adr/0002-clerk-authentication.md) still requires Pilot A–C phone OTP
    validation before pilot use. Disable public registration for the invited pilot;
    staff invitations remain Task 11. The application exposes sign-in only.
+
+   On 27 October the founder confirmed Pilot A–C are available for phone OTP
+   testing. No delivery or completed sign-in outcomes are recorded yet. Record
+   only anonymous delivery/completion results, never numbers or OTPs.
 3. Run `npm run dev`, visit `/sign-in`, and authenticate using the configured
    development method. The fallback destination is `/dashboard`; direct access to
    another protected page preserves Clerk's return destination. An authenticated
@@ -137,8 +145,9 @@ and pilot sign-in validation remain separate open gates.
 
 ### Staging and production
 
-- A deployment target and backup owner require G4 approval before infrastructure is
-  configured.
+- ADR 0018 selects Vercel Pro/Neon and names the founder as operations/backup
+  owner. Retention/location, monitoring, recovery objectives, and spending policy
+  still need approval before infrastructure is configured.
 - Production changes must not auto-run destructive migrations.
 - Staging must not expose production data and requires a proven non-production
   restore before pilot use.
@@ -147,5 +156,6 @@ and pilot sign-in validation remain separate open gates.
 
 ## Decision status
 
-**Open — G4 deployment:** select the hosting and database approach, deployment
-responsibility, backup owner, retention policy, and monitoring approach.
+**Partially resolved — G4 deployment:** Vercel Pro/Neon and founder-owned
+operations are selected under ADR 0018. Remaining operating policies,
+configuration, and a proven non-production restore still block pilot readiness.
