@@ -108,7 +108,7 @@ or interview transcripts.
 | G0 market | Accepted: [ADR 0003](adr/0003-helmand-pilot-workflow.md), 19 October | Founder | Market choice is resolved |
 | G1 research | Open: founder reports interviews and about 40 findings, including notebook-based purchasing/sales; interview totals and the required 5 observations remain unconfirmed; see [clarifications](handoffs/pilot-blocker-clarifications.md) | Founder/researcher | Tasks 13–35 and pilot release |
 | G2 scope | Founder-approved: [ADR 0003](adr/0003-helmand-pilot-workflow.md); user validation still depends on G1 | Founder/product lead | Features outside the approved pilot |
-| G3 domain policies | Partially resolved: [ADRs 0001–0012 and 0017](adr/README.md); cash, AFN/PKR separation, and local weight entry are approved; canonical weight unit, decimal scale/rounding, and price basis remain open; terminology requires G1 validation | Founder/product lead | Task 12 until decimal policy is approved; dependent domain work and pilot labels until their policies/evidence exist |
+| G3 domain policies | Partially resolved: [ADRs 0001–0012 and 0017](adr/README.md); cash, AFN/PKR separation, local weight entry, and two-decimal purchase-line totals rounded once per line are approved; remaining numeric policies and price basis remain open; terminology requires G1 validation | Founder/product lead | Task 12 until remaining numeric policy is approved; dependent domain work and pilot labels until their policies/evidence exist |
 | G4 authentication | Accepted: [ADR 0002](adr/0002-clerk-authentication.md); development checks in [Task 06 handoff](handoffs/06-authentication.md); Pilot A–C are available for phone OTP tests, but delivery/sign-in outcomes are not recorded | Founder | Pilot authentication until sign-in validation is recorded |
 | G4 database | Accepted: [ADR 0013](adr/0013-local-postgresql-foundation.md) approves local PostgreSQL and reviewed migrations; [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md), 25 October, replaces local membership ownership with verified Clerk membership and a local organization mapping | Technical lead/founder | Detailed business schema still requires G1; other G4 gates remain open |
 | G4 mutation boundary | Accepted: [ADR 0015](adr/0015-server-action-mutation-boundary.md), 26 October; native Server Actions with the [mutation contract](api-conventions.md#mutation-contract) and a narrow first-organization bootstrap exception | Technical lead/founder | Boundary decision resolved; each mutation still needs its task's authorization and recovery checks |
@@ -159,7 +159,7 @@ against G1 research before domain implementation:
 | Product identity | Does grade, origin, harvest date, or quality create distinct stock? |
 | Receiving | Can receipt quantity differ from order quantity, and who may approve it? |
 | Supplier debt | Accepted receipt creates the supplier payable at the approved purchase price; see [ADR 0012](adr/0012-receipt-supplier-payables.md). |
-| Decimal policy | Approve currency/quantity scale and rounding before Task 12; record it in a decision record. |
+| Decimal policy | Two-decimal monetary purchase-line totals, rounded once per line, are approved under ADR 0017; approve remaining quantity/unit-price scales, tie-breaks, receipt reconciliation, and fractional-cash treatment before Task 12. |
 | Stock policy | Is negative stock ever allowed? Recommended pilot policy: no. |
 | Sale timing | Does stock leave at confirmation, dispatch, or delivery? |
 | Credit | Is payment applied to one invoice, oldest debt first, or manually allocated? |
@@ -404,12 +404,15 @@ quantity validation, UTC timestamps, IDs, and explicit status-transition checks.
 Document approved rounding, decimal scales, canonical weight unit, and price basis
 from G3. Support exact AFN/PKR amounts and the limited pilot weight conversions
 in [ADR 0017](adr/0017-cash-currencies-local-measures.md).
+Monetary purchase-line totals use two decimals, rounded once per line; purchase
+totals sum rounded lines. Remaining numeric policies must be approved first.
 
 **Do not:** write a generic ORM repository, a client-side financial calculator, or
 convert values to JavaScript floats.
 
 **Verify:** unit tests cover decimal parsing, rejected negative quantities, rounding,
-and invalid transitions.
+and invalid transitions. Include multiple lines whose rounded sum differs from
+rounding their unrounded aggregate; preserve the approved per-line result.
 
 **Handoff:** state where each primitive may be imported from.
 

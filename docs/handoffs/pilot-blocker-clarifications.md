@@ -41,10 +41,11 @@ application behavior is unchanged.
 - G1 stays open until interview totals, five workflow observations, and a redacted
   workflow summary establish the build plan's required coverage. Do not invent
   counts or reinterpret findings as interview participants.
-- Task 12 stays blocked on canonical weight unit, allowed money/quantity scales,
-  agreed price basis, and rounding/cash-settlement rules. Obtain one concrete
-  purchase with quantity, bag weight if applicable, currency, unit price, and
-  price measure; support for fractions alone does not select precision.
+- Monetary purchase-line totals use two decimal places, rounded once per line;
+  purchase totals sum rounded lines. Task 12 stays blocked on canonical stock
+  unit, quantity/unit-price scales, agreed price basis, rounding tie-breaks,
+  partial-receipt reconciliation, and fractional-cash treatment. Approval of
+  line precision/stage alone does not settle the remaining policies.
 - Run each pilot contact's real phone sign-in test and record anonymous delivery
   and completion outcomes before approving the pilot sign-in method.
 - Agree backup retention/location, monitoring, recovery objectives, and spending
@@ -65,7 +66,7 @@ same-currency allocation, and private research/phone-data boundaries. Found stal
 architecture/security text saying target and backup owner were unselected; updated
 both. No unresolved must-fix findings.
 
-Verification passes: 139 local links/anchors across 13 changed Markdown files;
+Initial clarification verification passed: 139 local links/anchors across 13 changed Markdown files;
 four exact-decimal checks for 10/11/100 maan and half a maan; assertions preserving
 G1, Task 12's decimal gate, Task 11 as next, and the partially resolved deployment
 gate; documentation-only scope assertion; and `git diff --check`.
@@ -73,6 +74,22 @@ gate; documentation-only scope assertion; and `git diff --check`.
 No application, schema, migration, dependency, command, CI, or test configuration
 changes. App lint/typecheck/test/build are not required for this documentation-only
 change; no live OTP, hosted service, billing, or restore test was performed.
+
+## Follow-up: purchase-line rounding
+
+The founder subsequently approved two decimal places and rounding once per
+purchase line. Updated ADR 0017, the G3 gate, Task 12 scope/acceptance, product
+requirements, database guidance, and this handoff. Review checked that summing
+rounded lines preserves the selected stage and that partial-receipt allocation
+cannot be inferred from this approval. Remaining numeric and evidence gates stay
+open. No unresolved must-fix findings. Follow-up verification passes: 58 local
+links/anchors across five changed Markdown files; exact-decimal checks for the
+discussed half-maan example and per-line versus aggregate rounding under both
+half-up and half-even; confirmation that a different halfway example distinguishes
+those modes; remaining-gate and documentation-only scope assertions; and
+`git diff --check`. These checks demonstrate the approved rounding stage without
+selecting an unapproved tie-break rule. No app checks or live-service tests were
+required or run for this documentation-only follow-up.
 
 Next implementation task remains **11 — staff invitation and membership
 management**. G1 still blocks Tasks 13–35; this clarification does not authorize
