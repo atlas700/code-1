@@ -41,9 +41,9 @@ application behavior is unchanged.
 - G1 stays open until interview totals, five workflow observations, and a redacted
   workflow summary establish the build plan's required coverage. Do not invent
   counts or reinterpret findings as interview participants.
-- Monetary purchase-line totals use two decimal places, rounded once per line;
+- Monetary purchase-line totals use two decimal places, rounded half-up once per line;
   purchase totals sum rounded lines. Task 12 stays blocked on canonical stock
-  unit, quantity/unit-price scales, agreed price basis, rounding tie-breaks,
+  unit, quantity/unit-price scales, agreed price basis,
   partial-receipt reconciliation, and fractional-cash treatment. Approval of
   line precision/stage alone does not settle the remaining policies.
 - Run each pilot contact's real phone sign-in test and record anonymous delivery
@@ -87,9 +87,25 @@ links/anchors across five changed Markdown files; exact-decimal checks for the
 discussed half-maan example and per-line versus aggregate rounding under both
 half-up and half-even; confirmation that a different halfway example distinguishes
 those modes; remaining-gate and documentation-only scope assertions; and
-`git diff --check`. These checks demonstrate the approved rounding stage without
-selecting an unapproved tie-break rule. No app checks or live-service tests were
+`git diff --check`. At that review the tie-break rule was still undecided; the
+subsequent approval is recorded below. No app checks or live-service tests were
 required or run for this documentation-only follow-up.
+
+## Follow-up: half-up tie-breaking
+
+The founder accepted the recommended half-up rule for both AFN and PKR. Round
+each monetary purchase-line total to the nearest 0.01, with exact halfway values
+rounded away from zero: 62.785 becomes 62.79. Sum rounded lines for purchase
+totals. The remaining quantity/unit-price, receipt-reconciliation, and
+fractional-cash policies remain open. Updated the same five policy/guidance files.
+
+Pre-validation review checked consistent tie semantics and preserved the agreed
+precision/stage, exact intermediate calculations, and remaining gates. No
+unresolved must-fix findings. Verification passes: 58 local links/anchors across
+five changed Markdown files, 12 half-up examples covering both AFN and PKR,
+the per-line versus aggregate check, remaining-gate/scope assertions, and
+`git diff --check`. No application code or configuration changed; app checks and
+live-service tests were not required or run.
 
 Next implementation task remains **11 — staff invitation and membership
 management**. G1 still blocks Tasks 13–35; this clarification does not authorize

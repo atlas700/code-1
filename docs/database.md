@@ -204,9 +204,9 @@ bag sizes under [ADR 0017](adr/0017-cash-currencies-local-measures.md), which
 amends ADR 0004. Preserve original quantity/price meaning through receipts.
 Future payables, cash payments, and balances carry AFN or PKR; allocations must
 match the payable's currency and balances must never combine currencies.
-Monetary purchase-line totals use two decimal places, rounded once per line;
+Monetary purchase-line totals use two decimal places, rounded half-up once per line;
 purchase totals sum those rounded lines. Canonical weight unit, quantity/unit-price
-scales, tie-breaks, partial-receipt reconciliation, and fractional-cash treatment
+scales, partial-receipt reconciliation, and fractional-cash treatment
 still block Task 12.
 
 **Decided — G3 product identity:** each product is one stock identity for the

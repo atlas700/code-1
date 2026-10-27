@@ -1,7 +1,7 @@
 # ADR 0017: Record cash in AFN or PKR and accept local weight measures
 
 - **Date:** 2026-10-27
-- **Status:** Accepted requirements and two-decimal purchase-line totals; remaining numeric policy open
+- **Status:** Accepted requirements and two-decimal half-up purchase-line totals; remaining numeric policy open
 
 ## Context
 
@@ -29,12 +29,14 @@ on entering purchases and receipts in different weight units; it does not close 
   conversions for comparison and aggregation. Do not equate a bag count with a
   fixed weight or introduce a general conversion-rule editor.
 - Preserve exact agreed quantities and unit prices during calculation. The
-  founder approved monetary purchase-line totals to two decimal places, rounding
-  once per purchase line. Sum those rounded line amounts for the purchase total;
+  founder approved monetary purchase-line totals to two decimal places using
+  half-up rounding once per purchase line. Round to the nearest 0.01; an exact
+  halfway value rounds away from zero, so 62.785 becomes 62.79. Sum those rounded
+  line amounts for the purchase total;
   do not round intermediate quantities or products, or recompute the total from
   unrounded lines. This applies to both AFN and PKR.
 - The canonical stock unit, quantity/unit-price input scales, price-entry
-  conventions, rounding tie-break rule, partial-receipt rounding/reconciliation,
+  conventions, partial-receipt rounding/reconciliation,
   and cash treatment of fractional balances still require approval before Task
   12. Two-decimal purchase lines do not settle these remaining numeric policies.
 
@@ -45,8 +47,8 @@ purchases, receipts, payments, and read models. Cash allocation still follows
 ADR 0009 and receipt-based debt follows ADR 0012. Existing onboarding remains
 AFN-only; this decision scopes future trade workflows and does not claim PKR or
 weight entry is already implemented. G1 and the remaining numeric-policy gates
-remain open; monetary line precision and the purchase-line rounding stage are
-approved.
+remain open; monetary line precision, half-up tie-breaking, and the purchase-line
+rounding stage are approved.
 
 ## Links
 

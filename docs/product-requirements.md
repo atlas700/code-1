@@ -79,9 +79,10 @@ Defer sales/customer-payment terms; see
 [ADR 0011](adr/0011-validate-purchase-receipt-terminology.md).
 
 **Partially resolved — G3 decimal policy:** monetary purchase-line totals use two
-decimal places and round once per line; purchase totals sum the rounded lines.
+decimal places and round half-up once per line for AFN/PKR; purchase totals sum
+the rounded lines. An exact 62.785 line amount becomes 62.79.
 Quantity/unit-price scales, canonical stock unit, price-entry conventions,
-rounding tie-breaks, partial-receipt reconciliation, and fractional-cash treatment
+partial-receipt reconciliation and fractional-cash treatment
 remain open under ADR 0017 before Task 12. Validate chosen terminology as part of G1. The
 localization approach remains General Translation with `en-US` and `ps-AF`; see
 [ADR 0001](adr/0001-launch-localization.md). Consult the
