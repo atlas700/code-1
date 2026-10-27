@@ -74,6 +74,18 @@ an agent workflow requirement; CI continues to run the existing automated checks
   data for purchasing, accepted receipt/payable creation, supplier payment, and
   stock/supplier balance reconciliation rather than a shared development database.
 
+## Staff management verification
+
+Task 11 adds staff provider/action/UI tests plus unit tests using Drizzle's real
+SQL generation. They cover owner-only changes, the last active owner, actor
+rechecking, tenant and identity isolation, input validation, retry behavior,
+safe errors, pending controls, and staff entry without a business grant.
+Six additional opt-in PostgreSQL tests verify actual row-lock concurrency and
+revocation against synthetic Clerk memberships. Run them with onboarding's
+isolated command and `src/db/staff.integration.test.ts`; no live provider mutation
+is needed. Static rendering verifies markup and feedback, not browser interaction
+or email/OTP delivery.
+
 ## Dependency gate
 
 - The audit checks production dependencies and fails for high or critical

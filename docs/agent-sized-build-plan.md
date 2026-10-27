@@ -18,7 +18,7 @@ Sales, customer payments, multiple warehouses, returns, lot/grade tracking, and
 offline mode are deferred. Accepted ADRs govern product policy; this plan governs
 task readiness and order. Update both when an approved decision changes the scope.
 
-## Current repository baseline (27 October 2026)
+## Current repository baseline (28 October 2026)
 
 - The application shell, localization plumbing, Clerk authentication, environment
   validation, Vitest tests, and CI are implemented (Tasks 01–06).
@@ -29,6 +29,8 @@ task readiness and order. Update both when an approved decision changes the scop
   organization mapping and verified Clerk membership lookup under ADR 0014.
   Task 09 supplies first-organization onboarding and local business settings.
   Task 10 supplies fixed business roles, membership-bound grants, and server guards.
+  Task 11 supplies Clerk-backed staff invitation, membership management, and local
+  role changes with serialized last-active-owner protection.
   Purchasing tables and a UI-component library are absent.
 - Preserve unrelated worktree changes.
 
@@ -115,15 +117,17 @@ or interview transcripts.
 | G4 permissions | Accepted: [ADR 0016](adr/0016-local-business-authorization.md); Task 10 implements fixed roles, membership-bound grants, and server guards. ADR 0019 approves a future owner-only rounding-reduction permission for Task 25 | Technical lead/founder | Policy and foundation resolved; each new workflow still needs its own permission and resource-ownership checks |
 | G4 deployment | Partially resolved: [ADR 0018](adr/0018-managed-pilot-hosting.md) selects Vercel Pro/Neon and founder-owned operations; retention/location, monitoring, recovery objectives, spending policy, configuration, and restore evidence remain open | Founder | Task 34 configuration until operating policies are approved; pilot release until verification passes |
 
-**Next task:** 11 — staff invitation and membership management, under ADRs 0014/0016
-and the last-active-owner invariant. Task 10 is complete; see its
+**Next task:** 12 — shared domain primitives for money, quantities, and status
+transitions, under ADR 0019. Task 11 implements staff invitation and membership
+management under ADRs 0014/0016; see its [handoff](handoffs/11-staff-management.md).
+Task 10 is complete; see its
 [handoff](handoffs/10-business-authorization.md). Task 09 onboarding is implemented under
 ADR 0015; see its [handoff](handoffs/09-first-organization-onboarding.md). Task 08's
 [handoff](handoffs/08-clerk-organizations.md) and the
 [readiness handoff](handoffs/task-08-09-readiness.md) record its completion.
 Development Organizations and recovery slugs are on, membership is optional, and
 automatic creation is off; Task 09 verifies these settings and its live flow.
-ADR 0019 resolves Task 12's numeric prerequisite; it follows Task 11. G1 still
+ADR 0019 resolves Task 12's numeric prerequisite. G1 still
 blocks Tasks 13–35; pilot sign-in and deployment readiness remain open.
 
 ### G0 — choose the initial market
@@ -189,8 +193,8 @@ The scope column also constrains the detailed task descriptions below.
 
 | Tasks | Classification | Pilot scope |
 | --- | --- | --- |
-| 01–10 | Complete | Foundation, authentication, persistence, tenancy, onboarding, and local business authorization; see [handoffs](README.md) |
-| 11–15 | Pilot required | Staff, primitives, products, suppliers |
+| 01–11 | Complete | Foundation, authentication, persistence, tenancy, onboarding, local authorization, and staff management; see [handoffs](README.md) |
+| 12–15 | Pilot required | Primitives, products, suppliers |
 | 16 | Deferred | Customers |
 | 17–22 | Pilot required | One warehouse, purchases, accepted receipts/payables, stock, owner-approved corrections |
 | 23–24 | Deferred | Sales drafts and fulfilment |

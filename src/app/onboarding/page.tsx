@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { unstable_rethrow } from "next/navigation";
 import { T } from "gt-next";
 import { getLocale } from "gt-next/server";
@@ -40,6 +41,7 @@ export default async function OnboardingPage() {
         <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm sm:p-8" aria-labelledby="onboarding-title">
           <h1 id="onboarding-title" className="text-3xl font-semibold tracking-tight text-ink"><T>Set up your business</T></h1>
           <p className="mt-3 mb-7 leading-7 text-ink-muted"><T>Create your business workspace. If setup is interrupted, return here to continue with the same details.</T></p>
+          <Link href="/join" prefetch={false} className="mb-6 inline-flex min-h-11 items-center text-primary underline focus-visible:outline-2 focus-visible:outline-ring"><T>Joining an existing business? Open staff access.</T></Link>
           <OnboardingForm initialValues={initialValues} resuming={request !== null} />
           <div className="mt-7 border-t border-border pt-5"><LocalePicker /></div>
         </section>

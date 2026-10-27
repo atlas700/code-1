@@ -43,7 +43,8 @@
    user in that development instance. This does not approve a pilot method:
    [ADR 0002](adr/0002-clerk-authentication.md) still requires Pilot A–C phone OTP
    validation before pilot use. Disable public registration for the invited pilot;
-   staff invitations remain Task 11. The application exposes sign-in only.
+   Task 11 supplies Clerk email invitations and manual account addition. The
+   application exposes sign-in and `/join` for existing invited accounts.
 
    On 27 October the founder confirmed Pilot A–C are available for phone OTP
    testing. No delivery or completed sign-in outcomes are recorded yet. Record
@@ -93,8 +94,9 @@ verification; read both values again and also verify Organizations remain enable
 The Dashboard's Membership optional setting is an alternative. See
 [configuration](https://clerk.com/docs/guides/organizations/configure).
 
-Organization/membership creation and management remain Tasks 09/11. No switcher,
-profile-management UI, or webhooks are needed for this foundation. Future
+Tasks 09/11 implement organization creation and staff management. `/join` offers
+explicit selection from the signed-in user's memberships. No profile-management
+UI or webhooks are introduced. Future
 background tenant requests must explicitly bind their intended organization to
 the verified session context; Clerk documents a shared-cookie caveat for multiple
 tabs in its [organization overview](https://clerk.com/docs/guides/organizations/overview).
@@ -136,12 +138,25 @@ roles to existing users. Existing Task 09 creators must explicitly resume their
 saved setup, with the same details, and pass current creator/membership verification
 for the initial grant. Active Clerk membership alone no longer opens protected
 pages. Do not solve a denial by assigning Clerk Admin or resetting bootstrap
-markers. Staff assignment and last-owner management arrive in Task 11.
+markers. Staff assignment and last-owner management are implemented by Task 11.
 
 Keep the migration, assignments, and markers if application code needs a forward
 fix. Rolling back to an application that lacks the guard removes permission
 enforcement; it is not an authorization recovery procedure. G4 deployment, backups,
 and pilot sign-in validation remain separate open gates.
+
+### Staff invitations and manual access
+
+Before using staff email invitations, enable Clerk Email and verify invitation
+delivery and acceptance in development. The installed provider sends the email;
+there is no separate email/SMS integration. Without email support, provision the
+invited account through the configured Clerk sign-in/account process, ask staff
+to open `/join`, then add that exact account ID under Settings → Manage staff.
+Assign its local business role after membership exists. No app public sign-up,
+phone registration changes, paid membership-cap changes, or provider settings
+are applied by Task 11. Invitations expire after 30 days; revoke/reissue as needed.
+See [Clerk invitations](https://clerk.com/docs/guides/organizations/add-members/invitations)
+and [Task 11 recovery](handoffs/11-staff-management.md#expiry-and-recovery).
 
 ### Staging and production
 

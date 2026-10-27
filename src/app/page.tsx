@@ -34,6 +34,7 @@ export default function Home() {
           </Link>
         </div>
         <div className="mt-8 border-t border-border pt-6">
+          <Link href="/join" prefetch={false} className="mb-5 inline-flex min-h-11 items-center text-primary underline focus-visible:outline-2 focus-visible:outline-ring"><T>Staff access</T></Link>
           <LocalePicker />
         </div>
       </section>

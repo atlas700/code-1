@@ -121,9 +121,38 @@ permission separately; activation alone grants none. Reserved
 slugs must remain unchanged until their remote IDs are pinned; see the
 [operational prerequisite](deployment.md#onboarding-recovery-slugs).
 
+## Staff management contract
+
+`updateStaff(previousState, formData)` authenticates and explicitly selects
+`operation`, `emailAddress`, `userId`, `membershipId`, `role`, and `invitationId`.
+Client state and organization/actor IDs never establish authority. The server-only
+`manageStaff(input)` operation independently requires `staff.manage`, validates a
+Zod discriminated command, and derives the organization from the verified tenant.
+
+- `invite`: valid email, at most 254 characters; Clerk `org:member`, 30-day expiry.
+  Repeated submissions reuse an existing live pending invitation. It grants no
+  local role. After an ambiguous result, reload pending invitations before retrying.
+- `add`: an existing Clerk `user_` account ID, at most 200 characters. Repeated or
+  ambiguous creates resolve the exact current organization/user membership. No
+  notification or local role is created.
+- `role`: current membership ID and one of the seven fixed roles. Both old/new
+  ownership require `ownership.manage`; never demote the last active owner.
+- `deactivate`: current membership ID. Remove membership through Clerk, retaining
+  its historical local grant. Removing an owner requires `ownership.manage` and
+  another currently verified owner. Rejoining never revives an old grant.
+- `revoke`: a pending invitation ID verified inside the current organization.
+
+Resource IDs are trimmed, nonempty, and at most 200 characters. Role writes are
+parameterized and bound to local organization, current membership, and current
+user. Every mutation takes the same organization row lock and rechecks actor and
+target after waiting. Results are `success`, `invalid` with field names,
+`conflict`, `owner-required`, `last-owner`, or a safe `error` with correlation ID;
+Next.js authentication/authorization control flow is preserved. Success
+revalidates `/settings/staff`. See the [recovery procedures](handoffs/11-staff-management.md#expiry-and-recovery).
+
 ## Decision status
 
 **Accepted — G4 mutation boundary:** [ADR 0015](adr/0015-server-action-mutation-boundary.md).
-Task 09 and the approved Task 10 permission boundary follow ADRs 0015/0016. G1 research, decimal policy,
+Tasks 09–11 follow ADRs 0014–0016. ADR 0019 resolves numeric policy. G1 research,
 pilot sign-in validation, and deployment gates remain open in the
 [build plan](agent-sized-build-plan.md#current-gate-status).

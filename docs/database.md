@@ -196,6 +196,21 @@ verifiable saved setup require a separately reviewed recovery procedure.
   commit together. Derive supplier balances from receipt payables less supplier
   payment allocations; see [ADR 0012](adr/0012-receipt-supplier-payables.md).
 
+## Staff management
+
+Task 11 adds no tables or migrations. Its staff mutations lock the existing
+`organizations` row with `FOR UPDATE`, then read fresh assignments and provider
+memberships. Role upserts use the composite organization/membership key and exact
+verified user identity. Remote deactivation retains the original assignment;
+current Clerk membership remains mandatory for every authorization lookup.
+Clerk mutations cannot roll back with PostgreSQL; see
+[staff recovery](handoffs/11-staff-management.md#expiry-and-recovery).
+
+`src/db/staff.integration.test.ts` uses the same opt-in isolated database command
+as onboarding. It verifies competing owner demotions/removals, a queued actor's
+revoked role, cross-tenant targets, stale sessions, removal/rejoin, and failed
+remote removal. It refuses other database names and cleans up its synthetic rows.
+
 ## Decision status
 
 **Decided — G3 numeric and settlement policy:**

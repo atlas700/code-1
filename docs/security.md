@@ -63,6 +63,23 @@ backup recovery under [ADR 0018](adr/0018-managed-pilot-hosting.md). Approve acc
 logging, retention, and incident procedures with the remaining deployment plan;
 verify a non-production restore before pilot use.
 
+## Staff management
+
+Task 11 enforces staff permissions in the server operation, including a fresh
+membership/local-role check after acquiring the organization row lock. Admins
+cannot grant, demote, or remove owners. Only current, exactly matched memberships
+count toward the last-active-owner invariant; remote removal denies stale-session
+access and rejoining requires an explicit new grant. Bootstrap markers are never
+reset. Invitations and manual additions create no business grants. Invitation
+URLs/metadata are excluded from staff list responses and diagnostics.
+
+The lock serializes application staff operations across server processes; Clerk
+does not participate in a PostgreSQL transaction. Direct Clerk Dashboard edits,
+self-service departures, and provider-side account deletion can bypass the app's
+last-owner check. Use the app for ownership changes; reconcile external changes
+without resetting grants or bootstrap markers. No automated owner recovery or
+Clerk Admin promotion is introduced. See [Task 11 recovery](handoffs/11-staff-management.md#expiry-and-recovery).
+
 ## Deferred controls
 
 The first mutation must meet the safe error and correlation requirements in the
