@@ -37,8 +37,11 @@ revised by [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md).
 UI mutations use Next.js Server Actions under
 [ADR 0015](adr/0015-server-action-mutation-boundary.md).
 [ADR 0016](adr/0016-local-business-authorization.md) approves the local role matrix
-and one-time owner bootstrap. Detailed business modelling, deployment target, and backup owner
-remain open before their dependent work. The owning details are
+and one-time owner bootstrap. [ADR 0017](adr/0017-cash-currencies-local-measures.md)
+records the pilot's cash, currency, and local-weight requirements.
+[ADR 0018](adr/0018-managed-pilot-hosting.md) selects Vercel/Neon and the founder
+as operations/backup owner. Detailed business modelling, decimal policy, and
+remaining deployment readiness stay open before their dependent work. The owning details are
 tracked in [database](database.md), [security](security.md),
 [API conventions](api-conventions.md), and [deployment](deployment.md).
 

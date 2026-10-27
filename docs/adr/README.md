@@ -41,6 +41,11 @@ first-organization bootstrap exception.
 [ADR 0016](0016-local-business-authorization.md) approves Task 10's fixed business
 roles, permission matrix, first-owner bootstrap, and authorization guard. It is
 accepted on 27 October and closes the G4 permission-policy gate.
+[ADR 0017](0017-cash-currencies-local-measures.md) records cash-only payments,
+separate AFN/PKR balances, and local weight entry, amending ADR 0004.
+[ADR 0018](0018-managed-pilot-hosting.md) selects Vercel/Neon and founder-owned
+operations. Decimal policy, research evidence, pilot phone sign-in testing, and
+deployment readiness remain open.
 The [build plan's gate status](../agent-sized-build-plan.md#current-gate-status)
 is the task-readiness record. G1 and the remaining G4 decisions stay
 open until evidence or founder approval exists. Record each decision before starting

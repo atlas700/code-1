@@ -106,14 +106,14 @@ or interview transcripts.
 | Gate | Status and evidence (updated 27 October 2026) | Owner | Blocks |
 | --- | --- | --- | --- |
 | G0 market | Accepted: [ADR 0003](adr/0003-helmand-pilot-workflow.md), 19 October | Founder | Market choice is resolved |
-| G1 research | Open: 20 interviews and 5 workflow observations have no recorded completion evidence | Founder/researcher | Tasks 13–35 and pilot release |
+| G1 research | Open: founder reports interviews and about 40 findings, including notebook-based purchasing/sales; interview totals and the required 5 observations remain unconfirmed; see [clarifications](handoffs/pilot-blocker-clarifications.md) | Founder/researcher | Tasks 13–35 and pilot release |
 | G2 scope | Founder-approved: [ADR 0003](adr/0003-helmand-pilot-workflow.md); user validation still depends on G1 | Founder/product lead | Features outside the approved pilot |
-| G3 domain policies | Partially resolved: [ADRs 0001–0012](adr/README.md); decimal scale/rounding remain open; terminology requires G1 validation | Founder/product lead | Task 12 until decimal policy is approved; dependent domain work and pilot labels until their policies/evidence exist |
-| G4 authentication | Accepted: [ADR 0002](adr/0002-clerk-authentication.md); development checks in [Task 06 handoff](handoffs/06-authentication.md); pilot sign-in method still needs validation | Founder | Pilot authentication until sign-in validation is recorded |
+| G3 domain policies | Partially resolved: [ADRs 0001–0012 and 0017](adr/README.md); cash, AFN/PKR separation, and local weight entry are approved; canonical weight unit, decimal scale/rounding, and price basis remain open; terminology requires G1 validation | Founder/product lead | Task 12 until decimal policy is approved; dependent domain work and pilot labels until their policies/evidence exist |
+| G4 authentication | Accepted: [ADR 0002](adr/0002-clerk-authentication.md); development checks in [Task 06 handoff](handoffs/06-authentication.md); Pilot A–C are available for phone OTP tests, but delivery/sign-in outcomes are not recorded | Founder | Pilot authentication until sign-in validation is recorded |
 | G4 database | Accepted: [ADR 0013](adr/0013-local-postgresql-foundation.md) approves local PostgreSQL and reviewed migrations; [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md), 25 October, replaces local membership ownership with verified Clerk membership and a local organization mapping | Technical lead/founder | Detailed business schema still requires G1; other G4 gates remain open |
 | G4 mutation boundary | Accepted: [ADR 0015](adr/0015-server-action-mutation-boundary.md), 26 October; native Server Actions with the [mutation contract](api-conventions.md#mutation-contract) and a narrow first-organization bootstrap exception | Technical lead/founder | Boundary decision resolved; each mutation still needs its task's authorization and recovery checks |
 | G4 permissions | Accepted: [ADR 0016](adr/0016-local-business-authorization.md), founder-approved 27 October; Task 10 implements fixed roles, the action matrix, membership-bound grants, one-time owner bootstrap, and server guards | Technical lead/founder | Policy and foundation resolved; each new workflow still needs its own permission and resource-ownership checks |
-| G4 deployment | Open: hosting, backup owner, retention, and monitoring in [deployment](deployment.md) | Technical lead/founder | Task 34 and pilot release |
+| G4 deployment | Partially resolved: [ADR 0018](adr/0018-managed-pilot-hosting.md) selects Vercel Pro/Neon and founder-owned operations; retention/location, monitoring, recovery objectives, spending policy, configuration, and restore evidence remain open | Founder | Task 34 configuration until operating policies are approved; pilot release until verification passes |
 
 **Next task:** 11 — staff invitation and membership management, under ADRs 0014/0016
 and the last-active-owner invariant. Task 10 is complete; see its
@@ -154,7 +154,8 @@ against G1 research before domain implementation:
 
 | Decision | Required answer |
 | --- | --- |
-| Units | Are conversion rules needed, or is each product sold in one stock unit for the pilot? |
+| Units | Accept local weight entry and actual bag sizes under ADR 0017; approve canonical stock unit and precision before Task 12. |
+| Currency and settlement | Cash only; AFN/PKR obligations and balances stay separate, with same-currency payment under ADR 0017. |
 | Product identity | Does grade, origin, harvest date, or quality create distinct stock? |
 | Receiving | Can receipt quantity differ from order quantity, and who may approve it? |
 | Supplier debt | Accepted receipt creates the supplier payable at the approved purchase price; see [ADR 0012](adr/0012-receipt-supplier-payables.md). |
@@ -400,7 +401,9 @@ framework.
 
 **Do:** Define narrowly scoped server-side helpers/types for decimal input/output,
 quantity validation, UTC timestamps, IDs, and explicit status-transition checks.
-Document rounding and decimal-scale policy from G3.
+Document approved rounding, decimal scales, canonical weight unit, and price basis
+from G3. Support exact AFN/PKR amounts and the limited pilot weight conversions
+in [ADR 0017](adr/0017-cash-currencies-local-measures.md).
 
 **Do not:** write a generic ORM repository, a client-side financial calculator, or
 convert values to JavaScript floats.
@@ -416,13 +419,15 @@ and invalid transitions.
 
 **Do:** Add organization-owned units and categories, schema/migration, list/create/
 edit/deactivate services, and their minimal management screens. Seed only validated
-pilot defaults.
+pilot defaults. Support kilograms, maan, khorwar, fractions, and actual bag sizes
+under ADR 0017, retaining one stock unit per product.
 
-**Do not:** implement cross-unit conversion, global uncontrolled units, or product
-pricing.
+**Do not:** build an arbitrary conversion-rule editor, global uncontrolled units,
+or product pricing.
 
 **Verify:** tenant scoping, uniqueness rule, permissions, validation, and
-deactivation behavior have tests.
+deactivation behavior have tests. Cover fractional weights, 10/11-maan bags, and
+equivalence of 100 maan and 440 kg without losing the entered measure.
 
 **Handoff:** record the selected product-unit policy from G3.
 
@@ -432,7 +437,8 @@ deactivation behavior have tests.
 
 **Do:** Add products with validated name, optional SKU/code, category, stock unit,
 default purchase/selling price if validated, active state, and product list/detail/
-edit screens. Add appropriate per-organization uniqueness constraints.
+edit screens. Any default price must retain its currency and price measure under
+ADR 0017. Add appropriate per-organization uniqueness constraints.
 
 **Do not:** add batch/lot/grade/origin fields unless G3 says they define stock
 identity; do not compute inventory yet.
@@ -496,7 +502,9 @@ isolation is tested.
 
 **Do:** Add purchase order/item schema and a create/list/detail flow. Validate active
 supplier, products, warehouse, positive item quantities, non-negative prices, totals,
-and permitted draft status transitions. Calculate totals server-side.
+and permitted draft status transitions. Record currency, entered weight measure,
+actual bag size when applicable, and agreed price basis under ADR 0017. Calculate
+totals server-side in the purchase's currency.
 
 **Do not:** receive stock, create supplier payable, or accept client-calculated totals
 as truth.
@@ -534,7 +542,9 @@ and owner approval for variances. Append inbound movements and create one payabl
 per accepted receipt using accepted quantities and approved purchase-price snapshots
 under [ADR 0012](adr/0012-receipt-supplier-payables.md). Update purchase status in the
 same transaction. Enforce receipt-request uniqueness and concurrent quantity limits
-in the database so retries cannot duplicate stock or debt.
+in the database so retries cannot duplicate stock or debt. Compare quantities in
+the product's stock unit while preserving the entered weight/bag-size and price
+snapshots. Keep receipt payables in the purchase currency under ADR 0017.
 
 **Do not:** overwrite a `stock_quantity` field as the source of truth, recognize
 debt at draft/order creation, add supplier invoice entry, or support returns.
@@ -554,6 +564,8 @@ and evidence that stock and supplier debt reconcile to accepted receipt lines.
 **Do:** Implement a server-side aggregate/query for current quantity by
 organization/product/warehouse and a paginated movement history. Add indexes only for
 these demonstrated queries. Define and document available-stock calculation.
+Aggregate equivalent weight entries in the product's stock unit under ADR 0017;
+do not add bag counts with differing weights as if they were equivalent.
 
 **Do not:** cache or denormalize balances before profiling; implement transfers,
 adjustments, or valuation.
@@ -623,17 +635,19 @@ cannot double-decrement stock; a successful sale appears in stock history.
 **Goal:** Settle receipt-based supplier debt without corrupting balances.
 
 **Do:** Add supplier payments and payment allocations under ADR 0009. Record the
-supplier, date, exact positive amount, reference/note, and exactly one selected receipt
-payable from Task 20. Make allocation transactional, server-authorized, and protected
-against concurrent over-allocation and duplicate requests.
+supplier, date, exact positive cash amount, currency, reference/note, and exactly one
+selected receipt payable from Task 20. Require the payable's currency under ADR
+0017. Make allocation transactional, server-authorized, and protected against
+concurrent over-allocation and duplicate requests.
 
 **Do not:** add customer payments, split payments across payables, introduce unapplied
-credit, integrate online payment rails, overwrite balances, or allow allocations
-exceeding the selected payable's outstanding amount.
+credit, integrate online payment rails, exchange currencies, overwrite balances,
+or allow allocations exceeding the selected payable's outstanding amount.
 
 **Verify:** partial/full payment, overpayment rejection, concurrent allocation,
-duplicate requests, and tenant isolation are integration tested against Task 20
-payables. A failed payment leaves both payment and allocation unchanged.
+duplicate requests, currency-mismatch rejection, and tenant isolation are
+integration tested against Task 20 payables. A failed payment leaves both payment
+and allocation unchanged.
 
 **Handoff:** document balance derivation and payment idempotency; customer receipts
 and unapplied credit remain deferred.
@@ -645,6 +659,7 @@ and unapplied credit remain deferred.
 **Do:** Build read-only supplier balances and paginated statements using Task 20
 receipt payables and Task 25 payment allocations. Show outstanding amounts and links
 to accepted receipts and supplier payments; show due dates only under approved terms.
+Keep AFN and PKR balances and statement totals separate under ADR 0017.
 
 **Do not:** add customer statements, complex accounting journals, interest,
 installment plans, or changes to historical obligations.
@@ -680,7 +695,8 @@ critical operations; unauthorized failure does not create a success event.
 
 **Do:** Implement a server-rendered dashboard for purchases, accepted receipts,
 current stock quantities, outstanding supplier balances, and recent pilot
-transactions. Use real empty/error/loading states.
+transactions. Keep AFN/PKR amounts separate under ADR 0017. Use real
+empty/error/loading states.
 
 **Do not:** add sales/customer metrics, stock valuation, speculative low-stock
 thresholds, fabricated forecasts, or an N+1 query per card.
@@ -783,6 +799,8 @@ suite for every page, or a shared development database.
 staging environment variables, managed/self-hosted PostgreSQL access, migration-on-
 deploy process, health check, database backup schedule, restore drill, and uptime/
 error monitoring.
+Use Vercel Pro/Neon with the founder accountable under ADR 0018; approve remaining
+operating policies before provisioning. Keep staging and production data separate.
 
 **Do not:** expose production data in staging, auto-run destructive migrations, or
 launch publicly before access controls are tested.

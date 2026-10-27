@@ -51,8 +51,10 @@ roles, an explicit action matrix, membership-bound assignments, one-time owner
 bootstrap, and a server-only guard. Task 10 implements this policy; G1 and the
 remaining operational gates stay open.
 
-**Open — G4 operational security:** assign a backup owner and approve access,
-logging, and incident responsibilities with the deployment plan.
+**Partially resolved — G4 operational security:** the founder owns operations and
+backup recovery under [ADR 0018](adr/0018-managed-pilot-hosting.md). Approve access,
+logging, retention, and incident procedures with the remaining deployment plan;
+verify a non-production restore before pilot use.
 
 ## Deferred controls
 

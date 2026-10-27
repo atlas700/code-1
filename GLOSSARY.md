@@ -31,6 +31,15 @@ received.
 The physical handoff of sold goods from the warehouse.
 
 **Stock unit**:
-The single unit in which a product's purchase, receipt, and inventory quantities
-are recorded during the pilot.
-_Avoid_: mixed units, conversion unit
+The single weight unit used to compare a product's quantities and stock balance,
+including purchases entered in equivalent local measures.
+
+**Maan**:
+The pilot's local weight measure, defined by the founder as 4.4 kilograms.
+
+**Khorwar**:
+The pilot's local weight measure equal to 100 maan, or 440 kilograms.
+
+**Bag**:
+A package whose actual weight must be specified; pilot bags may contain 10 or
+11 maan, so bag count alone does not establish weight.
