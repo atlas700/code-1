@@ -6,6 +6,10 @@
   TypeScript, Tailwind CSS 4, and ESLint. Exact versions live in `package.json` and
   its lockfile.
 - Routes and layouts live in `src/app`; the Clerk integration lives in `src/auth`.
+- `src/domain` contains Task 12's server-only pure decimal, weight, monetary, UUID,
+  UTC timestamp, and explicit-transition helpers. They validate inputs and keep
+  ratios exact with native `bigint`; decimal strings cross public boundaries.
+  Import contracts and technical limits are in the [handoff](handoffs/12-domain-primitives.md).
 - Clerk supplies identity and session management. Each application page calls the
   server-only `requirePermission()` guard; onboarding and staff access use `requireSession()` and
   the sign-in page uses `getSession()`.
@@ -97,3 +101,6 @@ tracked in [database](database.md), [security](security.md),
   requires a fresh local authorization check.
 - Financial and inventory business events must be atomic when those modules are
   introduced.
+- Domain arithmetic does not establish tenant authority, approve a receipt variance,
+  prevent duplicate posting, or authorize debt reductions. Each owning service must
+  enforce those checks and preserve agreed weight/price/rate snapshots transactionally.
