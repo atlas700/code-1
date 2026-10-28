@@ -12,7 +12,8 @@ that must be reviewed against G1 evidence.
 
 ## Decision
 
-- Target Helmand fruit-and-nut wholesalers.
+- Target Helmand grain and mixed-goods wholesalers, as amended on 28 October
+  below. This replaces the initial fruit-and-nut target.
 - Launch Pashto-first, retaining English for internal and administrative use.
 - Treat Pilot A (wholesaler owner), Pilot B (warehouse/operations lead), and Pilot
   C (sales/accounts lead) as anonymized prospective contacts; do not record their
@@ -47,6 +48,23 @@ not evidence that G1 passed. Tasks 14–35 and pilot release still require G1.
 Use the already approved weight definitions from ADRs 0017/0019; do not invent
 pilot category defaults or change payment policy. Unvalidated labels remain
 subject to research. The build plan records the same exception.
+
+## Amendment — Grain and mixed-goods pilot market (28 October 2026)
+
+The founder confirmed that the first pilot should serve grain and mixed-goods
+wholesalers, matching the businesses described in the follow-up research
+interview. This replaces the initial fruit-and-nut segment; Helmand and the
+Pashto-first launch remain the approved location and language.
+
+Keep the purchasing, receiving, supplier-payment, and reconciliation workflow
+and its existing exclusions. Authorized users add their own product names in
+Task 14; the catalogue does not require a predefined list of goods. The reported
+3 AFN bag-carrying charge is research context and adds no labour-payment feature.
+
+This is market approval, not completed user research. The founder reports ten
+interviews but cannot recall the observation count; dated business-by-business
+coverage is still missing. G1, Task 14's evidence prerequisite, and pilot release
+remain open. See the [follow-up research record](../handoffs/pilot-research-evidence.md).
 
 ## Links
 

@@ -21,7 +21,8 @@ clearly distinguish evidence from assumptions.
 [ADR 0001](0001-launch-localization.md) and
 [ADR 0002](0002-clerk-authentication.md) record the accepted localization and pilot
 authentication decisions. [ADR 0003](0003-helmand-pilot-workflow.md) records the
-initial market and pilot workflow. [ADR 0004](0004-single-stock-unit.md) records
+pilot workflow and the 28 October amendment selecting Helmand grain and
+mixed-goods wholesalers. [ADR 0004](0004-single-stock-unit.md) records
 the pilot's single-stock-unit policy. [ADR 0005](0005-product-stock-identity.md)
 records the pilot's product-identity policy. [ADR 0006](0006-receipt-variance-approval.md)
 records the pilot's receipt-variance approval policy. [ADR 0007](0007-no-negative-stock.md)

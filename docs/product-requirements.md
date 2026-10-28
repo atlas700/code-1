@@ -12,17 +12,19 @@
 
 ## Decision status
 
-**Decided — G0 initial market:** target Helmand fruit-and-nut wholesalers,
-launching Pashto-first with English for internal and administrative use. The
-expected pilot contacts are recorded only as Pilot A (owner), Pilot B
+**Decided — G0 initial market:** target Helmand grain and mixed-goods wholesalers
+under ADR 0003's founder-approved amendment of 28 October, replacing the initial
+fruit-and-nut segment. Launch Pashto-first with English for internal and
+administrative use. The expected pilot contacts are recorded only as Pilot A (owner), Pilot B
 (warehouse/operations), and Pilot C (sales/accounts). See
 [ADR 0003](adr/0003-helmand-pilot-workflow.md).
 
 **Open — G1 workflow research:** record 20 interviews and 5 workflow observations
 covering purchase, receiving, stock, sale, debt, payment, correction, and reporting.
-The founder reports interviews and approximately 40 findings, including notebook
-records for purchases and sales. Counts and observation coverage are not yet
-confirmed; see the [clarification record](handoffs/pilot-blocker-clarifications.md).
+The founder confirms 10 people interviewed but cannot recall the observation
+count. The follow-up describes the approved grain and mixed-goods segment, but
+dated business-by-business workflow coverage is still unconfirmed. See the
+[research evidence record](handoffs/pilot-research-evidence.md).
 
 **Decided — G2 pilot workflow:** validate purchase-to-receipt first to improve stock
 accuracy and supplier balance visibility. The pains, four-week success metric, and
@@ -51,6 +53,9 @@ These are future workflow requirements; current onboarding still accepts AFN onl
 pilot. Defer grade, origin, harvest-date, and quality distinctions unless G1
 observes an attribute as operationally distinct stock for purchasing, storage, or
 pricing; see [ADR 0005](adr/0005-product-stock-identity.md).
+Authorized users add their business's own product names under Task 14, rather
+than choose from a predefined goods list. Custom names do not change the pilot's
+market or its research prerequisites.
 
 **Decided — G3 receiving:** permit a receipt quantity that differs from its
 purchase-order quantity only with wholesaler-owner approval. Revisit the approver

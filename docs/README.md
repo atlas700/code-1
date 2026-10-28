@@ -33,6 +33,7 @@ pilot evidence are labelled **Open**.
 - [PostgreSQL CI verification handoff](handoffs/postgresql-ci-verification.md)
 - [Pilot blocker clarifications](handoffs/pilot-blocker-clarifications.md)
 - [Confirmed pilot research interview and remaining G1 evidence](handoffs/pilot-research-evidence.md)
+- [G1 first-revisit checklist and private notes template](handoffs/pilot-research-fieldwork.md)
 - [Completed numeric policy interview](handoffs/pilot-numeric-policy.md)
 - [Pilot-plan and quality maintenance handoff](handoffs/pilot-plan-and-quality.md)
 - [Pre-validation review workflow handoff](handoffs/pre-validation-review.md)

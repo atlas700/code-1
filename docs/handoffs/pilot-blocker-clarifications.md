@@ -42,9 +42,12 @@ Earlier verification sections below retain their original review context.
 
 ## Remaining blockers and next decisions
 
-On 28 October, the founder confirmed approximately 10 interviews and four directly
-observed businesses, along with the [anonymized workflow summary](pilot-research-evidence.md).
-These counts do not meet G1's 20-interview/five-observation requirement. The summary
+On 28 October, the founder confirmed 10 interviews but could not recall the
+observation count; the earlier estimate of four is unconfirmed. The
+[anonymized workflow summary](pilot-research-evidence.md) records the follow-up
+and the approved grain/mixed-goods market amendment, with per-business workflow
+coverage still unconfirmed.
+G1's 20-interview/five-observation requirement remains unmet. The summary
 also records a supplier-running-balance policy mismatch for review before Task 25;
 it does not amend the accepted payment or rounding policies.
 

@@ -7,7 +7,7 @@ agent should complete **one numbered implementation task per chat**, including i
 tests and handoff note. Do not combine adjacent tasks merely because they look
 related.
 
-The approved pilot serves Helmand fruit-and-nut wholesalers, Pashto-first. Its
+The approved pilot serves Helmand grain and mixed-goods wholesalers, Pashto-first. Its
 workflow follows [ADR 0003](adr/0003-helmand-pilot-workflow.md):
 
 ```text
@@ -117,8 +117,8 @@ or interview transcripts.
 
 | Gate | Status and evidence (updated 28 October 2026) | Owner | Blocks |
 | --- | --- | --- | --- |
-| G0 market | Accepted: [ADR 0003](adr/0003-helmand-pilot-workflow.md), 19 October | Founder | Market choice is resolved |
-| G1 research | Open: founder reports approximately 10 people interviewed and 4 businesses directly observed on 28 October; the required 20 interviews/5 observations and complete workflow evidence are not yet recorded; see the [confirmed interview summary](handoffs/pilot-research-evidence.md). About 40 findings is not an interview count. Task 13 alone has the founder-authorized exception in ADR 0003 | Founder/researcher | Tasks 14–35 and pilot release |
+| G0 market | Accepted: [ADR 0003](adr/0003-helmand-pilot-workflow.md), amended 28 October to target Helmand grain and mixed-goods wholesalers | Founder | Market choice is resolved |
+| G1 research | Open: on 28 October, founder confirms 10 people interviewed but cannot recall the observation count; the earlier estimate of 4 is unconfirmed. Follow-up describes the approved grain and mixed-goods segment, but dated business-by-business coverage remains unconfirmed. The required 20 interviews/5 observations and complete workflow evidence are not yet recorded; see the [confirmed interview summary](handoffs/pilot-research-evidence.md). Task 13 alone has the founder-authorized exception in ADR 0003 | Founder/researcher | Tasks 14–35 and pilot release |
 | G2 scope | Founder-approved: [ADR 0003](adr/0003-helmand-pilot-workflow.md); user validation still depends on G1 | Founder/product lead | Features outside the approved pilot |
 | G3 domain policies | Numeric policy resolved by [ADR 0019](adr/0019-pilot-numeric-settlement-policy.md) and implemented as Task 12's pure helpers: kg/gram stock, custom weight measures, exact price conversions, cumulative receipt rounding, recorded mixed-currency cash, and reduction-cap checks; Task 13 adds the weight catalogue, while posting remains in later tasks; terminology requires G1 validation | Founder/product lead | Tasks 14–35 and pilot labels still require G1 evidence |
 | G4 authentication | Accepted: [ADR 0002](adr/0002-clerk-authentication.md); development checks in [Task 06 handoff](handoffs/06-authentication.md); Pilot A–C are available for phone OTP tests, but delivery/sign-in outcomes are not recorded | Founder | Pilot authentication until sign-in validation is recorded |
@@ -476,6 +476,9 @@ measure isolation, sub-gram rejection, and historical snapshot preservation.
 default purchase/selling price if validated, active state, and product list/detail/
 edit screens. Any default price must retain its currency and price measure under
 ADR 0019. Add appropriate per-organization uniqueness constraints.
+Authorized users enter their business's product names as needed; do not restrict
+products to a predefined goods list. This does not change ADR 0003's pilot market
+or close the G1 evidence gate.
 
 **Do not:** add batch/lot/grade/origin fields unless G3 says they define stock
 identity; do not compute inventory yet.
