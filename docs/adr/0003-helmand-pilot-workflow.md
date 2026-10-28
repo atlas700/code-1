@@ -38,6 +38,16 @@ that must be reviewed against G1 evidence.
 - Work that introduces an excluded capability requires a new decision record or an
   explicit amendment to this ADR.
 
+## Amendment — Task 13 implementation before G1 closure (28 October 2026)
+
+After being told that Task 13 was blocked by G1, the founder instructed
+“implement it”. This authorizes Task 13's units/categories schema, services,
+and management screens before research completion. It is a Task 13 exception,
+not evidence that G1 passed. Tasks 14–35 and pilot release still require G1.
+Use the already approved weight definitions from ADRs 0017/0019; do not invent
+pilot category defaults or change payment policy. Unvalidated labels remain
+subject to research. The build plan records the same exception.
+
 ## Links
 
 - [Product requirements](../product-requirements.md)

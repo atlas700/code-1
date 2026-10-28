@@ -20,6 +20,8 @@
   requests without modifying existing mapping rows or migration history.
   `0003_business_roles.sql` adds the grant table and nullable bootstrap marker;
   it does not backfill or infer business roles.
+  `0004_catalog_units_categories.sql` adds organization-owned units and categories
+  under the [Task 13 exception](adr/0003-helmand-pilot-workflow.md#amendment--task-13-implementation-before-g1-closure-28-october-2026).
 - `DATABASE_URL` is required by application startup and migration tooling. It is
   server-only and must never use a `NEXT_PUBLIC_` prefix.
 - SQL and metadata live in `drizzle/`. Migrations are explicit operations, separate
@@ -75,7 +77,7 @@ Use `npm.cmd` when forwarding flags in Windows PowerShell; in other shells use
 `npm`. This avoids the PowerShell `npm.ps1` wrapper consuming migration flags.
 
 Verify reviewed migrations on a separate database before development. The retained
-`afcs_task07_verify` receives the fourth migration for Task 10. A fresh checkout may
+`afcs_task07_verify` receives the fifth migration for Task 13. A fresh checkout may
 instead use a newly provisioned empty database. In a
 dedicated PowerShell terminal, set a process-only override without recording the
 connection string in shell history:
@@ -87,8 +89,9 @@ npm run db:migrate
 Remove-Item Env:DATABASE_URL
 ```
 
-Both runs must succeed, with exactly four migration rows in
-`drizzle.__drizzle_migrations` and the four public tables above plus the ledger.
+Both runs must succeed, with exactly five migration rows in
+`drizzle.__drizzle_migrations` and six public tables (the four foundation tables
+plus `catalog_units` and `product_categories`) plus the ledger.
 Verify prior migration hashes remain unchanged. Run the isolated onboarding tests
 below for uniqueness, concurrency, settings constraints, and rollback. Stop on any
 failure. Removing
@@ -172,7 +175,7 @@ The suite checks `current_database()` before writes, uses unique synthetic fixtu
 and deletes only its grants/settings/mappings/requests afterward. Without the variable, its fifteen tests are
 explicitly skipped; ordinary unit tests need no running database. CI's separate
 `database` job starts PostgreSQL 16 with a fresh `afcs_task07_verify` database,
-applies committed migrations twice, and runs both integration suites with fixed
+applies committed migrations twice, and runs all three integration suites with fixed
 job-local credentials. The service is discarded when the job ends; no repository
 secret or shared application database is used. After the
 26 October local migration, concurrency/rollback tests, and browser smoke checks,
@@ -233,7 +236,8 @@ Convert the combined amount exactly and round once for allocation in the debt's
 currency. Append owner-approved cash rounding reductions separately, with
 provenance and a lifetime cumulative cap of 0.99 in that currency. Serialize
 allocation/cap checks and writes, preserving idempotency and original debt/cash.
-No exchange, adjustment, or custom-measure schema has been implemented yet.
+Task 13 implements the custom-weight catalogue described below. Exchange,
+adjustment, and transaction-line snapshot persistence remain in later tasks.
 
 **Decided — G3 product identity:** each product is one stock identity for the
 pilot; see [ADR 0005](adr/0005-product-stock-identity.md). Grade, origin,
@@ -270,6 +274,45 @@ same approval and a separate scope decision. See
 PostgreSQL 16, Drizzle with `pg`, the structural ownership model, and explicitly
 reviewed/run migrations with forward-fix and backup/restore recovery. See
 [ADR 0013](adr/0013-local-postgresql-foundation.md). Detailed business schema and
-screens beginning at Task 13 still require G1 evidence. ADR 0019 resolves the
+screens after Task 13 still require G1 evidence; Task 13 alone has the limited
+founder-authorized exception in ADR 0003. ADR 0019 resolves the
 numeric policy; other G4 readiness gates remain open. Current eligibility is recorded in the
 [build plan's gate status](agent-sized-build-plan.md#current-gate-status).
+
+## Units and product categories
+
+Task 13 adds `catalog_units` and `product_categories`, each with a generated UUID,
+an organization foreign key, a bounded trimmed name, and an active flag. Names
+are unique per organization and table, ignoring case and outer spaces; inactive
+names remain reserved. No row is deleted or automatically reactivated.
+
+Fixed units have a positive kg weight with at most 18 integer and three fractional
+digits. Bag units have no catalogue weight; each future transaction line supplies
+its actual weight. The unscaled PostgreSQL `numeric` column uses CHECK constraints
+for precision/range, rejecting sub-gram input instead of rounding on storage.
+The service normalizes accepted weights to three decimal places using Task 12.
+
+Reads require `catalog.read`; mutations require `catalog.manage`. Mutations share
+staff's organization row lock and recheck current Clerk membership and the exact
+membership/user-bound grant within the lock. Database reads during that recheck
+use the transaction connection, including under more than ten concurrent requests.
+Creates, edits, and deactivation use server-derived organization scope. The
+explicit default-unit action adds kg, maan, khorwar, and variable-weight bags
+idempotently, retaining existing definitions and deactivation. Categories start
+empty. Reads never seed data.
+
+`getUnitSnapshot` reads only a current active unit in the caller's organization.
+It returns scalar copies of unit ID, name, kind, entered quantity, kg weight, and
+normalized stock kg. It requires an actual bag weight and rejects a weight override
+for fixed units. Fractional quantities requiring sub-gram stock are rejected.
+Later posting services must store these values inside their transaction and apply
+their own positive-quantity/permission rules; this task adds no purchase/receipt
+tables. Measure edits/deactivation do not mutate previously returned snapshots.
+
+Run `src/db/catalog.integration.test.ts` with the same isolated verification URL
+as onboarding. It verifies permissions for every role, tenant isolation, duplicate
+names, deactivation, custom/local/fractional weights, bags, snapshots, database
+constraints, concurrent seeding, and queued actor revocation. CI includes it in
+the disposable database job. The suite refuses other database names and removes
+only its synthetic records. Apply the reviewed fifth migration to verification
+before running the suite, and apply/reapply it to development before using the page.
