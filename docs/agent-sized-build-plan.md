@@ -31,6 +31,8 @@ task readiness and order. Update both when an approved decision changes the scop
   Task 10 supplies fixed business roles, membership-bound grants, and server guards.
   Task 11 supplies Clerk-backed staff invitation, membership management, and local
   role changes with serialized last-active-owner protection.
+  Task 12 supplies exact server-side decimal, weight, money, and validation helpers
+  under ADR 0019; see its [handoff](handoffs/12-domain-primitives.md).
   Purchasing tables and a UI-component library are absent.
 - Preserve unrelated worktree changes.
 
@@ -105,20 +107,22 @@ gate changes; an accepted policy does not count as completed user research.
 Research records stay private; link a redacted evidence summary rather than names
 or interview transcripts.
 
-| Gate | Status and evidence (updated 27 October 2026) | Owner | Blocks |
+| Gate | Status and evidence (updated 28 October 2026) | Owner | Blocks |
 | --- | --- | --- | --- |
 | G0 market | Accepted: [ADR 0003](adr/0003-helmand-pilot-workflow.md), 19 October | Founder | Market choice is resolved |
 | G1 research | Open: founder reports interviews and about 40 findings, including notebook-based purchasing/sales; interview totals and the required 5 observations remain unconfirmed; see [clarifications](handoffs/pilot-blocker-clarifications.md) | Founder/researcher | Tasks 13–35 and pilot release |
 | G2 scope | Founder-approved: [ADR 0003](adr/0003-helmand-pilot-workflow.md); user validation still depends on G1 | Founder/product lead | Features outside the approved pilot |
-| G3 domain policies | Numeric policy resolved by [ADR 0019](adr/0019-pilot-numeric-settlement-policy.md): kg/gram stock, custom weight measures, exact price conversions, cumulative receipt rounding, recorded mixed-currency cash, and capped owner-only reductions; other accepted domain ADRs remain in force; terminology requires G1 validation | Founder/product lead | Task 12's numeric prerequisite is resolved; Tasks 13–35 and pilot labels still require G1 evidence |
+| G3 domain policies | Numeric policy resolved by [ADR 0019](adr/0019-pilot-numeric-settlement-policy.md) and implemented as Task 12's pure helpers: kg/gram stock, custom weight measures, exact price conversions, cumulative receipt rounding, recorded mixed-currency cash, and reduction-cap checks; authorization/posting remains in later tasks; terminology requires G1 validation | Founder/product lead | Tasks 13–35 and pilot labels still require G1 evidence |
 | G4 authentication | Accepted: [ADR 0002](adr/0002-clerk-authentication.md); development checks in [Task 06 handoff](handoffs/06-authentication.md); Pilot A–C are available for phone OTP tests, but delivery/sign-in outcomes are not recorded | Founder | Pilot authentication until sign-in validation is recorded |
 | G4 database | Accepted: [ADR 0013](adr/0013-local-postgresql-foundation.md) approves local PostgreSQL and reviewed migrations; [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md), 25 October, replaces local membership ownership with verified Clerk membership and a local organization mapping | Technical lead/founder | Detailed business schema still requires G1; other G4 gates remain open |
 | G4 mutation boundary | Accepted: [ADR 0015](adr/0015-server-action-mutation-boundary.md), 26 October; native Server Actions with the [mutation contract](api-conventions.md#mutation-contract) and a narrow first-organization bootstrap exception | Technical lead/founder | Boundary decision resolved; each mutation still needs its task's authorization and recovery checks |
 | G4 permissions | Accepted: [ADR 0016](adr/0016-local-business-authorization.md); Task 10 implements fixed roles, membership-bound grants, and server guards. ADR 0019 approves a future owner-only rounding-reduction permission for Task 25 | Technical lead/founder | Policy and foundation resolved; each new workflow still needs its own permission and resource-ownership checks |
 | G4 deployment | Partially resolved: [ADR 0018](adr/0018-managed-pilot-hosting.md) selects Vercel Pro/Neon and founder-owned operations; retention/location, monitoring, recovery objectives, spending policy, configuration, and restore evidence remain open | Founder | Task 34 configuration until operating policies are approved; pilot release until verification passes |
 
-**Next task:** 12 — shared domain primitives for money, quantities, and status
-transitions, under ADR 0019. Task 11 implements staff invitation and membership
+**Next task:** 13 — units and product categories, **blocked by G1 research evidence**.
+Close G1 before implementing its schema, services, or screens. Task 12 implements
+shared domain primitives under ADR 0019; see its [handoff](handoffs/12-domain-primitives.md).
+Task 11 implements staff invitation and membership
 management under ADRs 0014/0016; see its [handoff](handoffs/11-staff-management.md).
 Task 10 is complete; see its
 [handoff](handoffs/10-business-authorization.md). Task 09 onboarding is implemented under
@@ -193,8 +197,8 @@ The scope column also constrains the detailed task descriptions below.
 
 | Tasks | Classification | Pilot scope |
 | --- | --- | --- |
-| 01–11 | Complete | Foundation, authentication, persistence, tenancy, onboarding, local authorization, and staff management; see [handoffs](README.md) |
-| 12–15 | Pilot required | Primitives, products, suppliers |
+| 01–12 | Complete | Foundation, authentication, persistence, tenancy, onboarding, local authorization, staff management, and domain primitives; see [handoffs](README.md) |
+| 13–15 | Pilot required | Units/categories, products, suppliers; blocked by G1 |
 | 16 | Deferred | Customers |
 | 17–22 | Pilot required | One warehouse, purchases, accepted receipts/payables, stock, owner-approved corrections |
 | 23–24 | Deferred | Sales drafts and fulfilment |

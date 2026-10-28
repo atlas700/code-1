@@ -86,6 +86,18 @@ isolated command and `src/db/staff.integration.test.ts`; no live provider mutati
 is needed. Static rendering verifies markup and feedback, not browser interaction
 or email/OTP delivery.
 
+## Domain primitive verification
+
+Task 12's colocated `src/domain/*.test.ts` tests run with
+`npm run test -- src/domain`, without a database or provider. They verify exact
+decimal parsing/output, signed half-up ties, large values, precision and size
+rejection, gram-precise custom/local measures, differing quantity/price measures,
+rounded-line sums, cumulative receipt reconciliation, both cash exchange directions,
+whole cash, the lifetime reduction cap, UUIDs, UTC timestamps, and explicit status
+transitions. Expected monetary examples come from ADR 0019. These tests establish
+pure calculations; later service tests must establish authorization, durable
+snapshots, concurrent/idempotent posting, and reconciliation against stored rows.
+
 ## Dependency gate
 
 - The audit checks production dependencies and fails for high or critical
