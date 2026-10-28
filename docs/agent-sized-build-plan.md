@@ -34,6 +34,10 @@ task readiness and order. Update both when an approved decision changes the scop
   Task 12 supplies exact server-side decimal, weight, money, and validation helpers
   under ADR 0019; see its [handoff](handoffs/12-domain-primitives.md).
   Purchasing tables and a UI-component library are absent.
+- CI maintenance adds a separate disposable PostgreSQL 16 verification job for
+  committed migrations and the 21 existing integration tests under
+  [ADR 0013's amendment](adr/0013-local-postgresql-foundation.md#amendment--disposable-ci-verification-28-october-2026).
+  This does not advance Task 32 or close G1, pilot sign-in, or deployment gates.
 - Preserve unrelated worktree changes.
 
 The project rules in `AGENTS.md` and `docs/` are mandatory. In particular:

@@ -24,8 +24,10 @@
 - Local-only values belong in the ignored root `.env.local` file.
 - `DATABASE_URL` is required at startup and by migration tooling. Keep it
   server-only; follow the [database setup](database.md). Apply reviewed migrations
-  explicitly, separately from startup and builds. Quality CI uses an unreachable
-  placeholder and never connects to or migrates a database.
+  explicitly, separately from startup and builds. CI's `quality` job uses an
+  unreachable placeholder and never connects to or migrates a database. The
+  separate `database` job applies committed migrations only to its disposable
+  PostgreSQL service; it provides no deployment or restore evidence.
 - Staging and production values will be set in the approved deployment target's
   encrypted environment configuration after remaining G4 operating policies are
   approved. They must not be committed to the repository. Secrets must never use
