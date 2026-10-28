@@ -31,6 +31,7 @@ pilot evidence are labelled **Open**.
 - [Task 12 handoff and primitive import contracts](handoffs/12-domain-primitives.md)
 - [PostgreSQL CI verification handoff](handoffs/postgresql-ci-verification.md)
 - [Pilot blocker clarifications](handoffs/pilot-blocker-clarifications.md)
+- [Confirmed pilot research interview and remaining G1 evidence](handoffs/pilot-research-evidence.md)
 - [Completed numeric policy interview](handoffs/pilot-numeric-policy.md)
 - [Pilot-plan and quality maintenance handoff](handoffs/pilot-plan-and-quality.md)
 - [Pre-validation review workflow handoff](handoffs/pre-validation-review.md)

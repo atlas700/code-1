@@ -1,11 +1,12 @@
-# Maintenance handoff — PostgreSQL CI verification
+# Maintenance handoff — PostgreSQL CI and pilot readiness
 
 Date: 28 October 2026.
 
 ## Status and acceptance
 
 **Complete and ready for review.** This maintenance change runs the existing
-database acceptance tests in CI without implementing a numbered feature.
+database acceptance tests in CI and records the confirmed research interview
+without implementing a numbered feature. G1 itself remains open.
 
 - [x] Add a separate PostgreSQL 16 service job on every push and pull request.
 - [x] Apply the committed migrations twice before running both integration suites.
@@ -14,6 +15,8 @@ database acceptance tests in CI without implementing a numbered feature.
 - [x] Preserve the existing `quality` job, including its database-free build.
 - [x] Record the approved narrow CI exception in ADR 0013 and update current guidance.
 - [x] Complete pre-validation review and all required local quality checks.
+- [x] Save the founder-confirmed anonymized research summary and preserve G1's
+  unmet evidence threshold and the unresolved payment-policy mismatch.
 
 ## Changed files
 
@@ -24,6 +27,9 @@ database acceptance tests in CI without implementing a numbered feature.
 - `docs/agent-sized-build-plan.md`, `docs/testing.md`, `docs/database.md`, and
   `docs/deployment.md`: distinguish the two jobs and preserve the open gates.
 - `docs/README.md`: index this handoff.
+- `docs/handoffs/pilot-research-evidence.md` and
+  `docs/handoffs/pilot-blocker-clarifications.md`: record the confirmed interview,
+  approximate counts, terminology, remaining G1 evidence, and payment-policy review.
 - This handoff.
 
 No application, schema, migration, dependency, permission, or deployment changes.
@@ -38,6 +44,9 @@ Checked service readiness, runner-to-service addressing, explicit test activatio
 the tests' database-name guards, synthetic fixture cleanup, migration reapplication,
 failure propagation, and absence of real credentials or deployment mutation.
 The existing quality job is unchanged. No unresolved must-fix findings.
+Reviewed the subsequent research record against the founder's confirmed answers,
+G1's threshold, pilot exclusions, and ADRs 0009/0019. The running-balance mismatch
+is flagged for review; no payment policy or permission is silently changed.
 
 ## Verification
 
@@ -52,20 +61,24 @@ The existing quality job is unchanged. No unresolved must-fix findings.
 - Workflow assertions: existing quality-job contents unchanged; explicit isolated
   database/test opt-in; two migration invocations; no repository-secret references
   or ignored failures.
-- `git diff --check` and 272 local documentation links/anchors across 60 Markdown
+- `git diff --check` and 281 local documentation links/anchors across 61 Markdown
   files: pass.
 
 Local Docker's Linux engine is unavailable, so a fresh service-container run is
-not claimed locally. GitHub's first run must establish that the new job provisions
-and migrates an empty service successfully; local execution verifies the existing
-PostgreSQL 16 database and test commands. Neither result proves live Clerk behavior,
-pilot phone delivery, deployment, backups, or restore readiness.
+not claimed locally. GitHub's [first PR run](https://github.com/atlas700/code-1/actions/runs/40665610063)
+passes both `quality` and `database` on commit `0a025ce`; the push run also passes.
+This verifies fresh PostgreSQL 16 service provisioning, committed/repeated
+migrations, and the 21 integration tests. Subsequent research/documentation edits
+do not change that workflow. Neither local nor CI evidence proves live Clerk
+behavior, pilot phone delivery, deployment, backups, or restore readiness.
 
 ## Recovery and next task
 
 Revert this maintenance commit to remove the CI job; no shared database migration
 or data rollback is needed. G1 research, pilot phone sign-in, and deployment/restore
-gates remain open. The G1 evidence interview is separate from this CI verification.
+gates remain open. The [confirmed G1 interview](pilot-research-evidence.md) records
+approximately 10 interviews and four observed businesses, below the required
+counts, and flags the selected-payable policy for review before Task 25.
 
 Next implementation task remains **13 — units and product categories**, blocked
 until the required 20 interviews and five workflow observations are documented.

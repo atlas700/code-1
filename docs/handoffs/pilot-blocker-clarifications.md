@@ -42,6 +42,12 @@ Earlier verification sections below retain their original review context.
 
 ## Remaining blockers and next decisions
 
+On 28 October, the founder confirmed approximately 10 interviews and four directly
+observed businesses, along with the [anonymized workflow summary](pilot-research-evidence.md).
+These counts do not meet G1's 20-interview/five-observation requirement. The summary
+also records a supplier-running-balance policy mismatch for review before Task 25;
+it does not amend the accepted payment or rounding policies.
+
 - G1 stays open until interview totals, five workflow observations, and a redacted
   workflow summary establish the build plan's required coverage. Do not invent
   counts or reinterpret findings as interview participants.
