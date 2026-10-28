@@ -23,7 +23,9 @@
 - `DATABASE_URL` is required by application startup and migration tooling. It is
   server-only and must never use a `NEXT_PUBLIC_` prefix.
 - SQL and metadata live in `drizzle/`. Migrations are explicit operations, separate
-  from application startup, builds, and quality CI.
+  from application startup, builds, and CI's `quality` job. The separate disposable
+  CI database job applies committed migrations under
+  [ADR 0013's amendment](adr/0013-local-postgresql-foundation.md#amendment--disposable-ci-verification-28-october-2026).
 
 ## Local setup
 
@@ -168,7 +170,11 @@ Remove-Item Env:AFCS_TEST_DATABASE_URL
 
 The suite checks `current_database()` before writes, uses unique synthetic fixtures,
 and deletes only its grants/settings/mappings/requests afterward. Without the variable, its fifteen tests are
-explicitly skipped; ordinary unit tests and CI need no running database. After the
+explicitly skipped; ordinary unit tests need no running database. CI's separate
+`database` job starts PostgreSQL 16 with a fresh `afcs_task07_verify` database,
+applies committed migrations twice, and runs both integration suites with fixed
+job-local credentials. The service is discarded when the job ends; no repository
+secret or shared application database is used. After the
 26 October local migration, concurrency/rollback tests, and browser smoke checks,
 all three public tables are empty in both local databases.
 

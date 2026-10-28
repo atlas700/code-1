@@ -29,6 +29,9 @@ an agent workflow requirement; CI continues to run the existing automated checks
 - Install locked dependencies with `npm ci`.
 - Run `npm run lint`, `npm run typecheck`, `npm run test`, and `npm run build`.
 - CI runs those same commands on every push and pull request.
+- A separate CI job starts disposable PostgreSQL 16, applies committed migrations
+  twice, and runs the onboarding/authorization and staff integration suites with
+  `AFCS_TEST_DATABASE_URL`. It uses fixed, job-local credentials and no live services.
 - CI also runs `npm audit --omit=dev --audit-level=high` after installation. Run it
   locally for dependency or CI changes and before deployment.
 
@@ -44,7 +47,8 @@ an agent workflow requirement; CI continues to run the existing automated checks
 - Database unit tests cover URL validation, lazy pool creation, development reload
   reuse, and sanitized background errors without connecting to PostgreSQL. Task 07
   separately verifies its baseline migration on a fresh local database and then
-  development; CI does not provision or migrate a database.
+  development. The separate CI database job now verifies committed migrations
+  against a fresh disposable service; the `quality` job stays database-free.
 - Later tasks add focused tests for tenancy, authorization, exact totals, status
   transitions, inventory, and payments as those behaviors are introduced.
 - Task 08 tests mock Clerk and the PostgreSQL transport while using Drizzle's real
@@ -58,8 +62,9 @@ an agent workflow requirement; CI continues to run the existing automated checks
   onboarding routing. Eight opt-in PostgreSQL tests cover actual concurrent
   reservation/completion, pinned IDs, uniqueness, tenant-scoped reads, rollback,
   and non-overwrite behavior. Follow the
-  [isolated command](database.md#onboarding-persistence-and-verification); CI skips
-  these database tests unless `AFCS_TEST_DATABASE_URL` is explicitly supplied.
+  [isolated command](database.md#onboarding-persistence-and-verification). Local
+  default runs and CI's `quality` job skip these tests without
+  `AFCS_TEST_DATABASE_URL`; the CI `database` job explicitly supplies it.
 - Task 09's manual development browser smoke covers real sign-in/onboarding,
   validation and retained values, activation after persistence, idempotent resume,
   mobile RTL layout, membership-removal denial, and sign-out. It adds no E2E
@@ -113,8 +118,9 @@ snapshots, concurrent/idempotent posting, and reconciliation against stored rows
 
 ## Scope
 
-- No browser DOM test environment, coverage tooling, integration-test database, or
-  end-to-end framework is part of this baseline.
+- No browser DOM test environment, coverage tooling, or end-to-end framework is
+  part of this baseline. PostgreSQL integration tests use only the dedicated local
+  verification database or CI's disposable service, never a shared application DB.
 - CI uses explicitly nonfunctional Clerk key placeholders only for compilation.
   They cannot sign in users and must not be reused for an application deployment.
   Unit tests use their own isolated placeholders and never contact Clerk.

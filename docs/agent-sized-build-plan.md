@@ -34,6 +34,10 @@ task readiness and order. Update both when an approved decision changes the scop
   Task 12 supplies exact server-side decimal, weight, money, and validation helpers
   under ADR 0019; see its [handoff](handoffs/12-domain-primitives.md).
   Purchasing tables and a UI-component library are absent.
+- CI maintenance adds a separate disposable PostgreSQL 16 verification job for
+  committed migrations and the 21 existing integration tests under
+  [ADR 0013's amendment](adr/0013-local-postgresql-foundation.md#amendment--disposable-ci-verification-28-october-2026).
+  This does not advance Task 32 or close G1, pilot sign-in, or deployment gates.
 - Preserve unrelated worktree changes.
 
 The project rules in `AGENTS.md` and `docs/` are mandatory. In particular:
@@ -110,7 +114,7 @@ or interview transcripts.
 | Gate | Status and evidence (updated 28 October 2026) | Owner | Blocks |
 | --- | --- | --- | --- |
 | G0 market | Accepted: [ADR 0003](adr/0003-helmand-pilot-workflow.md), 19 October | Founder | Market choice is resolved |
-| G1 research | Open: founder reports interviews and about 40 findings, including notebook-based purchasing/sales; interview totals and the required 5 observations remain unconfirmed; see [clarifications](handoffs/pilot-blocker-clarifications.md) | Founder/researcher | Tasks 13–35 and pilot release |
+| G1 research | Open: founder reports approximately 10 people interviewed and 4 businesses directly observed on 28 October; the required 20 interviews/5 observations and complete workflow evidence are not yet recorded; see the [confirmed interview summary](handoffs/pilot-research-evidence.md). About 40 findings is not an interview count | Founder/researcher | Tasks 13–35 and pilot release |
 | G2 scope | Founder-approved: [ADR 0003](adr/0003-helmand-pilot-workflow.md); user validation still depends on G1 | Founder/product lead | Features outside the approved pilot |
 | G3 domain policies | Numeric policy resolved by [ADR 0019](adr/0019-pilot-numeric-settlement-policy.md) and implemented as Task 12's pure helpers: kg/gram stock, custom weight measures, exact price conversions, cumulative receipt rounding, recorded mixed-currency cash, and reduction-cap checks; authorization/posting remains in later tasks; terminology requires G1 validation | Founder/product lead | Tasks 13–35 and pilot labels still require G1 evidence |
 | G4 authentication | Accepted: [ADR 0002](adr/0002-clerk-authentication.md); development checks in [Task 06 handoff](handoffs/06-authentication.md); Pilot A–C are available for phone OTP tests, but delivery/sign-in outcomes are not recorded | Founder | Pilot authentication until sign-in validation is recorded |
@@ -133,6 +137,9 @@ Development Organizations and recovery slugs are on, membership is optional, and
 automatic creation is off; Task 09 verifies these settings and its live flow.
 ADR 0019 resolves Task 12's numeric prerequisite. G1 still
 blocks Tasks 13–35; pilot sign-in and deployment readiness remain open.
+The [research summary](handoffs/pilot-research-evidence.md#policy-mismatch-requiring-review)
+also flags a supplier-running-balance versus selected-payable policy mismatch.
+Review it before Task 25; ADRs 0009/0019 remain in force pending an approved change.
 
 ### G0 — choose the initial market
 
@@ -655,6 +662,10 @@ cannot double-decrement stock; a successful sale appears in stock history.
 #### 25 — Record and allocate supplier payments
 
 **Goal:** Settle receipt-based supplier debt without corrupting balances.
+
+**Readiness:** Review the [28 October research mismatch](handoffs/pilot-research-evidence.md#policy-mismatch-requiring-review)
+before implementation. ADR 0009's selected-payable policy remains binding until
+an approved replacement updates the affected numeric rules and task scope.
 
 **Do:** Add supplier payments and payment allocations under ADR 0009. Record the
 supplier, date, whole AFN/PKR cash amounts, reference/note, and exactly one selected

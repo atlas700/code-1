@@ -48,6 +48,17 @@ ownership model and migration/recovery workflow without pre-empting G1 research.
 - Docker, hosted PostgreSQL, business schema, automatic migration pipelines, and
   general repository abstractions are outside Task 07.
 
+## Amendment — disposable CI verification (28 October 2026)
+
+The founder approved adding the existing PostgreSQL integration tests to CI.
+A separate database-verification job may provision a disposable PostgreSQL 16
+service with a database named `afcs_task07_verify`, apply committed migrations twice, and run
+the isolated tests. Its fixed credentials belong only to that job's service;
+it must not use development, staging, production, or repository-secret credentials.
+The service is discarded with the job. The application, builds, and existing
+`quality` job still never apply migrations. This exception approves test
+verification, not an automatic deployment-migration pipeline or new domain schema.
+
 ## Links
 
 - [Database setup and workflow](../database.md)

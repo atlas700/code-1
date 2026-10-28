@@ -29,3 +29,38 @@ jobs:
           CLERK_SECRET_KEY: sk_test_ciPlaceholder
           # Unreachable placeholder proves compilation requires no live database.
           DATABASE_URL: postgresql://ci:placeholder@127.0.0.1:1/afcs_ci
+
+  database:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: afcs_task07_verify
+          POSTGRES_USER: afcs_ci
+          POSTGRES_PASSWORD: ci_only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U afcs_ci -d afcs_task07_verify"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      # Fixed credentials are only for this job's disposable service.
+      DATABASE_URL: postgresql://afcs_ci:ci_only@127.0.0.1:5432/afcs_task07_verify
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Apply committed migrations and verify repeat application
+        run: |
+          npm run db:migrate
+          npm run db:migrate
+      - name: Run PostgreSQL integration tests
+        run: npm run test -- src/db/onboarding.integration.test.ts src/db/staff.integration.test.ts
+        env:
+          AFCS_TEST_DATABASE_URL: ${{ env.DATABASE_URL }}
