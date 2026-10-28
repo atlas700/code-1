@@ -87,7 +87,9 @@ currency conversion, and owner-only adjustment checks described here. Task 25
 must record adjustment provenance when introduced; it cannot wait for Task 27.
 
 This decision adds no code, schema, dependency, permission, or deployed resource
-yet. Current onboarding remains AFN-only. G1 still blocks Tasks 13–35; pilot
+yet. Current onboarding remains AFN-only. G1 still blocks Tasks 14–35; Task 13
+has the limited pre-research implementation exception in
+[ADR 0003](0003-helmand-pilot-workflow.md#amendment--task-13-implementation-before-g1-closure-28-october-2026). Pilot
 phone testing and remaining deployment policies/configuration/restore remain open.
 
 ## Links

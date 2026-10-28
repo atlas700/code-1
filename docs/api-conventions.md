@@ -150,6 +150,40 @@ target after waiting. Results are `success`, `invalid` with field names,
 Next.js authentication/authorization control flow is preserved. Success
 revalidates `/settings/staff`. See the [recovery procedures](handoffs/11-staff-management.md#expiry-and-recovery).
 
+## Units and categories contract
+
+`updateCatalog(previousState, formData)` authenticates and forwards only operation,
+resource ID, name, and unit details. `manageCatalog(input)` independently requires
+`catalog.manage`, validates the discriminated Zod command, derives the tenant,
+locks the organization row shared with staff mutations, and rechecks fresh Clerk
+membership and the exact local grant before writing.
+
+- `seed-units`: explicitly add approved kg/maan/khorwar definitions and bags without
+  changing existing weights or inactive entries; no category defaults.
+- `create-unit` / `update-unit`: trimmed 1–80 character name and either fixed weight
+  (positive kg, at most 18 integer/three fractional digits) or variable bag weight
+  (`null` in the catalogue). Update requires a local UUID and an active tenant row.
+- `create-category` / `update-category`: trimmed 1–80 character name; update requires
+  a local UUID and an active tenant row.
+- `deactivate-unit` / `deactivate-category`: local UUID; mark an active tenant row
+  inactive without deletion or historical changes. Repeating returns `conflict`.
+
+Names are unique per tenant/table ignoring case and surrounding spaces, including
+inactive names. Results are `success`, `invalid` with field names, `duplicate`,
+`conflict`, or a safe `error` with a correlation UUID. Framework authentication
+and permission control flow is rethrown. Only success revalidates `/settings/catalog`.
+After an ambiguous result, reload the list before retrying; normal duplicate
+creates never create a second same-name row. Edits currently use last successful
+write semantics; there is no version-conflict editor in this task.
+
+`getCatalogWorkspace()` requires `catalog.read`, returns tenant-scoped scalar
+lists with a current `canManage` flag, and never writes. `getUnitSnapshot(input)`
+requires `catalog.read` and an active unit UUID. It returns scalar quantity/measure
+snapshots and exact normalized kg; bags require a positive gram-precise actual
+weight, while fixed-weight overrides and sub-gram stock are rejected. Like Task
+12, the calculation accepts zero quantity; future posting services must enforce
+their positive quantities and persist snapshots atomically with the business event.
+
 ## Decision status
 
 **Accepted — G4 mutation boundary:** [ADR 0015](adr/0015-server-action-mutation-boundary.md).

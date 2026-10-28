@@ -89,5 +89,9 @@ and the distinction between research findings and an approved policy change.
 No unresolved must-fix findings. This record changes no application behavior,
 schema, migration, dependency, or documented command.
 
-Next implementation task remains **13 — units and product categories**, blocked
-by G1. See the [maintenance handoff](postgresql-ci-verification.md) for CI evidence.
+At this interview's completion, Task 13 remained blocked by G1. Subsequently,
+after being informed of that blocker, the founder instructed implementation of
+Task 13; [ADR 0003's amendment](../adr/0003-helmand-pilot-workflow.md#amendment--task-13-implementation-before-g1-closure-28-october-2026)
+records that limited exception. G1 remains open; Task 14 and later tasks still
+require its evidence. See the [Task 13 handoff](13-units-product-categories.md)
+and [maintenance handoff](postgresql-ci-verification.md) for implementation/CI evidence.

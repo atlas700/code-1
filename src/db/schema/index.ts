@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { check, pgTable, primaryKey, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, check, numeric, pgTable, primaryKey, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 import { businessRoles } from "@/auth/permissions";
 
 export const organizations = pgTable("organizations", {
@@ -7,6 +7,32 @@ export const organizations = pgTable("organizations", {
   clerkOrganizationId: text("clerk_organization_id").notNull().unique(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
+
+export const catalogUnits = pgTable("catalog_units", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organizationId: uuid("organization_id").notNull().references(() => organizations.id),
+  name: text("name").notNull(),
+  kind: text("kind", { enum: ["fixed", "bag"] }).notNull(),
+  // Unscaled numeric prevents PostgreSQL from silently rounding sub-gram inputs.
+  kilogramsPerUnit: numeric("kilograms_per_unit"),
+  isActive: boolean("is_active").default(true).notNull(),
+}, (table) => [
+  uniqueIndex("catalog_units_organization_name").on(table.organizationId, sql`lower(btrim(${table.name}))`),
+  check("catalog_units_name", sql`${table.name} = btrim(${table.name}) and length(${table.name}) between 1 and 80`),
+  check("catalog_units_weight", sql`(${table.kind} = 'bag' and ${table.kilogramsPerUnit} is null) or
+    (${table.kind} = 'fixed' and ${table.kilogramsPerUnit} is not null and ${table.kilogramsPerUnit} > 0
+    and ${table.kilogramsPerUnit} < 1000000000000000000 and scale(${table.kilogramsPerUnit}) <= 3)`),
+]);
+
+export const productCategories = pgTable("product_categories", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organizationId: uuid("organization_id").notNull().references(() => organizations.id),
+  name: text("name").notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+}, (table) => [
+  uniqueIndex("product_categories_organization_name").on(table.organizationId, sql`lower(btrim(${table.name}))`),
+  check("product_categories_name", sql`${table.name} = btrim(${table.name}) and length(${table.name}) between 1 and 80`),
+]);
 
 export const organizationRoleAssignments = pgTable("organization_role_assignments", {
   organizationId: uuid("organization_id").notNull().references(() => organizations.id),

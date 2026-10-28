@@ -30,7 +30,7 @@ an agent workflow requirement; CI continues to run the existing automated checks
 - Run `npm run lint`, `npm run typecheck`, `npm run test`, and `npm run build`.
 - CI runs those same commands on every push and pull request.
 - A separate CI job starts disposable PostgreSQL 16, applies committed migrations
-  twice, and runs the onboarding/authorization and staff integration suites with
+  twice, and runs the onboarding/authorization, staff, and catalogue integration suites with
   `AFCS_TEST_DATABASE_URL`. It uses fixed, job-local credentials and no live services.
 - CI also runs `npm audit --omit=dev --audit-level=high` after installation. Run it
   locally for dependency or CI changes and before deployment.
@@ -102,6 +102,18 @@ whole cash, the lifetime reduction cap, UUIDs, UTC timestamps, and explicit stat
 transitions. Expected monetary examples come from ADR 0019. These tests establish
 pure calculations; later service tests must establish authorization, durable
 snapshots, concurrent/idempotent posting, and reconciliation against stored rows.
+
+## Catalogue verification
+
+Task 13's service/action/static-render tests check input validation, tenant-bound
+SQL, permission denial, actor changes while waiting for a lock, safe errors,
+pending controls, retained values, and read-only management screens. Its opt-in
+`src/db/catalog.integration.test.ts` suite checks every role, tenant isolation,
+case-insensitive uniqueness, deactivation, custom measures, fractional weights,
+10/11-maan bags, returned snapshots, actual database constraints, concurrent
+seeding, and a queued actor's revoked grant. It uses the same isolated database
+guard/cleanup as the other integration suites, and CI's database job includes it.
+Static rendering does not establish live browser interaction or translation quality.
 
 ## Dependency gate
 
