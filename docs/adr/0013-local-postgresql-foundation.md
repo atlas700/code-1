@@ -33,8 +33,9 @@ ownership model and migration/recovery workflow without pre-empting G1 research.
   builds, or the quality CI workflow. Never rewrite an applied migration.
 - Use reviewed forward migrations for corrections. Destructive changes require
   an explicit migration plan, a backup, and a restore procedure; reverting code
-  alone does not reverse database changes. Deployment backup ownership, retention,
-  and restore rehearsal remain G4 deployment decisions.
+  alone does not reverse database changes. Amended
+  [ADR 0018](0018-managed-pilot-hosting.md) records the deployment backup owner,
+  retention, and recovery targets; configuration and restore rehearsal remain open.
 - Task 07 creates an empty schema and a custom `SELECT 1` baseline migration.
   Only Drizzle's migration ledger is introduced. Verify on a separate fresh local
   database before applying the baseline to development.

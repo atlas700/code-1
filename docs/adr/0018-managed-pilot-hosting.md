@@ -1,42 +1,77 @@
-# ADR 0018: Select Vercel and Neon with founder-owned operations
+# ADR 0018: Use free test hosting and founder-owned pilot operations
 
 - **Date:** 2026-10-27
-- **Status:** Accepted target and owner; deployment readiness remains open
+- **Status:** Accepted; amended 30 October 2026; deployment readiness remains open
 
 ## Context
 
-The founder delegated hosting selection between Vercel, Netlify, or another
-suitable option within a startup budget, and confirmed personal responsibility
-for hosting. The existing application uses Next.js and PostgreSQL. Select managed
-services rather than adding server administration to the pilot.
+The 27 October decision selected Vercel Pro and Neon with founder-owned
+operations. On 30 October the founder chose free temporary testing before deciding
+the paid production platform, and approved a spending ceiling and recovery
+targets. This amendment replaces the earlier fixed paid-platform selection and
+USD 40–60 planning estimate. The existing app uses Next.js and PostgreSQL.
 
 ## Decision
 
-- Select Vercel Pro for the commercial application and Neon PostgreSQL for the
-  hosted database. Local PostgreSQL development remains under ADR 0013.
+- Use Netlify Free for the temporary test app and Neon Free for its PostgreSQL
+  database, with made-up business records. Target USD 0 for test hosting/database
+  within free-plan limits. Local PostgreSQL development remains under ADR 0013.
+- Decide paid production hosting later. Keep a maximum of USD 60/month for
+  hosting and database; separately approve authentication/SMS/domain costs and
+  confirm how taxes, other charges, and provider controls fit the budget before
+  activating paid resources. The ceiling is an approved policy, not an already
+  configured billing limit or a promise that every workload fits it.
 - The founder owns hosting/database accounts, billing, operational alerts, and
   backup recovery. Credentials stay outside source control and public records.
-- Plan for separate staging and production data, explicit reviewed migrations,
-  monitoring, backups, and a verified non-production restore before pilot use.
-- Treat USD 40–60/month as an initial hosting/database planning estimate, not an
-  approved spending limit or a guaranteed bill. Domain, authentication/SMS,
-  taxes, additional seats, and excess usage are not included in that estimate.
-- Approve backup retention/location, monitoring, recovery objectives, and an
-  enforceable spending policy before configuring pilot infrastructure. No paid
-  resource or deployment is created by recording this selection.
+- Keep temporary testing, staging, and production business data separate. Free
+  test hosting does not authorize real business use or close Task 34.
+- For the real pilot, retain database backups for 30 days. Target at most one
+  hour of lost recent entries after a serious failure, and usable service restored
+  within four hours during business hours. Select a backup/recovery design that
+  meets both targets and demonstrate it with a non-production restore.
+- Overseas storage is acceptable. The founder delegates selection of a suitable
+  supported region when production hosting is finalized; the exact region and
+  backup destination remain to be selected and recorded.
+- Send downtime, backup-failure, and spending alerts to the founder by email,
+  with prompt checking during business hours. Monitoring configuration, alert
+  delivery tests, and the response procedure still need implementation.
+
+## Alternatives considered
+
+- Paying for the earlier Vercel Pro target immediately was deferred in favor of
+  free testing and a later production choice.
+- Vercel Hobby is restricted to personal, non-commercial use. Netlify's free
+  plan permits commercial projects, making it the selected temporary test target.
+- Real business records in the free test environment were excluded; synthetic
+  records allow testing without depending on unverified recovery arrangements.
 
 ## Consequences
 
-Task 34 has a named target and accountable owner. G4 deployment stays open until
-the remaining operating policies, configuration, and restore evidence exist.
-Existing builds and migration commands remain unchanged.
+Task 34 has approved operating targets and an accountable owner. G4 deployment
+stays open until the production provider, region/destination, separate costs and
+enforceable spending controls are settled, configuration is complete, and restore
+and alert tests pass. Backup retention does not itself prove the one-hour loss
+or four-hour recovery targets. No provisioning, paid upgrade, or deployment is
+authorized merely by recording this selection; this change adds documentation.
 
-Official pricing checked during this clarification: [Vercel Pro](https://vercel.com/pricing)
-starts at USD 20/month; [Neon](https://neon.com/pricing) is usage-based and lists
-USD 15/month for its example intermittent workload. Recheck at provisioning.
+## Provider references checked 30 October 2026
+
+- [Netlify free-plan terms and limits](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/credit-based-pricing-plans/)
+  and [commercial-project allowance](https://www.netlify.com/blog/introducing-netlify-free-plan/).
+- [Netlify Next.js support](https://docs.netlify.com/build/frameworks/framework-setup-guides/nextjs/overview/).
+- [Neon Free pricing and limits](https://neon.com/pricing).
+- [Vercel Hobby commercial-use restriction](https://vercel.com/docs/limits/fair-use-guidelines).
+- [Clerk development testing and SMS limits](https://clerk.com/docs/guides/development/testing/test-emails-and-phones)
+  and [production phone-authentication requirements](https://clerk.com/docs/guides/configure/auth-strategies/sign-up-sign-in-options).
+
+Recheck current limits, eligibility, and costs before setup. Free-plan quota
+pauses and development SMS limits can interrupt testing; routine test numbers
+do not establish real SMS delivery. Repository deployment compatibility remains
+unverified until a test deployment succeeds.
 
 ## Links
 
 - [Local database foundation](0013-local-postgresql-foundation.md)
 - [Deployment](../deployment.md)
 - [Build plan](../agent-sized-build-plan.md)
+- [Confirmed readiness interview](../handoffs/pilot-readiness-decisions.md)

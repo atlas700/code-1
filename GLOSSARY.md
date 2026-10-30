@@ -19,6 +19,20 @@ _Avoid_: separate debt record
 The amount owed to a supplier for goods received and accepted at the approved
 purchase price.
 
+**Supplier running balance**:
+The sum of a supplier's unpaid receipt payables after payment allocations and
+approved reductions, kept separately for AFN and PKR.
+
+**Payment allocation**:
+The part of a recorded supplier payment applied to one receipt payable. The
+pilot allocates automatically to the oldest unpaid receipts in one debt currency;
+one payment can have several allocations.
+
+**Business transaction**:
+A recorded purchase, receipt, cash payment, or correction. Recording cash already
+paid does not move money through an online payment processor. This differs from
+an HTTP request or a database transaction that commits related writes atomically.
+
 **Correction**:
 A recorded change that resolves a stock discrepancy or reverses an operational
 transaction.

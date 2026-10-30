@@ -2,6 +2,13 @@
 
 Date: 27 October 2026.
 
+**30 October follow-up:** amended [ADR 0009](../adr/0009-specific-obligation-payment-allocation.md)
+replaces single-payable entry with automatic oldest-first allocation of a supplier
+payment within one debt currency. ADR 0019 retains the numeric rules below;
+the [readiness handoff](pilot-readiness-decisions.md) records updated research,
+phone-test evidence, and hosting/recovery choices. Earlier readiness statements
+in this handoff describe its original completion date.
+
 ## Status and acceptance
 
 **Policy clarification is complete and ready for review.**

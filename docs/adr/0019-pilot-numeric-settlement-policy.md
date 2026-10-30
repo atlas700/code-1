@@ -1,7 +1,7 @@
 # ADR 0019: Use gram-precise stock and recorded mixed-currency cash settlement
 
 - **Date:** 2026-10-27
-- **Status:** Accepted
+- **Status:** Accepted; allocation amended 30 October 2026
 
 ## Context
 
@@ -45,19 +45,24 @@ working deployment/restore.
 ### Cash and exchange
 
 - Each purchase/payable retains one currency, AFN or PKR; supplier balances stay
-  separate by currency. Keep ADR 0009's one-payment-to-one-payable allocation.
+  separate by currency. Under amended ADR 0009, staff enter one supplier payment
+  against one debt currency; the app allocates it oldest-first across that
+  supplier's unpaid receipt payables in the same organization and currency.
 - Allow a payment to contain whole, non-negative AFN and/or PKR cash amounts,
   with at least one positive amount. The person authorized to record payment
   enters the rate agreed with the supplier when conversion is needed.
 - Quote rates only as **1 AFN = rate PKR**. Rates must be positive, with at most
   six decimal places. Preserve the entered rate and original cash amounts
   permanently; reject extra decimal places instead of silently rounding.
-- Calculate the combined value exactly in the payable's currency, then round
-  half-up to two decimals once for allocation. For an AFN debt, use
+- Calculate the combined value exactly in the chosen debt currency, then round
+  half-up to two decimals once before allocation. For an AFN debt, use
   `AFN cash + PKR cash / rate`; for a PKR debt, use
   `PKR cash + AFN cash * rate`. Keep exact ratios until this final rounding.
+  Distribute that amount across the oldest unpaid receipts without further
+  conversion or rounding; allocation rows must sum to the converted payment.
 - Reuse `supplier_payments.record` (owner/admin/accountant). Reject zero-valued
-  allocations and allocations exceeding the outstanding balance under ADR 0009;
+  allocations and allocations exceeding the supplier's total outstanding balance
+  in the chosen currency under ADR 0009; each row must also fit its payable;
   unapplied credit remains excluded. Record cash actually retained; do not
   silently reduce a recorded cash amount or discard an excess as rounding.
 
@@ -70,6 +75,9 @@ working deployment/restore.
   over its entire lifetime**, not per payment/request. Larger differences remain
   outstanding. Serialize/check this limit and the balance in the same transaction
   as the posting; retries cannot apply the reduction twice.
+  A payment covering several payables never combines their caps into a supplier
+  allowance or resets a previously used cap. Reductions remain explicit and
+  payable-specific, even though normal payment entry selects only the supplier.
 - Preserve original receipt/payable amounts and actual cash. Append a separate
   reduction with currency, amount, payable/payment reference, actor, reason, and
   timestamp. Derive the balance from recognized debt minus allocations and these
@@ -90,12 +98,23 @@ This decision adds no code, schema, dependency, permission, or deployed resource
 yet. Current onboarding remains AFN-only. G1 still blocks Tasks 14–35; Task 13
 has the limited pre-research implementation exception in
 [ADR 0003](0003-helmand-pilot-workflow.md#amendment--task-13-implementation-before-g1-closure-28-october-2026). Pilot
-phone testing and remaining deployment policies/configuration/restore remain open.
+phone validation and deployment configuration/restore remain open; the
+[30 October readiness record](../handoffs/pilot-readiness-decisions.md) adds a
+founder-reported successful phone login and approved operating targets.
+
+## Amendment — Supplier-balance payment entry (30 October 2026)
+
+The founder approved supplier-level entry, automatic oldest-first allocation
+within each debt currency, and overpayment rejection. Amended ADR 0009 replaces
+the former single-payable rule. The exact conversion, one final half-up rounding,
+cash provenance, and per-payable reduction rules above remain the numeric policy.
+Task 12's pure helpers are unchanged; Task 25 must implement the allocation and
+transaction invariants, and Task 26 must reconcile payments without double-counting.
 
 ## Links
 
 - [Initial cash and local measures](0017-cash-currencies-local-measures.md)
-- [Single-payable allocation](0009-specific-obligation-payment-allocation.md)
+- [Supplier-balance payment allocation](0009-specific-obligation-payment-allocation.md)
 - [Business permissions](0016-local-business-authorization.md)
 - [Receipt-based supplier debt](0012-receipt-supplier-payables.md)
 - [Build plan](../agent-sized-build-plan.md)

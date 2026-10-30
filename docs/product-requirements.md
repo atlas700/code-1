@@ -21,9 +21,10 @@ administrative use. The expected pilot contacts are recorded only as Pilot A (ow
 
 **Open — G1 workflow research:** record 20 interviews and 5 workflow observations
 covering purchase, receiving, stock, sale, debt, payment, correction, and reporting.
-The founder confirms 10 people interviewed but cannot recall the observation
-count. The follow-up describes the approved grain and mixed-goods segment, but
-dated business-by-business workflow coverage is still unconfirmed. See the
+On 30 October the founder reports 50 interviewees and approximately 50 personally
+observed businesses, with the same workflow and no original notes. These totals
+are recalled; dated, anonymized references and full business-by-business workflow
+coverage still need reconstruction and review. See the
 [research evidence record](handoffs/pilot-research-evidence.md).
 
 **Decided — G2 pilot workflow:** validate purchase-to-receipt first to improve stock
@@ -70,9 +71,11 @@ receipt or count discrepancy; see [ADR 0007](adr/0007-no-negative-stock.md).
 physical handoff is reliably recorded. Otherwise, revisit the timing before building
 a stock-decreasing sale workflow; see [ADR 0008](adr/0008-dispatch-stock-timing.md).
 
-**Decided — G3 credit allocation:** allocate each payment to one selected invoice
-or payable. Debt is that obligation's outstanding balance; defer automatic
-oldest-debt allocation, payment splitting, and a separate debt record; see
+**Decided — G3 credit allocation:** staff enter payments against a supplier's
+running balance in one debt currency, without selecting a receipt. Automatically
+allocate to the oldest unpaid receipt payables, allowing a payment to cover several
+receipts. Reject overpayments and supplier advances. Derive balances from payables,
+allocations, and approved reductions; do not create a separate debt record. See
 [ADR 0009](adr/0009-specific-obligation-payment-allocation.md).
 
 **Decided — G3 correction authority:** require wholesaler-owner approval for stock
@@ -81,14 +84,16 @@ excluded from the pilot; see [ADR 0010](adr/0010-owner-approval-for-corrections.
 
 **Decided — G3 supplier debt:** accepted receipts create supplier payables from
 accepted quantities and approved purchase-price snapshots. Partial receipts create
-only partial debt; supplier payments reduce the selected payable's outstanding
-balance. See [ADR 0012](adr/0012-receipt-supplier-payables.md).
+only partial debt; supplier payments reduce the outstanding balances of their
+allocated payables. See [ADR 0012](adr/0012-receipt-supplier-payables.md).
 
 **Decided — G3 terminology validation:** validate Pashto terms for product, stock
 unit, supplier, purchase, receipt, receipt variance, stock balance, supplier payable,
 supplier payment, supplier balance, and correction before shipping pilot labels.
 Defer sales/customer-payment terms; see
 [ADR 0011](adr/0011-validate-purchase-receipt-terminology.md).
+The founder can arrange a Pashto-speaking owner/accounts-clerk review; the
+remaining labels are still awaiting that review.
 
 **Decided — G3 numeric policy:** ADR 0019 resolves Task 12's numeric prerequisite:
 kg/gram stock, two-decimal entered unit prices, exact quantity/price conversions,

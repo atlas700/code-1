@@ -42,6 +42,16 @@ authentication task with the later database task.
 - Replacing Clerk later requires changing the local auth adapter and migrating the
   external user identity references; it must not change tenant or role rules.
 
+## Evidence update — Phone-code preference and reported login (30 October 2026)
+
+The founder selected phone verification codes as the preferred sign-in method
+and reported personally testing successful code delivery, authentication, and
+completed login. Record this as a founder-reported successful test. The exact
+test date/environment, anonymous Pilot A–C outcomes, and deployment smoke evidence
+were not supplied; this update does not claim those checks passed. The pilot
+validation requirement above remains open. See the
+[readiness interview](../handoffs/pilot-readiness-decisions.md).
+
 ## Links
 
 - [Architecture](../architecture.md)

@@ -4,9 +4,11 @@
 
 - No hosting service, deployment pipeline, staging environment, production database,
   backup configuration, or deployment environment variables are configured.
-- [ADR 0018](adr/0018-managed-pilot-hosting.md) selects Vercel Pro and Neon;
-  the founder owns hosting, billing, alerts, and backup recovery. Selection does
-  not establish deployed resources or an approved spending limit.
+- Amended [ADR 0018](adr/0018-managed-pilot-hosting.md) selects Netlify Free and
+  Neon Free for temporary testing with synthetic business records. Paid production
+  hosting is deferred. The founder owns hosting, billing, alerts, and recovery;
+  USD 60/month is the approved future hosting/database ceiling. No billing limit
+  or deployed resource has been configured by recording that decision.
 - Staging deployment, migration handling, backup scheduling, restore verification,
   and monitoring are planned for Task 34.
 
@@ -48,9 +50,11 @@
    Task 11 supplies Clerk email invitations and manual account addition. The
    application exposes sign-in and `/join` for existing invited accounts.
 
-   On 27 October the founder confirmed Pilot A–C are available for phone OTP
-   testing. No delivery or completed sign-in outcomes are recorded yet. Record
-   only anonymous delivery/completion results, never numbers or OTPs.
+   On 30 October the founder reported successful real phone-code delivery and
+   completed authentication/login. The test date/environment and separate Pilot
+   A–C outcomes were not supplied. See the [readiness record](handoffs/pilot-readiness-decisions.md).
+   Record anonymous delivery/completion outcomes with their context; never record
+   phone numbers or OTPs. A founder report does not replace deployment smoke tests.
 3. Run `npm run dev`, visit `/sign-in`, and authenticate using the configured
    development method. The fallback destination is `/dashboard`; direct access to
    another protected page preserves Clerk's return destination. An authenticated
@@ -162,17 +166,32 @@ and [Task 11 recovery](handoffs/11-staff-management.md#expiry-and-recovery).
 
 ### Staging and production
 
-- ADR 0018 selects Vercel Pro/Neon and names the founder as operations/backup
-  owner. Retention/location, monitoring, recovery objectives, and spending policy
-  still need approval before infrastructure is configured.
+- The temporary Netlify Free/Neon Free environment uses made-up products and
+  business transactions. Free-plan limits may pause testing. Clerk development
+  SMS has separate limits; use its reserved test values for routine checks and
+  real delivery tests only when needed. See ADR 0018's dated provider references.
+- Decide paid production hosting before setup. Record the exact supported region
+  and backup destination; overseas storage is permitted. Confirm separate
+  authentication/SMS/domain costs and enforceable spending controls within the
+  USD 60/month hosting/database ceiling. A target budget is not a configured cap.
+- Retain real-pilot database backups for 30 days. The approved recovery targets
+  are at most one hour of lost recent entries and usable service within four
+  hours during business hours. Choose backup/restore arrangements that can meet
+  both targets; retention alone does not establish recovery frequency or speed.
+- Email downtime, backup-failure, and spending alerts to the founder for prompt
+  business-hours response. Configure monitoring and verify delivery before relying
+  on it; account ownership alone is not monitoring coverage.
 - Production changes must not auto-run destructive migrations.
 - Staging must not expose production data and requires a proven non-production
   restore before pilot use.
-- Deployment handoffs must name the owner, rollback procedure, backup location and
-  retention, and restore evidence date once those choices exist.
+- Deployment handoffs must name the owner, provider/region, rollback procedure,
+  backup destination/retention, spending controls, alert-delivery results, and
+  dated restore evidence demonstrating both recovery targets.
 
 ## Decision status
 
-**Partially resolved — G4 deployment:** Vercel Pro/Neon and founder-owned
-operations are selected under ADR 0018. Remaining operating policies,
-configuration, and a proven non-production restore still block pilot readiness.
+**Partially resolved — G4 deployment:** temporary test hosting and the operating
+targets above are approved under amended ADR 0018. Paid provider/region/destination,
+separate costs, spending controls, configuration, and restore/alert verification
+remain open. Task 34 still requires G1; a free test deployment does not close
+the task or authorize real-business pilot use.

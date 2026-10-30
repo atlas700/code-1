@@ -8,6 +8,10 @@ interview approves kg/gram stock, custom weight measures, two-decimal unit price
 cumulative receipt rounding, and mixed AFN/PKR cash settlement at recorded rates.
 It replaces the same-currency-only restriction and open numeric-policy statements
 below. Retain the original pilot measure definitions; G1 remains open.
+The 30 October amendment to [ADR 0009](0009-specific-obligation-payment-allocation.md)
+also replaces selected-payable entry with supplier-balance entry and automatic
+oldest-first allocation within one debt currency. The original decision below
+is historical where these amendments replace it.
 
 ## Context
 
