@@ -18,7 +18,7 @@ Sales, customer payments, multiple warehouses, returns, lot/grade tracking, and
 offline mode are deferred. Accepted ADRs govern product policy; this plan governs
 task readiness and order. Update both when an approved decision changes the scope.
 
-## Current repository baseline (28 October 2026)
+## Current repository baseline (30 October 2026)
 
 - The application shell, localization plumbing, Clerk authentication, environment
   validation, Vitest tests, and CI are implemented (Tasks 01–06).
@@ -37,6 +37,10 @@ task readiness and order. Update both when an approved decision changes the scop
   unit snapshots, and their management screen under the limited ADR 0003 exception;
   see its [handoff](handoffs/13-units-product-categories.md).
   Purchasing tables and a UI-component library are absent.
+- The [30 October readiness interview](handoffs/pilot-readiness-decisions.md)
+  records updated research totals, supplier-balance payment entry, a reported
+  phone login, free test-hosting selection, and operating targets. These are
+  documentation/policy updates; the remaining evidence gates stay open.
 - CI maintenance adds a separate disposable PostgreSQL 16 verification job for
   committed migrations and the onboarding, staff, and catalogue integration suites under
   [ADR 0013's amendment](adr/0013-local-postgresql-foundation.md#amendment--disposable-ci-verification-28-october-2026).
@@ -115,17 +119,17 @@ gate changes; an accepted policy does not count as completed user research.
 Research records stay private; link a redacted evidence summary rather than names
 or interview transcripts.
 
-| Gate | Status and evidence (updated 28 October 2026) | Owner | Blocks |
+| Gate | Status and evidence (updated 30 October 2026) | Owner | Blocks |
 | --- | --- | --- | --- |
 | G0 market | Accepted: [ADR 0003](adr/0003-helmand-pilot-workflow.md), amended 28 October to target Helmand grain and mixed-goods wholesalers | Founder | Market choice is resolved |
-| G1 research | Open: on 28 October, founder confirms 10 people interviewed but cannot recall the observation count; the earlier estimate of 4 is unconfirmed. Follow-up describes the approved grain and mixed-goods segment, but dated business-by-business coverage remains unconfirmed. The required 20 interviews/5 observations and complete workflow evidence are not yet recorded; see the [confirmed interview summary](handoffs/pilot-research-evidence.md). Task 13 alone has the founder-authorized exception in ADR 0003 | Founder/researcher | Tasks 14–35 and pilot release |
+| G1 research | Open: on 30 October, founder reports 50 interviewees and approximately 50 businesses personally observed, with a common workflow and the latest visit about a week earlier. No notes were taken. Reported totals exceed 20 interviews/5 observations, but dated, anonymized references and full per-business workflow coverage still need reconstruction and review; see the [research record](handoffs/pilot-research-evidence.md). Task 13 alone has the ADR 0003 exception | Founder/researcher | Tasks 14–35 and pilot release |
 | G2 scope | Founder-approved: [ADR 0003](adr/0003-helmand-pilot-workflow.md); user validation still depends on G1 | Founder/product lead | Features outside the approved pilot |
-| G3 domain policies | Numeric policy resolved by [ADR 0019](adr/0019-pilot-numeric-settlement-policy.md) and implemented as Task 12's pure helpers: kg/gram stock, custom weight measures, exact price conversions, cumulative receipt rounding, recorded mixed-currency cash, and reduction-cap checks; Task 13 adds the weight catalogue, while posting remains in later tasks; terminology requires G1 validation | Founder/product lead | Tasks 14–35 and pilot labels still require G1 evidence |
-| G4 authentication | Accepted: [ADR 0002](adr/0002-clerk-authentication.md); development checks in [Task 06 handoff](handoffs/06-authentication.md); Pilot A–C are available for phone OTP tests, but delivery/sign-in outcomes are not recorded | Founder | Pilot authentication until sign-in validation is recorded |
+| G3 domain policies | [ADR 0019](adr/0019-pilot-numeric-settlement-policy.md) supplies the numeric policy and Task 12 helpers; Task 13 supplies the weight catalogue. On 30 October, amended [ADR 0009](adr/0009-specific-obligation-payment-allocation.md) approves supplier-balance entry, oldest-first same-currency allocation, and no overpayments. A Pashto-speaking owner/accounts clerk is available for label review; validation and posting remain pending | Founder/product lead | Tasks 14–35 and pilot labels still require G1 evidence |
+| G4 authentication | Clerk accepted under [ADR 0002](adr/0002-clerk-authentication.md). On 30 October the founder reports successful real phone-code delivery and completed authentication/login. Exact test context and separate Pilot A–C outcomes were not supplied; see the [readiness record](handoffs/pilot-readiness-decisions.md) | Founder | Pilot authentication until required outcomes and deployment smoke are recorded/reviewed |
 | G4 database | Accepted: [ADR 0013](adr/0013-local-postgresql-foundation.md) approves local PostgreSQL and reviewed migrations; [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md), 25 October, replaces local membership ownership with verified Clerk membership and a local organization mapping | Technical lead/founder | Detailed business schema still requires G1; other G4 gates remain open |
 | G4 mutation boundary | Accepted: [ADR 0015](adr/0015-server-action-mutation-boundary.md), 26 October; native Server Actions with the [mutation contract](api-conventions.md#mutation-contract) and a narrow first-organization bootstrap exception | Technical lead/founder | Boundary decision resolved; each mutation still needs its task's authorization and recovery checks |
 | G4 permissions | Accepted: [ADR 0016](adr/0016-local-business-authorization.md); Task 10 implements fixed roles, membership-bound grants, and server guards. ADR 0019 approves a future owner-only rounding-reduction permission for Task 25 | Technical lead/founder | Policy and foundation resolved; each new workflow still needs its own permission and resource-ownership checks |
-| G4 deployment | Partially resolved: [ADR 0018](adr/0018-managed-pilot-hosting.md) selects Vercel Pro/Neon and founder-owned operations; retention/location, monitoring, recovery objectives, spending policy, configuration, and restore evidence remain open | Founder | Task 34 configuration until operating policies are approved; pilot release until verification passes |
+| G4 deployment | Partially resolved: amended [ADR 0018](adr/0018-managed-pilot-hosting.md) selects Netlify Free/Neon Free with synthetic test records; paid production hosting is deferred, with a USD 60/month hosting/database ceiling. Approved real-pilot targets: 30-day backups, at most one hour lost entries, four-hour recovery during business hours, overseas storage, and email alerts to the founder. Exact provider/region/backup destination, separate costs, enforceable spend controls, configuration, and restore/alert evidence remain open | Founder | Task 34 still requires G1 and remaining setup decisions; pilot release requires verification |
 
 **Next task:** 14 — products, **blocked by G1 research evidence**.
 Task 13 implements units and product categories under the exception authorized
@@ -144,9 +148,11 @@ Development Organizations and recovery slugs are on, membership is optional, and
 automatic creation is off; Task 09 verifies these settings and its live flow.
 ADR 0019 resolves Task 12's numeric prerequisite. Apart from the Task 13 exception,
 G1 still blocks domain implementation; pilot sign-in and deployment readiness remain open.
-The [research summary](handoffs/pilot-research-evidence.md#policy-mismatch-requiring-review)
-also flags a supplier-running-balance versus selected-payable policy mismatch.
-Review it before Task 25; ADRs 0009/0019 remain in force pending an approved change.
+The [payment policy decision](handoffs/pilot-research-evidence.md#payment-policy-decision)
+resolves the earlier mismatch: amended ADRs 0009/0019 and Tasks 25–26 now require
+supplier-balance entry with automatic oldest-first allocation. This does not
+implement posting or close G1. The [readiness handoff](handoffs/pilot-readiness-decisions.md)
+lists the remaining evidence and operational work.
 
 ### G0 — choose the initial market
 
@@ -184,7 +190,7 @@ against G1 research before domain implementation:
 | Decimal policy | Resolved by ADR 0019: two-decimal unit prices/amounts, six-decimal rates, exact conversions, half-up purchase lines/payment allocation, and cumulative receipt reconciliation. |
 | Stock policy | Is negative stock ever allowed? Recommended pilot policy: no. |
 | Sale timing | Does stock leave at confirmation, dispatch, or delivery? |
-| Credit | Is payment applied to one invoice, oldest debt first, or manually allocated? |
+| Credit | Supplier-balance entry with automatic oldest-first receipt allocation within one debt currency; reject overpayments and advances under amended ADR 0009. |
 | Corrections | Which users can adjust stock, cancel transactions, or record returns? |
 | Languages | Which language launches first; which terms must be validated in Dari/Pashto? |
 
@@ -677,35 +683,45 @@ cannot double-decrement stock; a successful sale appears in stock history.
 
 **Goal:** Settle receipt-based supplier debt without corrupting balances.
 
-**Readiness:** Review the [28 October research mismatch](handoffs/pilot-research-evidence.md#policy-mismatch-requiring-review)
-before implementation. ADR 0009's selected-payable policy remains binding until
-an approved replacement updates the affected numeric rules and task scope.
+**Readiness:** The [30 October decision](handoffs/pilot-research-evidence.md#payment-policy-decision)
+amends ADRs 0009/0019 and this task together. G1 evidence and Task 20's receipt
+payables remain prerequisites.
 
 **Do:** Add supplier payments and payment allocations under ADR 0009. Record the
-supplier, date, whole AFN/PKR cash amounts, reference/note, and exactly one selected
-receipt payable from Task 20. Under ADR 0019, snapshot the supplier-agreed rate
-(PKR per AFN, at most six decimals) when converting, calculate combined value
-exactly, and allocate its half-up two-decimal value in the debt's currency.
+supplier, debt currency, date, whole AFN/PKR cash amounts, and reference/note.
+Staff do not select a receipt. Allocate automatically to the supplier's oldest
+unpaid Task 20 receipt payables within the server-derived organization and chosen
+currency, with deterministic ordering for ties. One payment may settle several
+receipts and part of the next. Under ADR 0019, snapshot the supplier-agreed rate
+(PKR per AFN, at most six decimals) when converting; calculate the combined cash
+value exactly, round half-up once to two decimals, and distribute that amount
+without per-allocation conversion or rounding. Persist the payment and its
+allocation rows so their amounts reconcile to the converted cash value.
 Reuse `supplier_payments.record` for payment/rate entry. Introduce the fixed
 owner-only `supplier_payments.adjust_rounding` permission for explicit residual
 reductions with reason/provenance. Cap all reductions cumulatively at 0.99 in
 the payable's currency; retain original debt/cash and append adjustments separately.
 Record adjustment audit evidence in this task, without waiting for Task 27.
-Serialize balance/cap checks and postings transactionally, with idempotency.
+Serialize supplier-total and per-payable balance/cap checks and all postings
+transactionally, with idempotency. A supplier-level entry never pools or resets
+the lifetime reduction caps of its payables.
 
-**Do not:** add customer payments, split payments across payables, introduce unapplied
-credit, integrate online payment rails or live rate feeds, revalue old payments,
-overwrite balances, silently discard residual debt, or allocate above the selected
-payable's outstanding balance. Larger rounding differences remain outstanding.
+**Do not:** add customer payments or supplier advances/unapplied credit, mix debt
+currency balances, integrate online payment rails or live rate feeds, revalue old
+payments, overwrite balances, silently discard residual debt, or exceed the
+supplier's outstanding total in the chosen currency or any payable's balance.
+Larger rounding differences remain outstanding.
 
-**Verify:** partial/full payment, overpayment rejection, concurrent allocation,
+**Verify:** oldest-first allocation across several receipts, deterministic ties,
+partial/full payment, zero-balance and overpayment rejection, concurrent allocation,
 duplicate requests, both exchange directions, immutable rates, whole cash/rate
 validation, unauthorized reduction denial, lifetime cap races/retries, separate
 adjustment audit, and tenant isolation are tested against Task 20 payables.
 A failed posting leaves cash, allocation, reduction, and balance unchanged.
 
 **Handoff:** document balance derivation and payment idempotency; customer receipts
-and unapplied credit remain deferred.
+and unapplied credit remain deferred. State the ordering/tie-break rule and show
+that allocation totals equal the converted payment without double-counting cash.
 
 #### 26 — Implement balances and transaction statements
 
@@ -717,12 +733,15 @@ to accepted receipts and supplier payments; show due dates only under approved t
 Keep AFN and PKR balances and statement totals separate under ADR 0019. Show
 original cash, rate, converted allocation, and owner-approved reductions distinctly;
 reconcile debt less allocations and reductions without presenting reductions as cash.
+Show each supplier payment once in account totals, with its receipt allocations
+available for traceability; do not repeat the full cash amount per allocation row.
 
 **Do not:** add customer statements, complex accounting journals, interest,
 installment plans, or changes to historical obligations.
 
-**Verify:** expected balances for no, partial, and full payments are tested; sum of
-statement entries reconciles to the displayed balance.
+**Verify:** expected balances for no, partial, full, and multi-receipt payments
+are tested; statement entries reconcile to the displayed balance in each currency
+without counting one payment more than once.
 
 **Handoff:** list reports that can safely reuse these queries.
 
@@ -856,14 +875,24 @@ suite for every page, or a shared development database.
 staging environment variables, managed/self-hosted PostgreSQL access, migration-on-
 deploy process, health check, database backup schedule, restore drill, and uptime/
 error monitoring.
-Use Vercel Pro/Neon with the founder accountable under ADR 0018; approve remaining
-operating policies before provisioning. Keep staging and production data separate.
+Follow amended ADR 0018: Netlify Free/Neon Free is the temporary test target with
+synthetic business records, while paid production hosting remains to be selected.
+The founder owns operations. Before paid setup, settle the exact provider,
+supported region, backup destination, separate authentication/SMS/domain costs,
+and enforceable spending controls within the USD 60/month hosting/database ceiling.
+Implement 30-day backup retention, at most one hour of lost recent entries, and
+service recovery within four hours during business hours. Email downtime,
+backup-failure, and spend alerts to the founder. Overseas storage is allowed;
+keep temporary test, staging, and production data separate. Free testing does not
+waive G1 or establish that Task 34 is complete.
 
 **Do not:** expose production data in staging, auto-run destructive migrations, or
 launch publicly before access controls are tested.
 
-**Verify:** a fresh staging deploy works; migration history is visible; backup is
-created and one restore is proven in a non-production database.
+**Verify:** a fresh staging deploy works; migration history is visible; backup
+retention and spending controls are checked; alert delivery works; and a
+non-production restore demonstrates the approved data-loss and business-hours
+recovery targets. Record end-to-end sign-in in the deployed environment.
 
 **Handoff:** name deploy owner, rollback procedure, backup location/retention, and
 restore evidence date.

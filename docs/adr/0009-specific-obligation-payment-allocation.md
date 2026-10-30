@@ -1,36 +1,61 @@
-# ADR 0009: Allocate each pilot payment to one invoice or payable
+# ADR 0009: Record supplier payments against a running balance
 
 - **Date:** 2026-10-19
-- **Status:** Accepted
+- **Status:** Accepted; amended 30 October 2026
 
-[ADR 0019](0019-pilot-numeric-settlement-policy.md) extends settlement with
-recorded mixed-currency cash and explicit owner-approved residual reductions.
-The single-payable and no-unapplied-credit rules below remain in force; compare
-the rounded converted allocation with the remaining balance.
+[ADR 0019](0019-pilot-numeric-settlement-policy.md) governs recorded mixed-currency
+cash and explicit owner-approved residual reductions. The 30 October amendment
+replaces manual single-payable selection with automatic oldest-first allocation.
 
 ## Context
 
-The pilot needs an auditable payment policy without adding automatic allocation or
-multi-debt splitting. An unpaid balance must remain visible when payment is needed
-but has not fully settled the related invoice or payable.
+The original 19 October decision required staff to select one payable per payment.
+The founder's reported notebook workflow instead records a supplier payment and
+the supplier's remaining balance. On 30 October the founder approved that entry
+flow, automatic oldest-first allocation within each currency, and rejection of
+overpayments. The [interview record](../handoffs/pilot-readiness-decisions.md)
+records the approval and the evidence limits.
 
 ## Decision
 
-- Allocate each payment to exactly one selected invoice or payable.
-- Represent debt only as that obligation's outstanding balance; do not create a
-  separate debt record.
-- A partially paid obligation retains its remaining outstanding balance.
-- Do not automatically allocate to the oldest debt or split one payment across
-  multiple obligations during the pilot.
+- Staff select the supplier and debt currency and record cash actually paid;
+  they do not select an individual purchase or receipt for payment allocation.
+- Automatically allocate the payment to that supplier's oldest unpaid receipt
+  payables in that organization and currency. One payment may settle several
+  payables and partially settle the next. Use deterministic ordering for ties.
+- Keep AFN and PKR debt balances separate. ADR 0019 still permits mixed AFN/PKR
+  cash: convert the combined cash once into the chosen debt currency, then
+  distribute the rounded amount without another conversion or rounding per row.
+- Reject a payment whose converted allocation exceeds the supplier's total
+  outstanding balance in that currency. Reject payment against a zero balance;
+  supplier advances and unapplied credit remain excluded.
+- Keep receipt payables and explicit allocation records as the audit source.
+  Derive the supplier's running balance from their outstanding amounts; do not
+  overwrite a supplier balance or introduce a separate debt record.
+- Preserve ADR 0019's explicit owner-only reductions and lifetime 0.99 cap per
+  payable. Supplier-level payment entry never pools or resets those caps.
+
+## Alternatives considered
+
+- Manual single-payable entry preserves a narrow posting path but conflicts with
+  the confirmed entry preference; it is replaced by the amendment above.
+- Keeping excess cash as supplier credit was considered and rejected for this
+  pilot. The app must reject the overpayment rather than silently retain excess.
 
 ## Consequences
 
-- Task 25 must validate that a payment does not exceed its selected obligation's
-  outstanding balance.
-- Task 26 may derive customer and supplier balances from outstanding invoice and
-  payable amounts.
-- Supporting unapplied credit or multi-obligation allocation requires a deliberate
-  replacement decision.
+- Task 25 must serialize balance reads and all affected allocation/reduction
+  writes with the payment, enforce per-payable and supplier-total limits, and
+  preserve idempotency under retries and concurrent requests.
+- For example, oldest-first AFN payables of 60 and 40 receive allocations of 60
+  and 15 from a 75 AFN payment, leaving 25 AFN outstanding. A 101 AFN payment
+  against the original 100 AFN balance is rejected.
+- Task 26 shows one supplier account per currency with links to the payment's
+  allocations. It counts each payment once in account totals, even when it has
+  several allocation rows.
+- Customer payments, advances, and online money transfer remain deferred. This
+  records a future posting policy; G1 and the relevant implementation tasks remain
+  required.
 
 ## Links
 

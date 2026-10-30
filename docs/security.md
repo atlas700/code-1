@@ -13,8 +13,10 @@
 ## Decision status
 
 **Decided — G4 authentication:** Clerk is the approved managed identity and secure
-session provider for Task 06; see [ADR 0002](adr/0002-clerk-authentication.md). The
-enabled sign-in method remains a pilot-validation decision. Under
+session provider for Task 06; see [ADR 0002](adr/0002-clerk-authentication.md). On
+30 October the founder confirmed a preference for phone codes and reported a
+successful delivery and login test; its date/context and Pilot A–C/deployed-environment
+validation remain open. Under
 [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md), Clerk owns
 membership and the application will own business permissions. Neither a
 client-controlled organization ID nor Clerk Admin/Member roles grant business access.
@@ -53,15 +55,20 @@ remaining operational gates stay open.
 
 [ADR 0019](adr/0019-pilot-numeric-settlement-policy.md) approves a future fixed
 `supplier_payments.adjust_rounding` permission for owner only. Task 25 must enforce
-the lifetime 0.99 debt-currency cap atomically, retaining actor/reason/provenance.
+the lifetime 0.99 debt-currency cap per payable atomically, retaining
+actor/reason/provenance. Supplier-level payment entry does not pool or reset caps.
 Current code does not yet implement that permission. Custom weight management
 and payment/rate entry reuse existing `catalog.manage` and
 `supplier_payments.record`; neither permits debt reductions.
 
 **Partially resolved — G4 operational security:** the founder owns operations and
-backup recovery under [ADR 0018](adr/0018-managed-pilot-hosting.md). Approve access,
-logging, retention, and incident procedures with the remaining deployment plan;
-verify a non-production restore before pilot use.
+backup recovery under amended [ADR 0018](adr/0018-managed-pilot-hosting.md).
+Approved targets are 30-day database backups, at most one hour of lost entries,
+four-hour recovery during business hours, and email alerts to the founder.
+Overseas storage is allowed; exact provider/region/destination, access, log
+retention, and incident procedures still need definition. Verify alert delivery
+and a non-production restore before pilot use. Temporary free testing uses
+synthetic business records and grants no permission to expose production data.
 
 ## Staff management
 

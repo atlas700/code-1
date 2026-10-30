@@ -28,7 +28,9 @@ records the pilot's product-identity policy. [ADR 0006](0006-receipt-variance-ap
 records the pilot's receipt-variance approval policy. [ADR 0007](0007-no-negative-stock.md)
 records the no-negative-stock policy. [ADR 0008](0008-dispatch-stock-timing.md)
 records the conditional dispatch stock-timing policy. [ADR 0009](0009-specific-obligation-payment-allocation.md)
-records the payment-allocation policy. [ADR 0010](0010-owner-approval-for-corrections.md)
+records the 30 October supplier-balance entry and automatic oldest-first
+same-currency payment allocation policy, replacing manual single-payable selection.
+[ADR 0010](0010-owner-approval-for-corrections.md)
 records the corrections-approval policy. [ADR 0011](0011-validate-purchase-receipt-terminology.md)
 records the terminology-validation scope. [ADR 0012](0012-receipt-supplier-payables.md)
 records receipt-based supplier debt recognition. [ADR 0013](0013-local-postgresql-foundation.md)
@@ -44,11 +46,16 @@ roles, permission matrix, first-owner bootstrap, and authorization guard. It is
 accepted on 27 October and closes the G4 permission-policy gate.
 [ADR 0017](0017-cash-currencies-local-measures.md) records cash-only payments,
 separate AFN/PKR balances, and local weight entry, amending ADR 0004.
-[ADR 0018](0018-managed-pilot-hosting.md) selects Vercel/Neon and founder-owned
-operations. [ADR 0019](0019-pilot-numeric-settlement-policy.md) completes the
+[ADR 0018](0018-managed-pilot-hosting.md), amended 30 October, selects Netlify
+Free/Neon Free for synthetic-data testing, defers paid production hosting, and
+records the founder's spending ceiling, backup/recovery targets, overseas storage
+permission, and email alerts. [ADR 0019](0019-pilot-numeric-settlement-policy.md) completes the
 numeric policy, introduces custom weight measures and recorded mixed-currency
 settlement, and approves a future owner-only cash rounding reduction permission.
-Research evidence, pilot phone sign-in testing, and deployment readiness remain open.
+The [30 October readiness record](../handoffs/pilot-readiness-decisions.md) captures
+50 reported interviewees, approximately 50 observed businesses without original
+notes, and a reported successful phone-code login. Research coverage, remaining
+pilot authentication validation, terminology review, and deployment readiness stay open.
 The [build plan's gate status](../agent-sized-build-plan.md#current-gate-status)
 is the task-readiness record. G1 and the remaining G4 decisions stay
 open until evidence or founder approval exists. Record each decision before starting

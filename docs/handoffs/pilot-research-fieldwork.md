@@ -1,8 +1,14 @@
-# G1 research — first business revisit
+# G1 research — evidence reconstruction and business revisits
 
-Prepared: 28 October 2026. Use for the approved Helmand grain and mixed-goods
+Prepared: 28 October 2026. Updated: 30 October 2026. Use for the approved Helmand grain and mixed-goods
 pilot. Current counts and gaps are in the [research record](pilot-research-evidence.md).
 This is a blank collection template; it records no completed interview or visit.
+
+The latest report is 50 interviewees and approximately 50 personally observed
+businesses, recalled without original notes. First reconstruct only details the
+founder can establish, label their source as recollection, and keep uncertain
+dates/counts explicit. Use a revisit to fill gaps rather than inventing historical
+entries or repeating questions already answered in the research record.
 
 ## At the visit
 
@@ -25,6 +31,8 @@ Goods traded (Pashto names are fine):
 Anonymous participant code and role:
 Interview, direct observation, or both:
 Private note reference:
+Evidence source (contemporaneous note / later recollection / new follow-up):
+Date certainty (exact / approximate / unknown):
 
 Purchase: goods, agreed quantity/measure, price/currency, person agreeing, record used.
 Receiving: bags and actual weight, acceptance, differences, approver, record used.
@@ -43,8 +51,9 @@ Unanswered items and follow-up needed:
 ## After the visit
 
 Keep participant and visit references so repeated visits do not inflate totals.
-For the earlier ten interviews recalled from memory, retain that source label;
-reconstruct dated notes only where details can actually be established.
+For the latest recalled interviews and observations, retain that source label;
+reconstruct dates only where details can actually be established. Keep the date
+of reconstruction distinct from the date of the original visit.
 
 Share an anonymized summary: visit date, business type, goods, what you directly
 watched, what staff explained, and the remaining gaps. Keep names, contacts,

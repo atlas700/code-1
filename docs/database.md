@@ -129,8 +129,10 @@ recovery database owned by the application role, then use
 `pg_restore --exit-on-error --no-owner -h 127.0.0.1 -U afcs_dev -d <recovery-database> -W <private-backup-path>`
 and verify its data before considering a switch. Keep backups outside the repo.
 See [PostgreSQL backup guidance](https://www.postgresql.org/docs/16/app-pgdump.html).
-Production backup ownership, retention, and restore rehearsal remain G4 deployment
-decisions; Task 07 does not establish production readiness.
+Amended [ADR 0018](adr/0018-managed-pilot-hosting.md) assigns production recovery
+to the founder and sets 30-day retention, at most one hour of lost entries, and
+four-hour recovery during business hours. Destination, configuration, and restore
+evidence remain G4 work; these local commands do not establish production readiness.
 
 ## Tenant-context contract
 
@@ -259,11 +261,16 @@ physical handoff is reliably recorded; see
 [ADR 0008](adr/0008-dispatch-stock-timing.md). Otherwise, revisit sale timing before
 the stock-decreasing sales workflow is implemented.
 
-**Decided — G3 credit allocation:** a payment is allocated to one selected invoice
-or payable. Its unpaid amount is the obligation's outstanding balance, not a
-separate debt record; see
-[ADR 0009](adr/0009-specific-obligation-payment-allocation.md). Automatic
-oldest-debt allocation and payment splitting remain deferred.
+**Decided — G3 credit allocation:** record one supplier payment and explicit
+oldest-first allocations to its unpaid receipt payables in the same organization
+and debt currency, under amended
+[ADR 0009](adr/0009-specific-obligation-payment-allocation.md). One payment can
+cover several payables; its allocation rows must sum to the single rounded
+converted cash value. Derive supplier balances from the payables, allocations,
+and payable-specific owner reductions. Reject overpayments and unapplied credit;
+serialize supplier-total, per-payable, and lifetime-cap checks with all writes.
+Task 26 must count payment cash once regardless of allocation-row count. These
+are future schema/service requirements; no payment tables are implemented yet.
 
 **Decided — G3 correction authority:** stock corrections and transaction
 cancellations require wholesaler-owner approval; any future return requires the

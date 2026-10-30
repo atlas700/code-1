@@ -61,10 +61,12 @@ and its existing exclusions. Authorized users add their own product names in
 Task 14; the catalogue does not require a predefined list of goods. The reported
 3 AFN bag-carrying charge is research context and adds no labour-payment feature.
 
-This is market approval, not completed user research. The founder reports ten
-interviews but cannot recall the observation count; dated business-by-business
-coverage is still missing. G1, Task 14's evidence prerequisite, and pilot release
-remain open. See the [follow-up research record](../handoffs/pilot-research-evidence.md).
+This is market approval, not completed user research. At the 28 October amendment
+the founder reported ten interviews and an unknown observation count. The latest
+30 October report is 50 interviewees and approximately 50 personally observed
+businesses, recalled without notes. Dated business-by-business coverage is still
+missing. G1, Task 14's evidence prerequisite, and pilot release remain open. See
+the [updated research record](../handoffs/pilot-research-evidence.md).
 
 ## Links
 

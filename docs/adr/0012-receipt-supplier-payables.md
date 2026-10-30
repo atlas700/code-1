@@ -20,8 +20,10 @@ rather than a separate supplier-invoice entry, as the recognition event.
 - Commit the accepted receipt, inbound inventory movements, receipt payable, and
   purchase status together. Retrying the same acceptance creates no additional
   stock or debt; concurrent receipts must respect approved quantity limits.
-- Record supplier payments against exactly one payable under ADR 0009. Supplier
-  balances derive from receipt payables less their payment allocations.
+- Allocate supplier payments oldest-first across receipt payables in one currency
+  under [ADR 0009's 30 October amendment](0009-specific-obligation-payment-allocation.md).
+  Supplier balances derive from receipt payables less their payment allocations
+  and explicit owner-approved reductions under ADR 0019.
 
 ## Consequences
 

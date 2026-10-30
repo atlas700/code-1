@@ -2,6 +2,12 @@
 
 Date: 27 October 2026.
 
+**Current follow-up:** the [30 October readiness interview](pilot-readiness-decisions.md)
+updates the reported research totals, approves supplier-balance payment entry,
+records a reported successful phone login, and amends hosting/recovery policies.
+The dated sections below retain the earlier clarification and verification history;
+use the [build plan](../agent-sized-build-plan.md#current-gate-status) for current readiness.
+
 ## Status and source
 
 Founder clarification, recorded from this conversation. This is a redacted
@@ -40,7 +46,7 @@ Earlier verification sections below retain their original review context.
   confirmed ownership of hosting, billing, alerts, and backup recovery. Resources
   have not been provisioned and a database restore has not been demonstrated.
 
-## Remaining blockers and next decisions
+## Blockers recorded on 28 October 2026
 
 On 28 October, the founder confirmed 10 interviews but could not recall the
 observation count; the earlier estimate of four is unconfirmed. The

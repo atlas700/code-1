@@ -1,6 +1,6 @@
 # Pilot research evidence — founder interview
 
-Date: 28 October 2026.
+Initial record: 28 October 2026. Updated: 30 October 2026.
 
 ## Source and status
 
@@ -10,15 +10,26 @@ evidence, not an independently verified study or business-by-business observatio
 log. No business names, contact details, transcripts, or financial records are
 included.
 
-In the follow-up, the founder confirmed that these answers mainly come from
-memory. No written interview notes were provided. Counts and workflow details
-remain founder-reported recollections until linked to dated private evidence.
+The latest interview was confirmed by the founder on 30 October, with explicit
+authorization to save it in the related project docs. The founder reports
+**50 people interviewed and approximately 50 businesses personally observed**,
+with the same workflow across them. No notes were taken; these are recalled
+findings, not a dated participant/visit register or independently verified totals.
+The participant-to-business mapping has not been recorded.
 
-**G1 remains open.** In this conversation's follow-up, the founder confirmed
-**10 people interviewed**, but could not recall the number of businesses directly
-observed. The observation count is **unknown**; the earlier estimate of four is
-unconfirmed. G1 requires 20 interviews and five documented workflow observations.
-The previous report of approximately 40 findings is not an interview count.
+The most recent observation was described as about one week before this interview
+(approximately 23 October 2026, not an exact visit date). The founder pointed back
+to the already reported weighing, receiving, and notebook process rather than
+supplying a new transaction example. No new workflow detail is inferred from that
+confirmation. See the [confirmed G0–G4 plan](pilot-readiness-decisions.md).
+
+**G1 remains open.** The reported totals exceed the 20-interview/five-observation
+threshold, but dated, anonymized references and complete per-business workflow
+coverage still need to be reconstructed, reviewed, and supplemented where unknown.
+Do not manufacture historical notes, exact dates, participants, or visit records.
+The earlier 28 October total was ten interviews with an unknown observation count;
+it is superseded by this latest report. Approximately 40 findings was never an
+interview count.
 
 ## Confirmed workflow summary
 
@@ -81,14 +92,15 @@ and the build plan record this approval. The decision changes the segment; it do
 not establish observation counts, dates, or complete workflow coverage, or add
 sales, customer payments, or worker payments to the purchasing pilot.
 
-These details do not yet provide dated, business-by-business coverage of every
-required workflow. Private evidence references and the observation count remain
-unconfirmed; the follow-up does not close G1 or amend payment policy.
+At that point, dated business-by-business coverage, private evidence references,
+and the observation count remained unconfirmed. The 30 October report above
+updates the counts; the evidence coverage gap remains.
 
 The founder confirmed being able to revisit one of these businesses and take
-notes while watching a purchase or delivery. No date or new visit evidence has
-been recorded. Use the [first-revisit checklist](pilot-research-fieldwork.md) to
-collect the missing evidence; planned visits do not increase completed totals.
+notes while watching a purchase or delivery. Use the
+[fieldwork checklist](pilot-research-fieldwork.md) to reconstruct recalled
+coverage honestly and collect missing evidence on follow-up visits. Planned visits
+do not increase completed totals.
 
 ## Units and terminology
 
@@ -98,31 +110,37 @@ collect the missing evidence; planned visits do not increase completed totals.
 
 These two labels were proposed during the interview and confirmed by the founder.
 They are not a complete terminology study or a pilot screen-usability test.
+On 30 October the founder confirmed that a Pashto-speaking owner or accounts
+clerk can review the remaining pilot labels before launch. Availability is
+recorded; that review has not yet happened.
 Exact weights, custom measures, gram precision, and numeric rules remain governed
 by [ADR 0019](../adr/0019-pilot-numeric-settlement-policy.md).
 
-## Policy mismatch requiring review
+## Payment policy decision
 
-[ADR 0009](../adr/0009-specific-obligation-payment-allocation.md) currently requires
-each payment to select exactly one payable. The reported notebook workflow uses
-the supplier's overall balance instead. Before Task 25, review whether the app
-should preserve its selected-payable policy, automate allocation, or use an
-account-level payment model. No replacement has been approved by this interview.
+The 28 October interview identified a mismatch between manual selection of one
+payable and the reported supplier-running-balance workflow. On 30 October the
+founder approved supplier-level payment entry, automatic allocation to the oldest
+unpaid receipts within each debt currency, and rejection of overpayments. No
+supplier advance or unapplied credit is introduced.
 
-Any accepted change must update ADRs 0009/0019 and the affected Task 25–26 scope
-together. It must explicitly resolve overpayment, separate AFN/PKR balances,
-mixed-cash conversion, concurrency/idempotency, and ADR 0019's lifetime rounding
-reduction cap per payable. A total-balance screen alone does not settle those
-posting rules. Current policies remain in force until that decision is recorded.
+[ADR 0009](../adr/0009-specific-obligation-payment-allocation.md),
+[ADR 0019](../adr/0019-pilot-numeric-settlement-policy.md), and Tasks 25–26 now
+record that choice together. Mixed-cash conversion remains exact with one final
+rounding before allocation; AFN/PKR balances stay separate. Per-payable owner-only
+reduction caps and transactional/idempotent posting remain required. This is an
+approved policy change, not implemented payment behavior or completed G1 evidence.
 
 ## Remaining G1 evidence
 
-- [ ] Reach and record 20 interviews and five directly observed workflows;
-  confirm exact counts rather than treating approximate reports as totals.
+- [ ] Reconstruct an anonymized evidence register for the reported interviews and
+  observations against the 20-interview/five-observation requirement. Label
+  recollections, approximate dates, and unknowns; confirm counts without turning
+  the estimated 50 businesses into invented individual records.
 - [ ] Keep dated, anonymized references to the private evidence and summarize
   each observed business's purchase, receiving, stock, sale, debt, payment,
-  correction, and reporting flow. This interview's summary does not replace
-  coverage records for all observed businesses.
+  correction, and reporting flow. This common-workflow summary does not establish
+  that all required activities were observed at every business.
 - [ ] Keep per-business evidence for the approved grain and mixed-goods pilot.
   Market approval does not establish the required interview and observation
   coverage; identify the businesses and workflows through anonymized references.
@@ -133,11 +151,17 @@ posting rules. Current policies remain in force until that decision is recorded.
   declaring the dependent tasks ready.
 
 The confirmed intent is a trustworthy stock and supplier-balance view using the
-familiar notebook workflow. Implementing Task 13, changing payment policy, and
-adding sales/customer-payment or multiple-warehouse features are outside this
-evidence-recording work. Pilot OTP and deployment/restore gates remain separate.
+familiar notebook workflow. The approved payment policy is recorded in the related
+ADRs; no application behavior is changed by saving this evidence. Sales/customer
+payments and multiple warehouses remain excluded. Phone-sign-in evidence and
+deployment/restore readiness are recorded separately in the
+[30 October handoff](pilot-readiness-decisions.md).
 
 ## Review and verification
+
+The following records the 28 October review. The
+[30 October handoff](pilot-readiness-decisions.md#documentation-delivery) records
+review and verification of the latest updates.
 
 The initial review checked the confirmed answers against the G1 threshold, pilot
 exclusions, terminology decision, payment-allocation policy, and numeric/rounding rules.

@@ -29,6 +29,13 @@ payments remain excluded until purchase/receipt accuracy is proven.
 - Introducing sales or customer-payment labels requires their own terminology
   validation.
 
+## Review readiness — 30 October 2026
+
+The founder confirmed that a Pashto-speaking owner or accounts clerk from an
+observed business can review the pilot labels before launch. The remaining labels
+are not yet validated; record the actual review and its results before enabling
+them. See the [research record](../handoffs/pilot-research-evidence.md#units-and-terminology).
+
 ## Links
 
 - [Launch localization](0001-launch-localization.md)
