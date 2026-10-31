@@ -10,7 +10,7 @@ import { parseWeight, pilotWeightMeasures, quantityToKg } from "@/domain/quantit
 import { localIdSchema } from "@/domain/validation";
 import { requirePermission } from "./authorization";
 import { db } from "./index";
-import { catalogUnits, organizationRoleAssignments, organizations, productCategories } from "./schema";
+import { catalogUnits, organizationRoleAssignments, organizations, productCategories, products } from "./schema";
 
 export type CatalogState =
   | { status: "idle" | "success" | "duplicate" | "conflict" }
@@ -18,6 +18,12 @@ export type CatalogState =
   | { status: "error"; correlationId: string };
 
 const nameSchema = z.string().trim().min(1).max(80);
+const productDetails = {
+  name: nameSchema,
+  sku: z.string().trim().max(40).transform((value) => value || null).nullable().default(null),
+  categoryId: localIdSchema.nullable().default(null),
+  unitId: localIdSchema,
+};
 const weightSchema = z.string().max(22).transform((value, context) => {
   try { return formatDecimal(parseWeight(value), 3); }
   catch { context.addIssue({ code: "custom", message: "Enter a positive gram-precise weight." }); return z.NEVER; }
@@ -34,6 +40,9 @@ const commandSchema = z.discriminatedUnion("operation", [
   z.object({ operation: z.literal("create-category"), name: nameSchema }),
   z.object({ operation: z.literal("update-category"), id: localIdSchema, name: nameSchema }),
   z.object({ operation: z.literal("deactivate-category"), id: localIdSchema }),
+  z.object({ operation: z.literal("create-product"), ...productDetails }),
+  z.object({ operation: z.literal("update-product"), id: localIdSchema, ...productDetails }),
+  z.object({ operation: z.literal("deactivate-product"), id: localIdSchema }),
 ]);
 
 export async function getCatalogWorkspace() {
@@ -88,6 +97,29 @@ export async function manageCatalog(input: unknown): Promise<CatalogState> {
         await tx.insert(catalogUnits).values({ organizationId: tenant.organizationId, name: command.name, ...command.unit });
       } else if (command.operation === "create-category") {
         await tx.insert(productCategories).values({ organizationId: tenant.organizationId, name: command.name });
+      } else if (command.operation === "create-product" || command.operation === "update-product") {
+        const [unit] = await tx.select({ id: catalogUnits.id }).from(catalogUnits).where(and(
+          eq(catalogUnits.id, command.unitId), eq(catalogUnits.organizationId, tenant.organizationId), eq(catalogUnits.isActive, true),
+        )).limit(1);
+        if (!unit) return { status: "invalid", fields: ["unitId"] };
+        if (command.categoryId !== null) {
+          const [category] = await tx.select({ id: productCategories.id }).from(productCategories).where(and(
+            eq(productCategories.id, command.categoryId), eq(productCategories.organizationId, tenant.organizationId), eq(productCategories.isActive, true),
+          )).limit(1);
+          if (!category) return { status: "invalid", fields: ["categoryId"] };
+        }
+        const details = { name: command.name, sku: command.sku, unitId: command.unitId, categoryId: command.categoryId };
+        if (command.operation === "create-product") {
+          await tx.insert(products).values({ organizationId: tenant.organizationId, ...details });
+        } else {
+          const saved = await tx.update(products).set(details).where(and(eq(products.id, command.id),
+            eq(products.organizationId, tenant.organizationId), eq(products.isActive, true))).returning({ id: products.id });
+          if (saved.length === 0) return { status: "conflict" };
+        }
+      } else if (command.operation === "deactivate-product") {
+        const saved = await tx.update(products).set({ isActive: false }).where(and(eq(products.id, command.id),
+          eq(products.organizationId, tenant.organizationId), eq(products.isActive, true))).returning({ id: products.id });
+        if (saved.length === 0) return { status: "conflict" };
       } else {
         const table = command.operation === "update-unit" || command.operation === "deactivate-unit" ? catalogUnits : productCategories;
         const changes = command.operation === "update-unit" ? { name: command.name, ...command.unit }
@@ -100,11 +132,46 @@ export async function manageCatalog(input: unknown): Promise<CatalogState> {
     });
   } catch (error) {
     unstable_rethrow(error);
-    // Drizzle wraps pg errors; only these two named uniqueness constraints are expected conflicts.
+    // Drizzle wraps pg errors; only catalogue name/code constraints are expected conflicts.
     const cause = error instanceof Error ? error.cause : error;
     if (cause && typeof cause === "object" && "code" in cause && cause.code === "23505" && "constraint" in cause &&
-      (cause.constraint === "catalog_units_organization_name" || cause.constraint === "product_categories_organization_name")) return { status: "duplicate" };
+      (cause.constraint === "catalog_units_organization_name" || cause.constraint === "product_categories_organization_name" ||
+        cause.constraint === "products_organization_name" || cause.constraint === "products_organization_sku")) return { status: "duplicate" };
     throw error;
+  }
+}
+
+const productSelection = { id: products.id, name: products.name, sku: products.sku, categoryId: products.categoryId,
+  unitId: products.unitId, isActive: products.isActive, unitName: catalogUnits.name, categoryName: productCategories.name };
+
+export async function getProducts() {
+  try {
+    const tenant = await requirePermission("catalog.read");
+    // shortcut: return the small pilot catalogue in full, paginate before supporting large catalogues.
+    return await db.select(productSelection).from(products)
+      .innerJoin(catalogUnits, and(eq(products.unitId, catalogUnits.id), eq(products.organizationId, catalogUnits.organizationId)))
+      .leftJoin(productCategories, and(eq(products.categoryId, productCategories.id), eq(products.organizationId, productCategories.organizationId)))
+      .where(eq(products.organizationId, tenant.organizationId)).orderBy(asc(products.name));
+  } catch (error) {
+    unstable_rethrow(error);
+    throw new Error("Products unavailable.");
+  }
+}
+
+export async function getProduct(input: unknown) {
+  try {
+    const tenant = await requirePermission("catalog.read");
+    const id = localIdSchema.safeParse(input);
+    if (!id.success) notFound();
+    const [product] = await db.select(productSelection).from(products)
+      .innerJoin(catalogUnits, and(eq(products.unitId, catalogUnits.id), eq(products.organizationId, catalogUnits.organizationId)))
+      .leftJoin(productCategories, and(eq(products.categoryId, productCategories.id), eq(products.organizationId, productCategories.organizationId)))
+      .where(and(eq(products.id, id.data), eq(products.organizationId, tenant.organizationId))).limit(1);
+    if (!product) notFound();
+    return product;
+  } catch (error) {
+    unstable_rethrow(error);
+    throw new Error("Products unavailable.");
   }
 }
 

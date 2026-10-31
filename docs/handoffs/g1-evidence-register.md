@@ -130,7 +130,12 @@ steps and unknowns must remain visible during the closure review.
   terminology under [ADR 0011](../adr/0011-validate-purchase-receipt-terminology.md),
   and material differences from accepted policies.
 - [ ] Record the review outcome and synchronize the research summary and build-plan
-  gate status before treating Task 14 as ready.
+  gate status before treating G1 as passed for subsequent tasks or pilot release.
+
+On 31 October the founder separately authorized Task 14 after being informed of
+the blocker; [ADR 0003](../adr/0003-helmand-pilot-workflow.md#amendment--task-14-implementation-before-g1-closure-31-october-2026)
+records the limited implementation exception. It changes none of the research
+records or closure checks above. Task 15 and later still require G1 evidence.
 
 The answers establish recalled participant roles, participation, B001's wheat and
 maize trade, and two observed receiving steps; none of the closure checks above is

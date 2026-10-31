@@ -12,6 +12,7 @@ export default async function SettingsPage() {
   return (
     <div className="space-y-5 text-ink">
       <h1 className="text-3xl font-semibold"><T>Settings</T></h1>
+      <Link href="/products" prefetch={false} className="inline-flex min-h-11 items-center rounded-lg border border-border px-4 font-semibold hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"><T>Products</T></Link>
       <Link href="/settings/catalog" prefetch={false} className="inline-flex min-h-11 items-center rounded-lg border border-border px-4 font-semibold hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"><T>Units and product categories</T></Link>
       <p className="text-ink-muted"><T>Owners and admins can manage staff membership and business roles.</T></p>
       <Link href="/settings/staff" prefetch={false} className="inline-flex min-h-11 items-center rounded-lg border border-border px-4 font-semibold hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"><T>Manage staff</T></Link>
