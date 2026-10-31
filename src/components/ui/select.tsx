@@ -4,8 +4,12 @@ import type { ComponentProps } from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLocaleDirection } from "gt-next";
 
-export const Select = SelectPrimitive.Root;
+export function Select(props: ComponentProps<typeof SelectPrimitive.Root>) {
+  const direction = useLocaleDirection();
+  return <SelectPrimitive.Root dir={direction} {...props} />;
+}
 export const SelectValue = SelectPrimitive.Value;
 
 export function SelectTrigger({ className, children, ...props }: ComponentProps<typeof SelectPrimitive.Trigger>) {
@@ -44,7 +48,7 @@ export function SelectItem({ className, children, ...props }: ComponentProps<typ
   return (
     <SelectPrimitive.Item
       data-slot="select-item"
-      className={cn("relative flex min-h-10 w-full cursor-default select-none items-center rounded-lg py-2 pe-8 ps-3 text-start outline-none data-[highlighted]:bg-muted data-[state=checked]:font-medium data-[disabled]:pointer-events-none data-[disabled]:opacity-45", className)}
+      className={cn("relative flex min-h-11 w-full cursor-default select-none items-center rounded-lg py-2 pe-8 ps-3 text-start outline-none data-[highlighted]:bg-muted data-[state=checked]:font-medium data-[disabled]:pointer-events-none data-[disabled]:opacity-45", className)}
       {...props}
     >
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>

@@ -33,7 +33,7 @@ describe("workspace identity and role", () => {
     await expect(getWorkspaceSummary()).rejects.toBe(denial);
     expect(mocks.query).not.toHaveBeenCalled();
   });
-  it.each([[], [["Business", "unknown"]]])("denies a missing or invalid current role: %j", async (rows) => {
+  it.each([{ rows: [] }, { rows: [["Business", "unknown"]] }])("denies a missing or invalid current role: %j", async ({ rows }) => {
     mocks.query.mockResolvedValue({ rows });
     await expect(getWorkspaceSummary()).rejects.toHaveProperty("digest", "NEXT_HTTP_ERROR_FALLBACK;404");
   });

@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 
 const state = vi.hoisted(() => ({ pathname: "/products/123" }));
 vi.mock("next/navigation", () => ({ usePathname: () => state.pathname }));
-vi.mock("gt-next", () => ({ T: ({ children }: { children: ReactNode }) => children }));
+vi.mock("gt-next", () => ({ T: ({ children }: { children: ReactNode }) => children, useGT: () => (text: string) => text }));
 
 import { AppNavigation } from "./app-navigation";
 import { businessRoles, hasPermission } from "@/auth/permissions";

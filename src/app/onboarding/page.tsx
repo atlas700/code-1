@@ -30,7 +30,7 @@ export default async function OnboardingPage() {
     timezone: request.timezone,
     baseCurrency: request.baseCurrency,
     locale: request.locale,
-  } : { name: "", businessType: "", timezone: "", baseCurrency: "AFN", locale };
+  } : { name: "", businessType: "", timezone: "Asia/Kabul", baseCurrency: "AFN", locale };
 
   return (
     <main className="min-h-dvh bg-page px-4 py-8 sm:px-6 sm:py-12">

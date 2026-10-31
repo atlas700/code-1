@@ -33,7 +33,7 @@ export default async function ProductsPage() {
         <ul className="divide-y divide-border/60">{products.map((product) => <li key={product.id} className="grid min-w-0 gap-3 px-5 py-5 transition-colors hover:bg-page/60 sm:px-6 md:grid-cols-[minmax(0,1fr)_6rem_9rem_6rem] md:items-center md:gap-5">
           <div className="flex min-w-0 items-center gap-3">
             <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-border/60 bg-page"><Package className="size-[18px] text-ink-muted" aria-hidden="true" /></span>
-            <div className="min-w-0"><Link href={`/products/${product.id}`} className="inline-flex min-h-6 items-center gap-2 break-words text-sm font-semibold hover:text-primary hover:underline"><bdi dir="auto">{product.name}</bdi><ArrowUpRight className="size-3.5 shrink-0 text-ink-muted rtl:-scale-x-100" aria-hidden="true" /></Link>
+            <div className="min-w-0"><Link href={`/products/${product.id}`} className="inline-flex min-h-11 max-w-full items-center gap-2 break-words text-sm font-semibold hover:text-primary hover:underline"><bdi dir="auto" className="min-w-0">{product.name}</bdi><ArrowUpRight className="size-3.5 shrink-0 text-ink-muted rtl:-scale-x-100" aria-hidden="true" /></Link>
               {product.sku && <p className="mt-1 break-words font-mono text-xs text-ink-muted" dir="auto">{product.sku}</p>}
             </div>
           </div>

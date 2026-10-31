@@ -1,9 +1,10 @@
 "use client";
 
-import { T } from "gt-next";
+import { T, useGT } from "gt-next";
 import { useActionState, useId, useState } from "react";
 import { updateCatalog } from "../actions";
 import { Button } from "@/components/ui/button";
+import { ConfirmSubmit } from "@/components/ui/confirm-submit";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
@@ -14,6 +15,7 @@ type CatalogFormProps = { entity: "unit" | "category"; entry?: {
 
 
 export function CatalogForm(props: CatalogFormProps) {
+  const gt = useGT();
   const entry = props.entity === "defaults" ? undefined : props.entry;
   const [name, setName] = useState(entry?.name ?? "");
   const [kind, setKind] = useState(entry?.kind ?? "fixed");
@@ -48,7 +50,8 @@ export function CatalogForm(props: CatalogFormProps) {
         <Button type="submit" name="operation" value={`${entry ? "update" : "create"}-${props.entity}`}>
           {entry ? <T>Save changes</T> : <T>Add</T>}
         </Button>
-        {entry && <Button variant="destructive" type="submit" formNoValidate name="operation" value={`deactivate-${props.entity}`}><T>Deactivate</T></Button>}
+        {entry && <ConfirmSubmit formNoValidate name="operation" value={`deactivate-${props.entity}`}
+          confirmation={gt("Deactivate {name}? Its record will be kept and it cannot be reactivated.", { name: entry.name })}><T>Deactivate</T></ConfirmSubmit>}
       </>}
     </fieldset>
     <div id={`${id}-feedback`} className="text-sm leading-6 [&_[role=alert]]:text-destructive [&_[role=status]]:text-success">

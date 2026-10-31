@@ -20,7 +20,7 @@ describe("safe route recovery", () => {
   });
   it.each([ProductsError, CatalogError, StaffError])("forwards retry through workspace error views", (Page) => {
     const retry = vi.fn();
-    const view = Page({ retry, reset: vi.fn() });
+    const view = Page({ retry });
     expect(view.props.retry).toBe(retry);
   });
   it("gives shared workspace failures and missing pages a safe return path", () => {

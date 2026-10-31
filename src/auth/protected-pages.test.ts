@@ -2,6 +2,10 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 const { requirePermission } = vi.hoisted(() => ({ requirePermission: vi.fn() }));
 vi.mock("@/db/authorization", () => ({ requirePermission }));
+vi.mock("@/db/workspace", () => ({ getWorkspaceSummary: async () => {
+  await requirePermission("organization.read");
+  return { name: "Business", role: "owner" };
+} }));
 
 import DashboardPage from "../app/(app)/dashboard/page";
 import InventoryPage from "../app/(app)/inventory/page";

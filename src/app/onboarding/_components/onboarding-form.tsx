@@ -90,7 +90,7 @@ export function OnboardingForm({ initialValues, resuming }: OnboardingFormProps)
           aria-describedby={fields.includes("timezone") ? "timezone-error" : "timezone-hint"}
         />
         <datalist id="timezones"><option value="Asia/Kabul" /></datalist>
-        <p id="timezone-hint" className="mt-2 text-sm text-ink-muted"><T>For Afghanistan, use Asia/Kabul.</T></p>
+        <p id="timezone-hint" className="mt-2 text-sm text-ink-muted"><T>Afghanistan time: Asia/Kabul (UTC+04:30).</T></p>
         {fields.includes("timezone") && <p id="timezone-error" className="mt-2 text-sm"><T>Enter a valid timezone, such as Asia/Kabul.</T></p>}
       </div>
       <div className="grid gap-5 sm:grid-cols-2">

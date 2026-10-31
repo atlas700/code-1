@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { T } from "gt-next";
+import { getGT } from "gt-next/server";
 import { businessRoles, type BusinessRole } from "@/auth/permissions";
 import { getStaffWorkspace } from "@/db/staff";
 import { StaffForm } from "./_components/staff-form";
 import { ArrowLeft } from "lucide-react";
 import { PageHeader, Panel } from "@/components/workspace";
 import { Button } from "@/components/ui/button";
+import { ConfirmSubmit } from "@/components/ui/confirm-submit";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Field, FieldLabel } from "@/components/ui/field";
@@ -21,6 +23,7 @@ const roleLabels: Record<BusinessRole, ReactNode> = {
 
 export default async function StaffPage() {
   const { members, invitations, canManageOwners } = await getStaffWorkspace();
+  const gt = await getGT();
   return (
     <div className="space-y-8">
       <div>
@@ -68,7 +71,8 @@ export default async function StaffPage() {
                   </Select>
                 </Field>
                 <Button type="submit" name="operation" value="role"><T>Save role</T></Button>
-                <Button variant="destructive" type="submit" name="operation" value="deactivate"><T>Deactivate membership</T></Button>
+                <ConfirmSubmit name="operation" value="deactivate"
+                  confirmation={gt("Remove {name} from this business? Rejoining will require a new business role.", { name: member.identifier })}><T>Deactivate membership</T></ConfirmSubmit>
               </StaffForm>}
             </li>
           ))}

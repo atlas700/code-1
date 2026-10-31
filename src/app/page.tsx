@@ -4,8 +4,10 @@ import { LocalePicker } from "./_components/locale-picker";
 import { Brand } from "@/components/workspace";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Package, Scale, Users } from "lucide-react";
+import { getSession } from "@/auth/server";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getSession();
   return (
     <div className="min-h-dvh bg-page">
       <header className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-6 sm:px-10"><Brand /><LocalePicker /></header>
@@ -15,8 +17,8 @@ export default function Home() {
           <h1 className="max-w-xl text-5xl font-semibold leading-[1.08] tracking-[-0.045em] text-ink sm:text-6xl"><T>A clearer way to run your trading day.</T></h1>
           <p className="mt-7 max-w-md text-lg leading-8 text-ink-muted"><T>Your products, measures, and people. Together in one considered workspace.</T></p>
           <div className="mt-9 flex flex-wrap gap-3">
-            <Button asChild className="px-6"><Link href="/sign-in"><T>Sign in</T><ArrowRight aria-hidden="true" className="rtl:-scale-x-100" /></Link></Button>
-            <Button asChild variant="outline"><Link href="/dashboard" prefetch={false}><T>Open workspace</T></Link></Button>
+            {!session && <Button asChild className="px-6"><Link href="/sign-in"><T>Sign in</T><ArrowRight aria-hidden="true" className="rtl:-scale-x-100" /></Link></Button>}
+            <Button asChild variant={session ? "default" : "outline"}><Link href="/dashboard" prefetch={false}><T>Open workspace</T></Link></Button>
           </div>
           <p className="mt-5 text-sm text-ink-muted"><T>Joining your team?</T> <Link href="/join" prefetch={false} className="inline-flex min-h-11 items-center font-medium text-primary hover:underline"><T>Staff access</T></Link></p>
         </section>
