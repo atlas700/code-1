@@ -171,7 +171,9 @@ membership and the exact local grant before writing.
 Names are unique per tenant/table ignoring case and surrounding spaces, including
 inactive names. Results are `success`, `invalid` with field names, `duplicate`,
 `conflict`, or a safe `error` with a correlation UUID. Framework authentication
-and permission control flow is rethrown. Only success revalidates `/settings/catalog`.
+and permission control flow is rethrown. Only success revalidates `/settings/catalog`
+and the product list/detail pages that display these units/categories. The
+units/categories action accepts only its own operation names.
 After an ambiguous result, reload the list before retrying; normal duplicate
 creates never create a second same-name row. Edits currently use last successful
 write semantics; there is no version-conflict editor in this task.
@@ -183,6 +185,27 @@ snapshots and exact normalized kg; bags require a positive gram-precise actual
 weight, while fixed-weight overrides and sub-gram stock are rejected. Like Task
 12, the calculation accepts zero quantity; future posting services must enforce
 their positive quantities and persist snapshots atomically with the business event.
+
+## Product catalogue contract
+
+`/products` uses the same catalogue service and permissions. `updateProduct`
+authenticates and forwards only product fields to `manageCatalog`; unrelated
+operation names are rejected. Only successful mutations revalidate `/products`
+and the `/products/[id]` page pattern. Safe errors and ambiguous-result recovery
+follow the catalogue contract above.
+
+- `create-product`: trimmed 1–80 character name, optional code/SKU up to 40
+  characters (blank becomes null), optional category UUID/null, required unit UUID.
+- `update-product`: those fields plus an active product UUID in the current tenant.
+- `deactivate-product`: active tenant product UUID; no deletion or reactivation.
+
+Create/edit requires active unit/category references in the server-derived tenant.
+Name/code conflicts include inactive products. Updates use last successful write
+semantics. `getProducts()` and `getProduct(id)` require `catalog.read`, scope reads
+and joins to the current tenant, and return scalar details including inactive
+records. Malformed, missing, and foreign detail IDs return the same not-found
+control flow. Reads never seed data. Future transaction selectors must check active
+products/units; this general catalogue list does not establish posting eligibility.
 
 ## Decision status
 

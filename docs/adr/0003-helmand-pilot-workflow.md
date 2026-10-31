@@ -68,6 +68,20 @@ businesses, recalled without notes. Dated business-by-business coverage is still
 missing. G1, Task 14's evidence prerequisite, and pilot release remain open. See
 the [updated research record](../handoffs/pilot-research-evidence.md).
 
+## Amendment — Task 14 implementation before G1 closure (31 October 2026)
+
+After being told that Task 14 was blocked by G1, the founder instructed
+“implement it”. This authorizes Task 14's product schema, services, and
+create/list/detail/edit/deactivate screens. Reuse the existing catalogue
+permissions and units/categories. Products have user-entered names, optional
+codes and categories, and a required weight unit. Default prices remain deferred
+because product-level defaults have not been validated. ADR 0005's single stock
+identity remains binding; no inventory calculation is included.
+
+This is a Task 14 exception only. It does not close G1 or authorize Task 15 and
+later, pilot release, or additional workflow policies. The earlier Task 13
+exception remains historical authorization for that task.
+
 ## Links
 
 - [Product requirements](../product-requirements.md)

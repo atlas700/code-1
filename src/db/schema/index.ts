@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { boolean, check, numeric, pgTable, primaryKey, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { boolean, check, foreignKey, numeric, pgTable, primaryKey, text, timestamp, unique, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 import { businessRoles } from "@/auth/permissions";
 
 export const organizations = pgTable("organizations", {
@@ -18,6 +18,7 @@ export const catalogUnits = pgTable("catalog_units", {
   isActive: boolean("is_active").default(true).notNull(),
 }, (table) => [
   uniqueIndex("catalog_units_organization_name").on(table.organizationId, sql`lower(btrim(${table.name}))`),
+  unique("catalog_units_organization_id").on(table.organizationId, table.id),
   check("catalog_units_name", sql`${table.name} = btrim(${table.name}) and length(${table.name}) between 1 and 80`),
   check("catalog_units_weight", sql`(${table.kind} = 'bag' and ${table.kilogramsPerUnit} is null) or
     (${table.kind} = 'fixed' and ${table.kilogramsPerUnit} is not null and ${table.kilogramsPerUnit} > 0
@@ -31,7 +32,27 @@ export const productCategories = pgTable("product_categories", {
   isActive: boolean("is_active").default(true).notNull(),
 }, (table) => [
   uniqueIndex("product_categories_organization_name").on(table.organizationId, sql`lower(btrim(${table.name}))`),
+  unique("product_categories_organization_id").on(table.organizationId, table.id),
   check("product_categories_name", sql`${table.name} = btrim(${table.name}) and length(${table.name}) between 1 and 80`),
+]);
+
+export const products = pgTable("products", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organizationId: uuid("organization_id").notNull().references(() => organizations.id),
+  name: text("name").notNull(),
+  sku: text("sku"),
+  categoryId: uuid("category_id"),
+  unitId: uuid("unit_id").notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+}, (table) => [
+  uniqueIndex("products_organization_name").on(table.organizationId, sql`lower(btrim(${table.name}))`),
+  uniqueIndex("products_organization_sku").on(table.organizationId, sql`lower(btrim(${table.sku}))`),
+  foreignKey({ name: "products_tenant_unit", columns: [table.organizationId, table.unitId],
+    foreignColumns: [catalogUnits.organizationId, catalogUnits.id] }),
+  foreignKey({ name: "products_tenant_category", columns: [table.organizationId, table.categoryId],
+    foreignColumns: [productCategories.organizationId, productCategories.id] }),
+  check("products_name", sql`${table.name} = btrim(${table.name}) and length(${table.name}) between 1 and 80`),
+  check("products_sku", sql`${table.sku} is null or (${table.sku} = btrim(${table.sku}) and length(${table.sku}) between 1 and 40)`),
 ]);
 
 export const organizationRoleAssignments = pgTable("organization_role_assignments", {

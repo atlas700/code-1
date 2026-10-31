@@ -30,7 +30,7 @@ an agent workflow requirement; CI continues to run the existing automated checks
 - Run `npm run lint`, `npm run typecheck`, `npm run test`, and `npm run build`.
 - CI runs those same commands on every push and pull request.
 - A separate CI job starts disposable PostgreSQL 16, applies committed migrations
-  twice, and runs the onboarding/authorization, staff, and catalogue integration suites with
+  twice, and runs the onboarding/authorization, staff, catalogue, and product integration suites with
   `AFCS_TEST_DATABASE_URL`. It uses fixed, job-local credentials and no live services.
 - CI also runs `npm audit --omit=dev --audit-level=high` after installation. Run it
   locally for dependency or CI changes and before deployment.
@@ -114,6 +114,16 @@ case-insensitive uniqueness, deactivation, custom measures, fractional weights,
 seeding, and a queued actor's revoked grant. It uses the same isolated database
 guard/cleanup as the other integration suites, and CI's database job includes it.
 Static rendering does not establish live browser interaction or translation quality.
+
+Task 14 adds product service/action/static-render tests and
+`src/db/products.integration.test.ts` to the existing isolated CI job. Coverage
+includes validation, authenticated tenant-derived authority, all roles, same-tenant
+unit/category references (also enforced by database constraints), active reference
+selection, case-insensitive product names and optional codes, concurrent duplicate
+creation, failed-edit rollback, inactive record retention, and queued actor
+revocation. UI checks cover list/detail/edit, read-only access, setup/empty states,
+labels, retained values, inactive selections, pending state, and safe feedback.
+These are separate from real browser, Clerk, and translation smoke evidence.
 
 ## Dependency gate
 

@@ -22,6 +22,8 @@
   it does not backfill or infer business roles.
   `0004_catalog_units_categories.sql` adds organization-owned units and categories
   under the [Task 13 exception](adr/0003-helmand-pilot-workflow.md#amendment--task-13-implementation-before-g1-closure-28-october-2026).
+  `0005_products.sql` adds products and same-tenant catalogue foreign keys under
+  the [Task 14 exception](adr/0003-helmand-pilot-workflow.md#amendment--task-14-implementation-before-g1-closure-31-october-2026).
 - `DATABASE_URL` is required by application startup and migration tooling. It is
   server-only and must never use a `NEXT_PUBLIC_` prefix.
 - SQL and metadata live in `drizzle/`. Migrations are explicit operations, separate
@@ -77,7 +79,7 @@ Use `npm.cmd` when forwarding flags in Windows PowerShell; in other shells use
 `npm`. This avoids the PowerShell `npm.ps1` wrapper consuming migration flags.
 
 Verify reviewed migrations on a separate database before development. The retained
-`afcs_task07_verify` receives the fifth migration for Task 13. A fresh checkout may
+`afcs_task07_verify` receives the sixth migration for Task 14. A fresh checkout may
 instead use a newly provisioned empty database. In a
 dedicated PowerShell terminal, set a process-only override without recording the
 connection string in shell history:
@@ -89,9 +91,9 @@ npm run db:migrate
 Remove-Item Env:DATABASE_URL
 ```
 
-Both runs must succeed, with exactly five migration rows in
-`drizzle.__drizzle_migrations` and six public tables (the four foundation tables
-plus `catalog_units` and `product_categories`) plus the ledger.
+Both runs must succeed, with exactly six migration rows in
+`drizzle.__drizzle_migrations` and seven public tables (the four foundation tables
+plus `catalog_units`, `product_categories`, and `products`) plus the ledger.
 Verify prior migration hashes remain unchanged. Run the isolated onboarding tests
 below for uniqueness, concurrency, settings constraints, and rollback. Stop on any
 failure. Removing
@@ -177,7 +179,7 @@ The suite checks `current_database()` before writes, uses unique synthetic fixtu
 and deletes only its grants/settings/mappings/requests afterward. Without the variable, its fifteen tests are
 explicitly skipped; ordinary unit tests need no running database. CI's separate
 `database` job starts PostgreSQL 16 with a fresh `afcs_task07_verify` database,
-applies committed migrations twice, and runs all three integration suites with fixed
+applies committed migrations twice, and runs all four integration suites with fixed
 job-local credentials. The service is discarded when the job ends; no repository
 secret or shared application database is used. After the
 26 October local migration, concurrency/rollback tests, and browser smoke checks,
@@ -281,8 +283,8 @@ same approval and a separate scope decision. See
 PostgreSQL 16, Drizzle with `pg`, the structural ownership model, and explicitly
 reviewed/run migrations with forward-fix and backup/restore recovery. See
 [ADR 0013](adr/0013-local-postgresql-foundation.md). Detailed business schema and
-screens after Task 13 still require G1 evidence; Task 13 alone has the limited
-founder-authorized exception in ADR 0003. ADR 0019 resolves the
+screens after Task 14 still require G1 evidence; Tasks 13 and 14 have separate limited
+founder-authorized exceptions in ADR 0003. ADR 0019 resolves the
 numeric policy; other G4 readiness gates remain open. Current eligibility is recorded in the
 [build plan's gate status](agent-sized-build-plan.md#current-gate-status).
 
@@ -323,3 +325,32 @@ constraints, concurrent seeding, and queued actor revocation. CI includes it in
 the disposable database job. The suite refuses other database names and removes
 only its synthetic records. Apply the reviewed fifth migration to verification
 before running the suite, and apply/reapply it to development before using the page.
+
+## Products
+
+Task 14 adds `products`: a generated UUID, organization, trimmed 1–80 character
+name, optional trimmed 1–40 character code/SKU, optional category, required weight
+unit, and active flag. Names and non-null codes are unique per organization,
+ignoring case and outer spaces, including inactive products. Blank optional codes
+are normalized to null. No product is deleted or reactivated.
+
+Composite foreign keys enforce that a product's unit and category belong to its
+organization, including for direct SQL writes. The migration adds the referenced
+unique constraints before creating those foreign keys. Product creates/edits
+require active references; an existing inactive reference must be replaced (or an
+optional category cleared) when editing. Deactivation remains possible regardless
+of reference status. Existing products remain readable when references deactivate.
+
+The catalogue service reuses `catalog.read`, `catalog.manage`, organization
+locking, and fresh membership/grant rechecks. `/products` and `/products/[id]`
+provide create/list/detail/edit/deactivate screens, linked from Settings. Reads
+include inactive products for history; future purchasing services must explicitly
+check active product/unit state and persist transaction snapshots. The chosen unit
+is an entry measure; stock still normalizes to kg under ADR 0019.
+
+Apply/reapply reviewed migration 0005 before using products. Run
+`src/db/products.integration.test.ts` with the same isolated verification URL as
+the existing suites. It tests all roles, tenant denial, references, uniqueness,
+concurrent creation, rollback, deactivation, and queued revocation. Default prices,
+inventory, and grade/origin/lot attributes are deferred. G1 remains open despite
+the Task 14 implementation exception.

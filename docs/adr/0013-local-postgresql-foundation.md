@@ -44,7 +44,7 @@ ownership model and migration/recovery workflow without pre-empting G1 research.
 
 - G4 database is approved for Task 07 and the structural tenancy work in Task 08.
   Detailed business tables and screens require G1 evidence, except for the limited
-  Task 13 exception in [ADR 0003](0003-helmand-pilot-workflow.md#amendment--task-13-implementation-before-g1-closure-28-october-2026).
+  Task 13 and Task 14 exceptions in [ADR 0003](0003-helmand-pilot-workflow.md).
 - Decimal scale/rounding, mutation-boundary approval, permissions, pilot sign-in
   validation, and deployment gates remain open. This is not research evidence.
 - Docker, hosted PostgreSQL, business schema, automatic migration pipelines, and

@@ -11,13 +11,17 @@ export async function updateCatalog(_previous: CatalogState, formData: FormData)
   try {
     await requireSession();
     stage = "catalogue-mutation";
-    const result = await manageCatalog(formData instanceof FormData ? {
-      operation: formData.get("operation"), id: formData.get("id"), name: formData.get("name"),
+    const operation = formData instanceof FormData ? formData.get("operation") : null;
+    const result = await manageCatalog(typeof operation === "string" && ["seed-units", "create-unit", "update-unit",
+      "deactivate-unit", "create-category", "update-category", "deactivate-category"].includes(operation) ? {
+      operation, id: formData.get("id"), name: formData.get("name"),
       unit: { kind: formData.get("kind"), kilogramsPerUnit: formData.get("kind") === "bag" ? null : formData.get("kilogramsPerUnit") },
     } : null);
     if (result.status === "success") {
       stage = "refresh";
       revalidatePath("/settings/catalog");
+      revalidatePath("/products");
+      revalidatePath("/products/[id]", "page");
     }
     return result;
   } catch (error) {

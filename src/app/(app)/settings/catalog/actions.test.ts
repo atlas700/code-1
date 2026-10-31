@@ -19,7 +19,7 @@ describe("catalogue Server Action", () => {
     expect(await updateCatalog({ status: "success" }, form)).toEqual({ status: "success" });
     expect(mocks.requireSession).toHaveBeenCalledOnce();
     expect(mocks.manageCatalog).toHaveBeenCalledWith({ operation: "create-unit", id: null, name: "Bag", unit: { kind: "bag", kilogramsPerUnit: null } });
-    expect(mocks.revalidatePath).toHaveBeenCalledExactlyOnceWith("/settings/catalog");
+    expect(mocks.revalidatePath.mock.calls).toEqual([["/settings/catalog"], ["/products"], ["/products/[id]", "page"]]);
   });
   it("preserves anonymous redirects and permission denials", async () => {
     mocks.requireSession.mockImplementation(() => redirect("/sign-in"));
@@ -43,5 +43,12 @@ describe("catalogue Server Action", () => {
     // @ts-expect-error Exercise the untrusted Server Action transport.
     await updateCatalog({ status: "idle" }, null);
     expect(mocks.manageCatalog).toHaveBeenLastCalledWith(null);
+  });
+  it("keeps product operations in the product action", async () => {
+    mocks.manageCatalog.mockResolvedValue({ status: "invalid", fields: ["operation"] });
+    const form = new FormData(); form.set("operation", "deactivate-product");
+    await updateCatalog({ status: "idle" }, form);
+    expect(mocks.manageCatalog).toHaveBeenCalledWith(null);
+    expect(mocks.revalidatePath).not.toHaveBeenCalled();
   });
 });

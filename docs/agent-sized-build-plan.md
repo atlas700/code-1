@@ -18,7 +18,7 @@ Sales, customer payments, multiple warehouses, returns, lot/grade tracking, and
 offline mode are deferred. Accepted ADRs govern product policy; this plan governs
 task readiness and order. Update both when an approved decision changes the scope.
 
-## Current repository baseline (30 October 2026)
+## Current repository baseline (31 October 2026)
 
 - The application shell, localization plumbing, Clerk authentication, environment
   validation, Vitest tests, and CI are implemented (Tasks 01–06).
@@ -36,6 +36,8 @@ task readiness and order. Update both when an approved decision changes the scop
   Task 13 supplies organization-owned weight units and product categories, exact
   unit snapshots, and their management screen under the limited ADR 0003 exception;
   see its [handoff](handoffs/13-units-product-categories.md).
+  Task 14 adds tenant-owned products and their list/detail/edit screens under a
+  separate ADR 0003 exception; see its [handoff](handoffs/14-products.md).
   Purchasing tables and a UI-component library are absent.
 - The [30 October readiness interview](handoffs/pilot-readiness-decisions.md)
   records updated research totals, supplier-balance payment entry, a reported
@@ -61,7 +63,8 @@ The project rules in `AGENTS.md` and `docs/` are mandatory. In particular:
 1. **Check task readiness first.** Tasks 01–12 may proceed before G1 only when
    their specific G3/G4 prerequisites below are approved. Task 13 has the limited
    founder-authorized exception in ADR 0003 (28 October); G1 remains open.
-   Tasks 14–35 require G1 evidence. Documentation, dependency patches, and CI maintenance may
+   Task 14 has a separate founder-authorized exception on 31 October under ADR 0003.
+   Tasks 15–35 require G1 evidence. Documentation, dependency patches, and CI maintenance may
    proceed independently; deferred features require a new scope decision.
 2. **One task, one concern.** A task must not silently add a second module,
    redesign the app, change deployment, or introduce a speculative abstraction.
@@ -122,20 +125,24 @@ or interview transcripts.
 | Gate | Status and evidence (updated 31 October 2026) | Owner | Blocks |
 | --- | --- | --- | --- |
 | G0 market | Accepted: [ADR 0003](adr/0003-helmand-pilot-workflow.md), amended 28 October to target Helmand grain and mixed-goods wholesalers | Founder | Market choice is resolved |
-| G1 research | Open: on 30 October, founder reports 50 interviewees and approximately 50 businesses personally observed, with a common workflow and the latest visit about a week earlier. No notes were taken. On 31 October, the [evidence register](handoffs/g1-evidence-register.md) maps B001's owner, two workers, and manager as four reported interview participants, plus partial recalled receiving evidence. Individual interview content and full per-business coverage still need reconstruction and review against 20 interviews/5 observations. The [records checklist](handoffs/grain-wholesaler-records-research.md) supplies proposed fields, not completed field evidence. Task 13 alone has the ADR 0003 exception | Founder/researcher | Tasks 14–35 and pilot release |
+| G1 research | Open: on 30 October, founder reports 50 interviewees and approximately 50 businesses personally observed, with a common workflow and the latest visit about a week earlier. No notes were taken. On 31 October, the [evidence register](handoffs/g1-evidence-register.md) maps B001's owner, two workers, and manager as four reported interview participants, plus partial recalled receiving evidence. Individual interview content and full per-business coverage still need reconstruction and review against 20 interviews/5 observations. The [records checklist](handoffs/grain-wholesaler-records-research.md) supplies proposed fields, not completed field evidence. Tasks 13 and 14 have separate limited ADR 0003 exceptions | Founder/researcher | Tasks 15–35 and pilot release |
 | G2 scope | Founder-approved: [ADR 0003](adr/0003-helmand-pilot-workflow.md); user validation still depends on G1 | Founder/product lead | Features outside the approved pilot |
-| G3 domain policies | [ADR 0019](adr/0019-pilot-numeric-settlement-policy.md) supplies the numeric policy and Task 12 helpers; Task 13 supplies the weight catalogue. On 30 October, amended [ADR 0009](adr/0009-specific-obligation-payment-allocation.md) approves supplier-balance entry, oldest-first same-currency allocation, and no overpayments. A Pashto-speaking owner/accounts clerk is available for label review; validation and posting remain pending | Founder/product lead | Tasks 14–35 and pilot labels still require G1 evidence |
+| G3 domain policies | [ADR 0019](adr/0019-pilot-numeric-settlement-policy.md) supplies the numeric policy and Task 12 helpers; Task 13 supplies the weight catalogue. On 30 October, amended [ADR 0009](adr/0009-specific-obligation-payment-allocation.md) approves supplier-balance entry, oldest-first same-currency allocation, and no overpayments. A Pashto-speaking owner/accounts clerk is available for label review; validation and posting remain pending | Founder/product lead | Tasks 15–35 and pilot labels still require G1 evidence; Task 14 has the limited exception |
 | G4 authentication | Clerk accepted under [ADR 0002](adr/0002-clerk-authentication.md). On 30 October the founder reports successful real phone-code delivery and completed authentication/login. Exact test context and separate Pilot A–C outcomes were not supplied; see the [readiness record](handoffs/pilot-readiness-decisions.md) | Founder | Pilot authentication until required outcomes and deployment smoke are recorded/reviewed |
 | G4 database | Accepted: [ADR 0013](adr/0013-local-postgresql-foundation.md) approves local PostgreSQL and reviewed migrations; [ADR 0014](adr/0014-clerk-organizations-local-business-roles.md), 25 October, replaces local membership ownership with verified Clerk membership and a local organization mapping | Technical lead/founder | Detailed business schema still requires G1; other G4 gates remain open |
 | G4 mutation boundary | Accepted: [ADR 0015](adr/0015-server-action-mutation-boundary.md), 26 October; native Server Actions with the [mutation contract](api-conventions.md#mutation-contract) and a narrow first-organization bootstrap exception | Technical lead/founder | Boundary decision resolved; each mutation still needs its task's authorization and recovery checks |
 | G4 permissions | Accepted: [ADR 0016](adr/0016-local-business-authorization.md); Task 10 implements fixed roles, membership-bound grants, and server guards. ADR 0019 approves a future owner-only rounding-reduction permission for Task 25 | Technical lead/founder | Policy and foundation resolved; each new workflow still needs its own permission and resource-ownership checks |
 | G4 deployment | Partially resolved: amended [ADR 0018](adr/0018-managed-pilot-hosting.md) selects Netlify Free/Neon Free with synthetic test records; paid production hosting is deferred, with a USD 60/month hosting/database ceiling. Approved real-pilot targets: 30-day backups, at most one hour lost entries, four-hour recovery during business hours, overseas storage, and email alerts to the founder. Exact provider/region/backup destination, separate costs, enforceable spend controls, configuration, and restore/alert evidence remain open | Founder | Task 34 still requires G1 and remaining setup decisions; pilot release requires verification |
 
-**Next task:** 14 — products, **blocked by G1 research evidence**.
+**Next task:** 15 — suppliers, **blocked by G1 research evidence**.
+Task 14 is implemented under the separate 31 October exception after the founder
+was informed of the G1 blocker; see [ADR 0003's Task 14 amendment](adr/0003-helmand-pilot-workflow.md#amendment--task-14-implementation-before-g1-closure-31-october-2026)
+and [Task 14 handoff](handoffs/14-products.md). G1 remains open; Task 15 and later
+and pilot release still require its evidence.
 Task 13 implements units and product categories under the exception authorized
 on 28 October after the founder was informed of the G1 blocker; see
 [ADR 0003's amendment](adr/0003-helmand-pilot-workflow.md#amendment--task-13-implementation-before-g1-closure-28-october-2026).
-G1 remains open and still blocks Tasks 14–35 and pilot release. Task 12 implements
+G1 remains open and still blocks Tasks 15–35 and pilot release. Task 12 implements
 shared domain primitives under ADR 0019; see its [handoff](handoffs/12-domain-primitives.md).
 Task 11 implements staff invitation and membership
 management under ADRs 0014/0016; see its [handoff](handoffs/11-staff-management.md).
@@ -146,7 +153,7 @@ ADR 0015; see its [handoff](handoffs/09-first-organization-onboarding.md). Task 
 [readiness handoff](handoffs/task-08-09-readiness.md) record its completion.
 Development Organizations and recovery slugs are on, membership is optional, and
 automatic creation is off; Task 09 verifies these settings and its live flow.
-ADR 0019 resolves Task 12's numeric prerequisite. Apart from the Task 13 exception,
+ADR 0019 resolves Task 12's numeric prerequisite. Apart from the Task 13/14 exceptions,
 G1 still blocks domain implementation; pilot sign-in and deployment readiness remain open.
 The [payment policy decision](handoffs/pilot-research-evidence.md#payment-policy-decision)
 resolves the earlier mismatch: amended ADRs 0009/0019 and Tasks 25–26 now require
@@ -219,7 +226,8 @@ The scope column also constrains the detailed task descriptions below.
 | --- | --- | --- |
 | 01–12 | Complete | Foundation, authentication, persistence, tenancy, onboarding, local authorization, staff management, and domain primitives; see [handoffs](README.md) |
 | 13 | Complete | Units/categories; founder-authorized G1 exception on 28 October under ADR 0003 |
-| 14–15 | Pilot required | Products and suppliers; blocked by G1 |
+| 14 | Complete | Products; founder-authorized G1 exception on 31 October under ADR 0003 |
+| 15 | Pilot required | Suppliers; blocked by G1 |
 | 16 | Deferred | Customers |
 | 17–22 | Pilot required | One warehouse, purchases, accepted receipts/payables, stock, owner-approved corrections |
 | 23–24 | Deferred | Sales drafts and fulfilment |
@@ -475,6 +483,10 @@ measure isolation, sub-gram rejection, and historical snapshot preservation.
 **Handoff:** record the selected product-unit policy from G3.
 
 #### 14 — Implement products
+
+**Readiness:** Founder-authorized exception to G1 on 31 October under ADR 0003.
+G1 remains open for subsequent tasks and pilot release. Product-level default
+prices are deferred until validated; category is optional and weight unit required.
 
 **Goal:** Create an organization-scoped product catalogue.
 
