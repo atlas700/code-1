@@ -71,6 +71,27 @@ to commit the work on its feature branch, push it to GitHub, and request review.
 
 ## Agent skills
 
+### Design and styling skills
+
+Before creating, updating, refactoring, or reviewing app design or styling,
+read and apply **both** project-local skills:
+
+- [design-taste-frontend](.agents/skills/design-taste-frontend/SKILL.md) from
+  [Taste Skill](https://github.com/Leonxlnx/taste-skill) for visual direction and
+  design review. For workspace pages, follow its
+  [app-screen workflow](.agents/skills/design-taste-frontend/references/app-screens.md).
+- [ui-ux-pro-max](.agents/skills/ui-ux-pro-max/SKILL.md) for UI/UX guidance and
+  the relevant focused domain or stack search; use its design-system search
+  when establishing a new visual direction.
+
+This applies to page and component layouts, CSS and Tailwind classes, typography,
+colors, spacing, themes, icons, animation, and responsive or interaction styling,
+including small style-only edits. Match the surrounding design for focused edits.
+Preserve the accepted [workspace design system](docs/adr/0020-workspace-design-system.md),
+shared components and tokens, Pashto/RTL support, and accessibility requirements;
+these take precedence over conflicting generic skill recommendations. Apply
+these skills alongside the other task-relevant skills and required checks.
+
 ### Issue tracker
 
 Issues are tracked in this repository's GitHub Issues. See `docs/agents/issue-tracker.md`.
