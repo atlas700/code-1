@@ -9,7 +9,7 @@ import { ArrowLeft } from "lucide-react";
 import { PageHeader, Panel } from "@/components/workspace";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { NativeSelect } from "@/components/ui/native-select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Field, FieldLabel } from "@/components/ui/field";
 
 export const metadata: Metadata = { title: "Staff" };
@@ -62,9 +62,10 @@ export default async function StaffPage() {
               {(member.role !== "owner" || canManageOwners) && <StaffForm>
                 <input type="hidden" name="membershipId" value={member.membershipId} />
                 <Field className="flex-1 basis-52"><FieldLabel htmlFor={`role-${member.membershipId}`}><T>Business role</T></FieldLabel>
-                  <NativeSelect id={`role-${member.membershipId}`} name="role" defaultValue={member.role ?? "viewer"}>
-                    {businessRoles.filter((role) => role !== "owner" || canManageOwners).map((role) => <option key={role} value={role}>{roleLabels[role]}</option>)}
-                  </NativeSelect>
+                  <Select name="role" defaultValue={member.role ?? "viewer"}>
+                    <SelectTrigger id={`role-${member.membershipId}`}><SelectValue /></SelectTrigger>
+                    <SelectContent>{businessRoles.filter((role) => role !== "owner" || canManageOwners).map((role) => <SelectItem key={role} value={role}>{roleLabels[role]}</SelectItem>)}</SelectContent>
+                  </Select>
                 </Field>
                 <Button type="submit" name="operation" value="role"><T>Save role</T></Button>
                 <Button variant="destructive" type="submit" name="operation" value="deactivate"><T>Deactivate membership</T></Button>

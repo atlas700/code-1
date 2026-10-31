@@ -12,7 +12,7 @@ authorized design-system improvement, not a numbered domain task.
 - The shared visual language now covers public pages, authenticated workspace
   navigation, dashboard, catalogue, products, staff, onboarding, loading,
   recoverable-error, and unavailable-state views.
-- `Button`, `Input`, `NativeSelect`, `Field`, feedback, panel, badge, and page
+- `Button`, `Input`, Radix-based `Select`, `Field`, feedback, panel, badge, and page
   heading components replace repeated raw control styles. The compatible
   shadcn/ui-derived controls retain their MIT attribution in
   `src/components/ui/README.md`.
@@ -45,6 +45,20 @@ records the shadcn/ui provenance and validation boundary.
 Unrelated local skill-installation files and `skills-lock.json` changes are
 deliberately excluded from this delivery.
 
+### Radix Select refinement
+
+The original `NativeSelect` wrapper was replaced with a shared Radix Select
+primitive styled with the existing Tailwind token utilities. Product unit and
+category selection, catalogue weight basis, staff roles, and onboarding locale
+now use the same keyboard-accessible trigger, viewport, option, selected-state,
+disabled-state, error, and focus treatment.
+
+Radix supplies the hidden native control for normal form submission. The only
+non-native value is the product form's no-category sentinel, which the Product
+Server Action converts to `null` before the existing Zod-backed catalogue
+boundary validates it. This keeps optional categories working without trusting
+the client or changing the domain model.
+
 ## Pre-validation review
 
 Applied the full Ponytail review to the complete redesign diff and the connected
@@ -57,11 +71,16 @@ One layout issue found during the visual pass was corrected: labels in the
 onboarding form are explicit block elements with consistent separation from
 their controls. No business, identity, authorization, or mutation logic changed.
 
+The Select refinement review found no unresolved must-fix issue. It confirmed
+all four callers retain their `name`, required/disabled state, labels, and
+field-error references; the optional product-category sentinel is normalized
+before validation and has focused action coverage.
+
 ## Verification
 
 - `npm run lint`: pass.
 - `npm run typecheck`: pass.
-- `npm run test`: **450 passed**, **49 skipped** database tests.
+- `npm run test`: **451 passed**, **49 skipped** database tests.
 - `npm run build`: pass; all 15 application routes compile as dynamic routes.
 - `npm audit --omit=dev --audit-level=high`: **0 vulnerabilities**.
 - `git diff --check`: pass.
@@ -69,6 +88,8 @@ their controls. No business, identity, authorization, or mutation logic changed.
   320x844; local sign-in shell at 1440x900 and 390x844. All checked public
   home viewports have document width equal to viewport width; no horizontal
   overflow was observed.
+- Select refinement: focused product action and all affected static form tests
+  pass; the production build compiles the Radix client boundary successfully.
 
 ## Limitations and next task
 

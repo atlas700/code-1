@@ -5,7 +5,7 @@ import { useActionState, useId, useState } from "react";
 import { updateCatalog } from "../actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { NativeSelect } from "@/components/ui/native-select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 
 type CatalogFormProps = { entity: "unit" | "category"; entry?: {
@@ -33,10 +33,10 @@ export function CatalogForm(props: CatalogFormProps) {
         </Field>
         {props.entity === "unit" && <>
           <Field className="flex-1 basis-48"><FieldLabel htmlFor={`${id}-kind`}><T>Weight basis</T></FieldLabel>
-            <NativeSelect id={`${id}-kind`} name="kind" value={kind} onChange={(event) => setKind(event.target.value === "bag" ? "bag" : "fixed")}
-              aria-invalid={invalid.includes("unit")} aria-describedby={`${id}-feedback`}>
-              <option value="fixed"><T>Fixed weight</T></option><option value="bag"><T>Actual bag weight</T></option>
-            </NativeSelect>
+            <Select name="kind" value={kind} onValueChange={(value) => setKind(value === "bag" ? "bag" : "fixed")}>
+              <SelectTrigger id={`${id}-kind`} aria-invalid={invalid.includes("unit")} aria-describedby={`${id}-feedback`}><SelectValue /></SelectTrigger>
+              <SelectContent><SelectItem value="fixed"><T>Fixed weight</T></SelectItem><SelectItem value="bag"><T>Actual bag weight</T></SelectItem></SelectContent>
+            </Select>
           </Field>
           {kind === "fixed" ? <Field className="flex-1 basis-48" data-invalid={invalid.includes("unit")}>
             <FieldLabel htmlFor={`${id}-weight`}><T>Kilograms per unit</T></FieldLabel>

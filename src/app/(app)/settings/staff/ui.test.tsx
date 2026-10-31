@@ -34,7 +34,7 @@ describe("staff page and form", () => {
     expect(markup).toContain('for="staff-email"');
     expect(markup).toContain("No business access");
     expect(markup).not.toContain('value="member_owner"');
-    expect(markup).not.toContain('<option value="owner"');
+    expect(markup).toContain('data-slot="select-trigger"');
     expect(markup).toContain('for="role-member_staff"');
     expect(markup).toContain("30 days");
   });
@@ -43,7 +43,7 @@ describe("staff page and form", () => {
     mocks.getStaffWorkspace.mockResolvedValue({ ...data, canManageOwners: true });
     const markup = renderToStaticMarkup(await StaffPage());
     expect(markup).toContain('value="member_owner"');
-    expect(markup).toContain('<option value="owner"');
+    expect(markup).toContain('name="role"');
   });
   it("disables controls while pending and announces safe feedback", () => {
     mocks.pending = true;

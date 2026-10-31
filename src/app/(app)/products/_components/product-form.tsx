@@ -4,9 +4,10 @@ import { T, Var } from "gt-next";
 import { useActionState, useId, useState } from "react";
 import type { getCatalogWorkspace, getProduct } from "@/db/catalog";
 import { updateProduct } from "../actions";
+import { NO_CATEGORY_VALUE } from "../no-category";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { NativeSelect } from "@/components/ui/native-select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 import { Plus, Check } from "lucide-react";
 
@@ -18,7 +19,7 @@ export function ProductForm({ product, units, categories }: ProductFormProps) {
   const [name, setName] = useState(product?.name ?? "");
   const [sku, setSku] = useState(product?.sku ?? "");
   const [unitId, setUnitId] = useState(product?.unitId ?? "");
-  const [categoryId, setCategoryId] = useState(product?.categoryId ?? "");
+  const [categoryId, setCategoryId] = useState(product?.categoryId ?? NO_CATEGORY_VALUE);
   const [state, action, pending] = useActionState(updateProduct, { status: "idle" });
   const id = useId();
   const invalid = state.status === "invalid" ? state.fields : [];
@@ -39,22 +40,29 @@ export function ProductForm({ product, units, categories }: ProductFormProps) {
       </Field>
       <Field data-invalid={invalid.includes("unitId")}>
         <FieldLabel htmlFor={`${id}-unit`}><T>Weight unit</T></FieldLabel>
-        <NativeSelect id={`${id}-unit`} name="unitId" value={unitId} onChange={(event) => setUnitId(event.target.value)} required
-          aria-invalid={invalid.includes("unitId")} aria-describedby={invalid.includes("unitId") ? `${id}-unit-error` : undefined}>
-          <option value="" disabled><T>Choose a weight unit</T></option>
+        <Select name="unitId" value={unitId} onValueChange={setUnitId} required>
+          <SelectTrigger id={`${id}-unit`} aria-invalid={invalid.includes("unitId")} aria-describedby={invalid.includes("unitId") ? `${id}-unit-error` : undefined}>
+            <SelectValue placeholder={<T>Choose a weight unit</T>} />
+          </SelectTrigger>
+          <SelectContent>
           {units.filter((unit) => unit.isActive || unit.id === product?.unitId).map((unit) =>
-            <option key={unit.id} value={unit.id} disabled={!unit.isActive}>{unit.name}{!unit.isActive && <T> (inactive)</T>}</option>)}
-        </NativeSelect>
+            <SelectItem key={unit.id} value={unit.id} disabled={!unit.isActive}>{unit.name}{!unit.isActive && <T> (inactive)</T>}</SelectItem>)}
+          </SelectContent>
+        </Select>
         {invalid.includes("unitId") && <FieldError id={`${id}-unit-error`}><T>Choose an active weight unit.</T></FieldError>}
       </Field>
       <Field data-invalid={invalid.includes("categoryId")}>
         <FieldLabel htmlFor={`${id}-category`}><T>Category (optional)</T></FieldLabel>
-        <NativeSelect id={`${id}-category`} name="categoryId" value={categoryId} onChange={(event) => setCategoryId(event.target.value)}
-          aria-invalid={invalid.includes("categoryId")} aria-describedby={invalid.includes("categoryId") ? `${id}-category-error` : undefined}>
-          <option value=""><T>No category</T></option>
+        <Select name="categoryId" value={categoryId} onValueChange={setCategoryId}>
+          <SelectTrigger id={`${id}-category`} aria-invalid={invalid.includes("categoryId")} aria-describedby={invalid.includes("categoryId") ? `${id}-category-error` : undefined}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+          <SelectItem value={NO_CATEGORY_VALUE}><T>No category</T></SelectItem>
           {categories.filter((category) => category.isActive || category.id === product?.categoryId).map((category) =>
-            <option key={category.id} value={category.id} disabled={!category.isActive}>{category.name}{!category.isActive && <T> (inactive)</T>}</option>)}
-        </NativeSelect>
+            <SelectItem key={category.id} value={category.id} disabled={!category.isActive}>{category.name}{!category.isActive && <T> (inactive)</T>}</SelectItem>)}
+          </SelectContent>
+        </Select>
         {invalid.includes("categoryId") && <FieldError id={`${id}-category-error`}><T>Choose an active category or no category.</T></FieldError>}
       </Field>
       <div className="flex flex-wrap gap-3 border-t border-border/70 pt-5 sm:col-span-2">

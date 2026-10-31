@@ -7,6 +7,7 @@ vi.mock("@/auth/server", () => mocks);
 vi.mock("@/db/catalog", () => mocks);
 vi.mock("next/cache", () => mocks);
 import { updateProduct } from "./actions";
+import { NO_CATEGORY_VALUE } from "./no-category";
 
 beforeEach(() => { mocks.requireSession.mockResolvedValue({ userId: "user_a" }); mocks.manageCatalog.mockResolvedValue({ status: "success" }); });
 afterEach(() => { vi.resetAllMocks(); vi.restoreAllMocks(); });
@@ -19,6 +20,12 @@ describe("product Server Action", () => {
     expect(mocks.requireSession).toHaveBeenCalledOnce();
     expect(mocks.manageCatalog).toHaveBeenCalledWith({ operation: "create-product", id: null, name: "Wheat", sku: "W", unitId: "unit", categoryId: null });
     expect(mocks.revalidatePath.mock.calls).toEqual([["/products"], ["/products/[id]", "page"]]);
+  });
+  it("normalizes the Radix no-category value before validation", async () => {
+    const form = new FormData();
+    for (const [key, value] of Object.entries({ operation: "create-product", name: "Wheat", sku: "W", unitId: "unit", categoryId: NO_CATEGORY_VALUE })) form.set(key, value);
+    await updateProduct({ status: "idle" }, form);
+    expect(mocks.manageCatalog).toHaveBeenCalledWith(expect.objectContaining({ categoryId: null }));
   });
   it("preserves sign-in redirects and permission denials", async () => {
     mocks.requireSession.mockImplementation(() => redirect("/sign-in"));

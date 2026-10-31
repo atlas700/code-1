@@ -3,7 +3,7 @@
 import { T } from "gt-next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { NativeSelect } from "@/components/ui/native-select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FieldLabel } from "@/components/ui/field";
 import type { ReactNode } from "react";
 import { useActionState, useEffect, useRef, useState } from "react";
@@ -111,18 +111,10 @@ export function OnboardingForm({ initialValues, resuming }: OnboardingFormProps)
         <div>
           <FieldLabel htmlFor="locale" className="mb-2.5 block"><T>Business language</T></FieldLabel>
           {resuming && <input type="hidden" name="locale" value={values.locale} />}
-          <NativeSelect
-            id="locale"
-            name={resuming ? undefined : "locale"}
-            disabled={resuming || pending}
-            value={values.locale}
-            onChange={(event) => setValues({ ...values, locale: event.target.value })}
-            aria-invalid={fields.includes("locale")}
-            aria-describedby={fields.includes("locale") ? "locale-error" : undefined}
-          >
-            <option value="en-US">English</option>
-            <option value="ps-AF" lang="ps">پښتو</option>
-          </NativeSelect>
+          <Select name={resuming ? undefined : "locale"} disabled={resuming || pending} value={values.locale} onValueChange={(locale) => setValues({ ...values, locale })}>
+            <SelectTrigger id="locale" aria-invalid={fields.includes("locale")} aria-describedby={fields.includes("locale") ? "locale-error" : undefined}><SelectValue /></SelectTrigger>
+            <SelectContent><SelectItem value="en-US">English</SelectItem><SelectItem value="ps-AF" lang="ps">پښتو</SelectItem></SelectContent>
+          </Select>
           {fields.includes("locale") && <p id="locale-error" className="mt-2 text-sm"><T>Select a supported business language.</T></p>}
         </div>
       </div>

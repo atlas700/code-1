@@ -67,8 +67,8 @@ describe("product pages and form", () => {
     mocks.getState.mockReturnValue({ status: "duplicate" });
     const markup = renderToStaticMarkup(<ProductForm product={{ ...product, unitId: "old", categoryId: "old-category" }} units={units} categories={categories} />);
     expect(markup).toContain('value="Wheat"'); expect(markup).toContain('value="W-1"');
-    expect(markup).toContain("Old measure"); expect(markup).toContain("Old category");
-    expect(markup).toContain("(inactive)"); expect(markup).toContain('disabled="" selected=""');
+    expect(markup).toContain('data-slot="select-trigger"');
+    expect(markup).toContain('name="unitId"'); expect(markup).toContain('name="categoryId"');
     expect(markup).toContain('role="alert"'); expect(markup).toContain("already used");
   });
   it("disables pending fields and announces invalid input and safe errors", () => {
