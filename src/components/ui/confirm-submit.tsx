@@ -13,6 +13,7 @@ type ConfirmSubmitProps = {
 
 export function ConfirmSubmit({ confirmation, children, ...submission }: ConfirmSubmitProps) {
   const submitter = useRef<HTMLButtonElement>(null);
+  // Keep deactivation inert before hydration; confirmation submits the original named control.
   return <>
     <Button type="button" variant="destructive" onClick={() => {
       if (window.confirm(confirmation) && submitter.current) submitter.current.form?.requestSubmit(submitter.current);

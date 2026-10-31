@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { eq, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 const auth = vi.hoisted(() => ({ requireSession: vi.fn(), getActiveOrganizationMembership: vi.fn() }));
@@ -13,6 +13,7 @@ vi.mock("@/env", () => ({ env: {
 
 import { db } from "./index";
 import { requirePermission } from "./authorization";
+import { getWorkspaceSummary } from "./workspace";
 import { completeOnboarding, getOnboardingRequest, pinOnboardingOrganization, reserveOnboarding, type OnboardingRequest } from "./onboarding";
 import { organizationOnboarding, organizationRoleAssignments, organizations, organizationSettings } from "./schema";
 
@@ -49,6 +50,27 @@ describe.skipIf(!process.env.AFCS_TEST_DATABASE_URL)("onboarding and authorizati
       await db.delete(organizations).where(inArray(organizations.clerkOrganizationId, remoteIds));
     }
     if (userIds.length) await db.delete(organizationOnboarding).where(inArray(organizationOnboarding.userId, userIds));
+  });
+
+  it("switches workspace identity and role using current membership, then denies a revoked grant", async () => {
+    const a = fixture();
+    const b = fixture();
+    const first = await pinOnboardingOrganization(await reserveOnboarding(a.userId, { ...details, name: "Business A" }), a.remoteId);
+    const second = await pinOnboardingOrganization(await reserveOnboarding(b.userId, { ...details, name: "Business B" }), b.remoteId);
+    await completeOnboarding(first, membership(first));
+    await completeOnboarding(second, membership(second));
+    const [mapping] = await db.select({ id: organizations.id }).from(organizations).where(eq(organizations.clerkOrganizationId, b.remoteId));
+    const secondMembership = { userId: a.userId, clerkOrganizationId: b.remoteId, membershipId: `staff_${randomUUID()}` };
+    await db.insert(organizationRoleAssignments).values({ organizationId: mapping.id, userId: a.userId, membershipId: secondMembership.membershipId, role: "viewer" });
+    auth.requireSession.mockResolvedValue({ userId: a.userId });
+    auth.getActiveOrganizationMembership.mockResolvedValue(membership(first));
+    expect(await getWorkspaceSummary()).toEqual({ name: "Business A", role: "owner" });
+    auth.getActiveOrganizationMembership.mockResolvedValue(secondMembership);
+    expect(await getWorkspaceSummary()).toEqual({ name: "Business B", role: "viewer" });
+    await db.delete(organizationRoleAssignments).where(and(eq(organizationRoleAssignments.organizationId, mapping.id), eq(organizationRoleAssignments.userId, a.userId)));
+    await expect(getWorkspaceSummary()).rejects.toMatchObject({ digest: "NEXT_HTTP_ERROR_FALLBACK;404" });
+    auth.getActiveOrganizationMembership.mockResolvedValue(membership(first));
+    expect(await getWorkspaceSummary()).toEqual({ name: "Business A", role: "owner" });
   });
 
   it("reserves one immutable setup across concurrent submissions", async () => {
