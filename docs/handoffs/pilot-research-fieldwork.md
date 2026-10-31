@@ -1,8 +1,16 @@
 # G1 research — evidence reconstruction and business revisits
 
-Prepared: 28 October 2026. Updated: 30 October 2026. Use for the approved Helmand grain and mixed-goods
+Prepared: 28 October 2026. Updated: 31 October 2026. Use for the approved Helmand grain and mixed-goods
 pilot. Current counts and gaps are in the [research record](pilot-research-evidence.md).
 This is a blank collection template; it records no completed interview or visit.
+
+Use the [G1 evidence register](g1-evidence-register.md) to track reconstructed
+interviews, observations, and workflow coverage. It now contains B001's partial
+record; reserved anonymous codes and unanswered questions are not completed
+evidence records. The [grain-wholesaler records research](grain-wholesaler-records-research.md)
+supplies proposed fields for collecting complete transactions without asking
+the founder to design every notebook field. These fields are literature-informed
+collection guidance, not proof of what a particular business recorded.
 
 The latest report is 50 interviewees and approximately 50 personally observed
 businesses, recalled without original notes. First reconstruct only details the
