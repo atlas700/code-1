@@ -34,7 +34,7 @@ describe("product pages and form", () => {
     expect(markup).not.toContain('value="old"');
     expect(markup).not.toContain('value="old-category"');
     expect(markup).not.toContain('name="organizationId"');
-    const ids = [...markup.matchAll(/<label for="([^"]+)"/g)].map((match) => match[1]);
+    const ids = [...markup.matchAll(/<label\b[^>]*\bfor="([^"]+)"/g)].map((match) => match[1]);
     expect(ids).toHaveLength(4);
     for (const id of ids) expect(markup).toContain(`id="${id}"`);
   });
@@ -78,6 +78,10 @@ describe("product pages and form", () => {
     mocks.pending = false; mocks.getState.mockReturnValue({ status: "invalid", fields: ["name", "unitId"] });
     markup = renderToStaticMarkup(<ProductForm units={units} categories={categories} />);
     expect(markup).toContain('aria-invalid="true"'); expect(markup).toContain("active weight unit");
+    for (const errorId of [...markup.matchAll(/aria-describedby="([^"]+-(?:name|unit)-error)"/g)].map((match) => match[1])) {
+      expect(markup).toContain(`id="${errorId}"`);
+    }
+    expect(markup).toContain("Enter a product name of 1–80 characters.");
     mocks.getState.mockReturnValue({ status: "error", correlationId: "safe-reference" });
     expect(renderToStaticMarkup(<ProductForm units={units} categories={categories} />)).toContain("safe-reference");
   });

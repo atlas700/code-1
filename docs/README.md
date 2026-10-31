@@ -31,6 +31,8 @@ pilot evidence are labelled **Open**.
 - [Task 12 handoff and primitive import contracts](handoffs/12-domain-primitives.md)
 - [Task 13 units and product categories handoff](handoffs/13-units-product-categories.md)
 - [Task 14 products handoff](handoffs/14-products.md)
+- [Workspace design-system decision](adr/0020-workspace-design-system.md)
+- [Workspace design-system redesign handoff](handoffs/workspace-design-system.md)
 - [PostgreSQL CI verification handoff](handoffs/postgresql-ci-verification.md)
 - [Pilot blocker clarifications](handoffs/pilot-blocker-clarifications.md)
 - [Confirmed pilot research interview and remaining G1 evidence](handoffs/pilot-research-evidence.md)

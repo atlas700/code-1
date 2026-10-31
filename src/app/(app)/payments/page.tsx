@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { T } from "gt-next";
 import { requirePermission } from "@/db/authorization";
 import { PlaceholderPage } from "../_components/placeholder-page";
 
@@ -10,8 +11,8 @@ export default async function PaymentsPage() {
   await requirePermission("supplier_payments.read");
   return (
     <PlaceholderPage
-      title="Payments"
-      description="Payment recording will be added only after invoices, payables, and allocation policies are in place."
+      title={<T>Payments</T>}
+      description={<T>Supplier payments and statements are not available yet.</T>}
     />
   );
 }

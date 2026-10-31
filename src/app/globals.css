@@ -1,33 +1,62 @@
 @import "tailwindcss";
 
 :root {
-  --page: #f8fafc;
+  color-scheme: light;
+  --page: #f5f5f7;
   --surface: #ffffff;
-  --ink: #1e293b;
-  --ink-muted: #475569;
-  --primary: #2563eb;
-  --primary-strong: #1d4ed8;
+  --ink: #1d1d1f;
+  --ink-muted: #626269;
+  --primary: #0066cc;
+  --primary-strong: #0055ad;
   --on-primary: #ffffff;
-  --muted: #e9eff8;
-  --border: #e2e8f0;
-  --ring: #2563eb;
+  --muted: #ededf0;
+  --border: #dedee3;
+  --ring: #0066cc;
+  --destructive: #b42318;
+  --success: #217347;
+  --input: #929299;
+  --radius: 0.75rem;
 }
 
 @theme inline {
   --color-page: var(--page);
+  --color-background: var(--surface);
+  --color-foreground: var(--ink);
   --color-surface: var(--surface);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
+  --color-muted-foreground: var(--ink-muted);
   --color-primary: var(--primary);
   --color-primary-strong: var(--primary-strong);
   --color-on-primary: var(--on-primary);
+  --color-primary-foreground: var(--on-primary);
   --color-muted: var(--muted);
+  --color-secondary: var(--muted);
+  --color-secondary-foreground: var(--ink);
+  --color-accent: var(--muted);
+  --color-accent-foreground: var(--ink);
   --color-border: var(--border);
   --color-ring: var(--ring);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-input: var(--input);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 0.25rem);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", var(--font-geist-sans), "Noto Sans Arabic", Tahoma, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
 }
 
-html {
-  scroll-padding-top: 1rem;
+@layer base {
+  html { scroll-padding-top: 6rem; }
+  body { letter-spacing: -0.012em; }
+  button, a, input, select, summary { -webkit-tap-highlight-color: transparent; }
+  button:not(:disabled), summary { cursor: pointer; }
+  ::selection { background: #cce5ff; color: #1d1d1f; }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
+  summary::marker { color: var(--ink-muted); }
+  [dir="rtl"] body { letter-spacing: normal; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
 }
