@@ -55,7 +55,7 @@ describe("catalogue page and forms", () => {
     expect(markup).toContain("Kilograms per unit");
     expect(markup).toContain('inputMode="decimal"');
     expect(markup).not.toContain('name="organizationId"');
-    const labelIds = [...markup.matchAll(/<label for="([^"]+)"/g)].map((match) => match[1]);
+    const labelIds = [...markup.matchAll(/<label\b[^>]*\bfor="([^"]+)"/g)].map((match) => match[1]);
     expect(labelIds.length).toBeGreaterThan(0);
     for (const id of labelIds) expect(markup).toContain(`id="${id}"`);
   });

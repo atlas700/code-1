@@ -34,7 +34,7 @@ describe("product pages and form", () => {
     expect(markup).not.toContain('value="old"');
     expect(markup).not.toContain('value="old-category"');
     expect(markup).not.toContain('name="organizationId"');
-    const ids = [...markup.matchAll(/<label for="([^"]+)"/g)].map((match) => match[1]);
+    const ids = [...markup.matchAll(/<label\b[^>]*\bfor="([^"]+)"/g)].map((match) => match[1]);
     expect(ids).toHaveLength(4);
     for (const id of ids) expect(markup).toContain(`id="${id}"`);
   });
@@ -67,8 +67,8 @@ describe("product pages and form", () => {
     mocks.getState.mockReturnValue({ status: "duplicate" });
     const markup = renderToStaticMarkup(<ProductForm product={{ ...product, unitId: "old", categoryId: "old-category" }} units={units} categories={categories} />);
     expect(markup).toContain('value="Wheat"'); expect(markup).toContain('value="W-1"');
-    expect(markup).toContain("Old measure"); expect(markup).toContain("Old category");
-    expect(markup).toContain("(inactive)"); expect(markup).toContain('disabled="" selected=""');
+    expect(markup).toContain('data-slot="select-trigger"');
+    expect(markup).toContain('name="unitId"'); expect(markup).toContain('name="categoryId"');
     expect(markup).toContain('role="alert"'); expect(markup).toContain("already used");
   });
   it("disables pending fields and announces invalid input and safe errors", () => {
@@ -78,6 +78,10 @@ describe("product pages and form", () => {
     mocks.pending = false; mocks.getState.mockReturnValue({ status: "invalid", fields: ["name", "unitId"] });
     markup = renderToStaticMarkup(<ProductForm units={units} categories={categories} />);
     expect(markup).toContain('aria-invalid="true"'); expect(markup).toContain("active weight unit");
+    for (const errorId of [...markup.matchAll(/aria-describedby="([^"]+-(?:name|unit)-error)"/g)].map((match) => match[1])) {
+      expect(markup).toContain(`id="${errorId}"`);
+    }
+    expect(markup).toContain("Enter a product name of 1–80 characters.");
     mocks.getState.mockReturnValue({ status: "error", correlationId: "safe-reference" });
     expect(renderToStaticMarkup(<ProductForm units={units} categories={categories} />)).toContain("safe-reference");
   });

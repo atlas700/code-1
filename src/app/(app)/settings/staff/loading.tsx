@@ -1,5 +1,6 @@
 import { T } from "gt-next";
+import { LoadingState } from "@/components/feedback";
 
 export default function Loading() {
-  return <p role="status"><T>Loading staff…</T></p>;
+  return <LoadingState><T>Loading staff…</T></LoadingState>;
 }

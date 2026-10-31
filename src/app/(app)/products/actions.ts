@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { unstable_rethrow } from "next/navigation";
 import { requireSession } from "@/auth/server";
 import { manageCatalog, type CatalogState } from "@/db/catalog";
+import { NO_CATEGORY_VALUE } from "./no-category";
 
 export async function updateProduct(_previous: CatalogState, formData: FormData): Promise<CatalogState> {
   let stage = "authentication";
@@ -14,7 +15,7 @@ export async function updateProduct(_previous: CatalogState, formData: FormData)
     const operation = formData instanceof FormData ? formData.get("operation") : null;
     const result = await manageCatalog(operation === "create-product" || operation === "update-product" || operation === "deactivate-product" ? {
       operation, id: formData.get("id"), name: formData.get("name"), sku: formData.get("sku"),
-      unitId: formData.get("unitId"), categoryId: formData.get("categoryId") === "" ? null : formData.get("categoryId"),
+      unitId: formData.get("unitId"), categoryId: ["", NO_CATEGORY_VALUE].includes(String(formData.get("categoryId") ?? "")) ? null : formData.get("categoryId"),
     } : null);
     if (result.status === "success") {
       stage = "refresh";

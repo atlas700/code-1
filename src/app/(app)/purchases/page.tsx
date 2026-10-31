@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { T } from "gt-next";
 import { requirePermission } from "@/db/authorization";
 import { PlaceholderPage } from "../_components/placeholder-page";
 
@@ -10,8 +11,8 @@ export default async function PurchasesPage() {
   await requirePermission("purchases.read");
   return (
     <PlaceholderPage
-      title="Purchases"
-      description="Purchasing workflows will be added after supplier and product foundations exist."
+      title={<T>Purchases</T>}
+      description={<T>Purchase and receipt recording is not available yet. You can organize your products in the meantime.</T>}
     />
   );
 }

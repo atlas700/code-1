@@ -10,7 +10,7 @@ export function StaffForm({ children }: { children: ReactNode }) {
   return (
     <form action={action} aria-busy={pending} aria-describedby={feedbackId} className="space-y-3">
       <fieldset disabled={pending} className="flex min-w-0 flex-wrap items-end gap-3 disabled:opacity-60">{children}</fieldset>
-      <div id={feedbackId}>
+      <div id={feedbackId} className="text-sm leading-6 [&_[role=alert]]:text-destructive [&_[role=status]]:text-success">
         {pending && <p role="status"><T>Saving…</T></p>}
         {state.status === "success" && <p role="status"><T>Saved.</T></p>}
         {state.status === "invalid" && <p role="alert"><T>Check the details. Use a valid email, account ID, or one of the listed business roles.</T></p>}

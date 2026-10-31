@@ -38,7 +38,10 @@ task readiness and order. Update both when an approved decision changes the scop
   see its [handoff](handoffs/13-units-product-categories.md).
   Task 14 adds tenant-owned products and their list/detail/edit screens under a
   separate ADR 0003 exception; see its [handoff](handoffs/14-products.md).
-  Purchasing tables and a UI-component library are absent.
+  Purchasing tables are absent. The separately authorized
+  [workspace redesign](adr/0020-workspace-design-system.md) adds Apple-inspired
+  presentation and shared shadcn/ui controls for existing screens. It implements
+  no numbered domain task and preserves G1 and Task 15's blocker.
 - The [30 October readiness interview](handoffs/pilot-readiness-decisions.md)
   records updated research totals, supplier-balance payment entry, a reported
   phone login, free test-hosting selection, and operating targets. These are
