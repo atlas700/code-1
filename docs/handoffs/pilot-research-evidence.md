@@ -1,6 +1,6 @@
 # Pilot research evidence — founder interview
 
-Initial record: 28 October 2026. Updated: 30 October 2026.
+Initial record: 28 October 2026. Updated: 31 October 2026.
 
 ## Source and status
 
@@ -132,6 +132,23 @@ reduction caps and transactional/idempotent posting remain required. This is an
 approved policy change, not implemented payment behavior or completed G1 evidence.
 
 ## Remaining G1 evidence
+
+Collection is tracked in the [G1 evidence register](g1-evidence-register.md),
+started on 31 October 2026. Its first partial business/visit record maps an owner,
+two workers, and a manager. The founder confirms that all four answered questions
+about the business. These are four reported participants with partial records;
+the business buys and sells wheat (غنم) and maize/corn (جواری). The founder also
+confirms personally seeing goods weighed and the manager entering actual received
+weight in a notebook at B001, recalled later rather than documented at the visit.
+Individual answers and full workflow coverage still need reconstruction and review. This
+adds no completed observations or accepted interview records to the reviewed
+totals. The reported totals above remain founder-reported.
+
+At the founder's request, the [grain-wholesaler records research](grain-wholesaler-records-research.md)
+provides a source-backed checklist of proposed business records and fields.
+It supports collection without requiring the founder to specify every standard
+field. These recommendations do not establish missing B001 facts or replace
+the required interviews and observations. Sale-recording time remains unknown.
 
 - [ ] Reconstruct an anonymized evidence register for the reported interviews and
   observations against the 20-interview/five-observation requirement. Label

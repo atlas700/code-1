@@ -35,6 +35,8 @@ pilot evidence are labelled **Open**.
 - [Confirmed pilot research interview and remaining G1 evidence](handoffs/pilot-research-evidence.md)
 - [Confirmed G0–G4 readiness decisions and documentation handoff](handoffs/pilot-readiness-decisions.md)
 - [G1 evidence reconstruction, revisit checklist, and private notes template](handoffs/pilot-research-fieldwork.md)
+- [G1 participant, observation, and workflow evidence register](handoffs/g1-evidence-register.md)
+- [Grain-wholesaler business records and source-backed field checklist](handoffs/grain-wholesaler-records-research.md)
 - [Completed numeric policy interview](handoffs/pilot-numeric-policy.md)
 - [Pilot-plan and quality maintenance handoff](handoffs/pilot-plan-and-quality.md)
 - [Pre-validation review workflow handoff](handoffs/pre-validation-review.md)
