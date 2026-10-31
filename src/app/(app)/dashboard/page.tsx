@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { requirePermission } from "@/db/authorization";
+import { getWorkspaceSummary } from "@/db/workspace";
+import { hasPermission } from "@/auth/permissions";
 import Link from "next/link";
 import { T } from "gt-next";
 import { ArrowUpRight, Package, Scale, Users, Boxes, ShoppingCart, Banknote } from "lucide-react";
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-  await requirePermission("organization.read");
+  const { role } = await getWorkspaceSummary();
   return (
     <div className="space-y-8">
       <PageHeader eyebrow={<T>Your workspace</T>} title={<T>Overview</T>} description={<T>Keep your products, measures, and people in order.</T>} action={<Button asChild><Link href="/products"><Package aria-hidden="true" /><T>Open products</T></Link></Button>} />
@@ -27,10 +28,10 @@ export default async function DashboardPage() {
               <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-success/8 text-success"><Scale className="size-5" aria-hidden="true" /></span>
               <div className="min-w-0 flex-1"><h3 className="text-sm font-semibold"><T>Units & categories</T></h3><p className="mt-1 text-sm leading-6 text-ink-muted"><T>Set up the measures your business uses.</T></p></div><ArrowUpRight className="size-4 shrink-0 text-ink-muted group-hover:text-primary rtl:-scale-x-100" aria-hidden="true" />
             </Link>
-            <Link href="/settings/staff" prefetch={false} className="group flex items-center gap-4 px-6 py-6 transition-colors hover:bg-page">
+            {hasPermission(role, "staff.read") && <Link href="/settings/staff" prefetch={false} className="group flex items-center gap-4 px-6 py-6 transition-colors hover:bg-page">
               <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#f3edf9] text-[#7950a3]"><Users className="size-5" aria-hidden="true" /></span>
               <div className="min-w-0 flex-1"><h3 className="text-sm font-semibold"><T>People & access</T></h3><p className="mt-1 text-sm leading-6 text-ink-muted"><T>Manage staff and their business roles.</T></p></div><ArrowUpRight className="size-4 shrink-0 text-ink-muted group-hover:text-primary rtl:-scale-x-100" aria-hidden="true" />
-            </Link>
+            </Link>}
           </div>
         </Panel>
         <Panel className="flex flex-col" aria-labelledby="daily-operations">

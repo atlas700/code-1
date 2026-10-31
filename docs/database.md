@@ -176,7 +176,7 @@ Remove-Item Env:AFCS_TEST_DATABASE_URL
 ```
 
 The suite checks `current_database()` before writes, uses unique synthetic fixtures,
-and deletes only its grants/settings/mappings/requests afterward. Without the variable, its fifteen tests are
+and deletes only its grants/settings/mappings/requests afterward. Without the variable, its sixteen tests are
 explicitly skipped; ordinary unit tests need no running database. CI's separate
 `database` job starts PostgreSQL 16 with a fresh `afcs_task07_verify` database,
 applies committed migrations twice, and runs all four integration suites with fixed

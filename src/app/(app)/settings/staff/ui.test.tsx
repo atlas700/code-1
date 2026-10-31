@@ -5,8 +5,9 @@ import type { StaffState } from "@/db/staff";
 
 const mocks = vi.hoisted(() => ({ getStaffWorkspace: vi.fn(), getState: vi.fn<() => StaffState>(), pending: false }));
 vi.mock("@/db/staff", () => mocks);
+vi.mock("gt-next/server", () => ({ getGT: async () => (text: string) => text }));
 vi.mock("./actions", () => ({ updateStaff: vi.fn() }));
-vi.mock("gt-next", () => ({ T: ({ children }: { children: ReactNode }) => children }));
+vi.mock("gt-next", () => ({ useLocaleDirection: () => "ltr", useGT: () => (text: string) => text, T: ({ children }: { children: ReactNode }) => children }));
 vi.mock("react", async (original) => ({
   ...await original<typeof import("react")>(), useActionState: () => [mocks.getState(), () => {}, mocks.pending],
 }));

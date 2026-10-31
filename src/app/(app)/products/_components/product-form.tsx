@@ -1,11 +1,12 @@
 "use client";
 
-import { T, Var } from "gt-next";
+import { T, Var, useGT } from "gt-next";
 import { useActionState, useId, useState } from "react";
 import type { getCatalogWorkspace, getProduct } from "@/db/catalog";
 import { updateProduct } from "../actions";
 import { NO_CATEGORY_VALUE } from "../no-category";
 import { Button } from "@/components/ui/button";
+import { ConfirmSubmit } from "@/components/ui/confirm-submit";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
@@ -16,6 +17,7 @@ type ProductFormProps = Pick<Awaited<ReturnType<typeof getCatalogWorkspace>>, "u
 };
 
 export function ProductForm({ product, units, categories }: ProductFormProps) {
+  const gt = useGT();
   const [name, setName] = useState(product?.name ?? "");
   const [sku, setSku] = useState(product?.sku ?? "");
   const [unitId, setUnitId] = useState(product?.unitId ?? "");
@@ -70,7 +72,8 @@ export function ProductForm({ product, units, categories }: ProductFormProps) {
           {product ? <Check aria-hidden="true" /> : <Plus aria-hidden="true" />}
           {product ? <T>Save changes</T> : <T>Add product</T>}
         </Button>
-        {product && <Button variant="destructive" type="submit" formNoValidate name="operation" value="deactivate-product"><T>Deactivate product</T></Button>}
+        {product && <ConfirmSubmit formNoValidate name="operation" value="deactivate-product"
+          confirmation={gt("Deactivate {name}? Its record will be kept and it cannot be reactivated.", { name: product.name })}><T>Deactivate product</T></ConfirmSubmit>}
       </div>
     </fieldset>
     <div id={`${id}-feedback`} className="text-sm leading-6 [&_[role=alert]]:text-destructive [&_[role=status]]:text-success">

@@ -13,10 +13,10 @@ export function LoadingState({ children }: { children: ReactNode }) {
   </div>;
 }
 
-export function ErrorState({ children, reset }: { children: ReactNode; reset: () => void }) {
+export function ErrorState({ children, retry }: { children: ReactNode; retry: () => void }) {
   return <Panel className="flex flex-col items-start gap-5">
     <span className="grid size-11 place-items-center rounded-xl bg-destructive/5 text-destructive"><AlertCircle className="size-5" aria-hidden="true" /></span>
     <p role="alert" className="max-w-lg text-sm leading-7">{children}</p>
-    <Button type="button" variant="outline" onClick={reset}><T>Try again</T></Button>
+    <Button type="button" variant="outline" onClick={retry}><T>Try again</T></Button>
   </Panel>;
 }

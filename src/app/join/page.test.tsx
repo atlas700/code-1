@@ -7,6 +7,7 @@ vi.mock("@/auth/server", () => mocks);
 vi.mock("@/auth/staff", () => mocks);
 vi.mock("gt-next", () => ({ T: ({ children }: { children: ReactNode }) => children }));
 vi.mock("@/auth/components", () => ({ SignOut: () => null }));
+vi.mock("@/app/_components/locale-picker", () => ({ LocalePicker: () => <select aria-label="Language" /> }));
 vi.mock("@/auth/organization-activation", () => ({ OrganizationActivation: ({ organizationId }: { organizationId: string }) => <span data-activation={organizationId} /> }));
 
 import StaffAccessPage from "./page";

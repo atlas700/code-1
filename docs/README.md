@@ -33,6 +33,7 @@ pilot evidence are labelled **Open**.
 - [Task 14 products handoff](handoffs/14-products.md)
 - [Workspace design-system decision](adr/0020-workspace-design-system.md)
 - [Workspace design-system redesign handoff](handoffs/workspace-design-system.md)
+- [Page and route UX audit fixes handoff](handoffs/app-ux-audit-fixes.md)
 - [PostgreSQL CI verification handoff](handoffs/postgresql-ci-verification.md)
 - [Pilot blocker clarifications](handoffs/pilot-blocker-clarifications.md)
 - [Confirmed pilot research interview and remaining G1 evidence](handoffs/pilot-research-evidence.md)

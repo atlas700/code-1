@@ -7,6 +7,7 @@ import { requireSession } from "@/auth/server";
 import { getStaffAccessOrganizations } from "@/auth/staff";
 import { Brand, PageHeader, Panel } from "@/components/workspace";
 import { buttonVariants } from "@/components/ui/button";
+import { LocalePicker } from "@/app/_components/locale-picker";
 
 export const metadata: Metadata = { title: "Staff access" };
 
@@ -21,7 +22,7 @@ export default async function StaffAccessPage() {
   }
   return (
     <main className="mx-auto min-h-dvh max-w-2xl space-y-7 px-4 py-10 sm:px-6">
-      <div className="mb-10 flex items-center justify-between gap-4"><Brand /><SignOut /></div>
+      <div className="mb-10 flex flex-wrap items-center justify-between gap-4"><Brand /><div className="flex flex-wrap items-center gap-2"><LocalePicker /><SignOut /></div></div>
       <PageHeader title={<T>Staff access</T>} description={<T>Share your account ID with the business owner or admin so they can add you. They must assign a business role before you can open the workspace.</T>} />
       <Panel><p className="text-xs font-medium text-ink-muted"><T>Your account ID</T></p><p className="mt-3 break-all font-mono text-sm" dir="ltr">{userId}</p></Panel>
       <h2 className="text-xl font-semibold"><T>Your businesses</T></h2>

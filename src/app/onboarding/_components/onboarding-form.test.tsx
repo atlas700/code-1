@@ -8,7 +8,7 @@ vi.mock("react", async (importOriginal) => ({
   ...await importOriginal<typeof import("react")>(),
   useActionState: () => [state.value, () => {}, state.pending],
 }));
-vi.mock("gt-next", () => ({ T: ({ children }: { children: ReactNode }) => children }));
+vi.mock("gt-next", () => ({ useLocaleDirection: () => "ltr", useGT: () => (text: string) => text, T: ({ children }: { children: ReactNode }) => children }));
 vi.mock("../actions", () => ({ createFirstOrganization: vi.fn() }));
 vi.mock("@/auth/organization-activation", () => ({
   OrganizationActivation: ({ organizationId }: { organizationId: string }) => <span data-activation={organizationId} />,

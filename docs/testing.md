@@ -125,6 +125,22 @@ revocation. UI checks cover list/detail/edit, read-only access, setup/empty stat
 labels, retained values, inactive selections, pending state, and safe feedback.
 These are separate from real browser, Clerk, and translation smoke evidence.
 
+## Workspace UX verification
+
+The UX audit fixes add session-aware home tests, seven-role navigation and
+dashboard/settings checks, locale-aware Select tests, error retry wiring, and
+confirmation cancellation/submission coverage. `src/db/workspace.test.ts` checks
+the metadata read's verified organization/membership/user parameters and safe
+denial/error behavior. The existing opt-in onboarding suite also checks business
+identity/role switching and denial after revocation against isolated PostgreSQL;
+all four database suites now contain 50 tests.
+
+Local synthetic HTML/browser fixtures are kept under ignored `artifacts/`.
+They exercise layout and native control behavior without contacting a provider or
+application database. Their evidence does not establish real Clerk login,
+translated terminology, deployed routes, or provider-backed mutations. No browser
+test dependency or CI browser suite is added.
+
 ## Dependency gate
 
 - The audit checks production dependencies and fails for high or critical

@@ -6,7 +6,7 @@ import type { CatalogState } from "@/db/catalog";
 const mocks = vi.hoisted(() => ({ getCatalogWorkspace: vi.fn(), getProducts: vi.fn(), getProduct: vi.fn(), getState: vi.fn<() => CatalogState>(), pending: false }));
 vi.mock("@/db/catalog", () => mocks);
 vi.mock("./actions", () => ({ updateProduct: vi.fn() }));
-vi.mock("gt-next", () => ({ T: ({ children }: { children: ReactNode }) => children, Var: ({ children }: { children: ReactNode }) => children }));
+vi.mock("gt-next", () => ({ useLocaleDirection: () => "ltr", useGT: () => (text: string) => text, T: ({ children }: { children: ReactNode }) => children, Var: ({ children }: { children: ReactNode }) => children }));
 vi.mock("react", async (original) => ({
   ...await original<typeof import("react")>(), useActionState: () => [mocks.getState(), () => {}, mocks.pending],
 }));

@@ -2,31 +2,34 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { T } from "gt-next";
+import { T, useGT } from "gt-next";
+import { hasPermission } from "@/auth/permissions";
 import { ArrowLeftRight, Banknote, Boxes, LayoutGrid, Package, Settings2, ShoppingBag, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navigationItems = [
-  { href: "/dashboard", label: <T>Overview</T>, icon: LayoutGrid, soon: false },
-  { href: "/products", label: <T>Products</T>, icon: Package, soon: false },
-  { href: "/inventory", label: <T>Inventory</T>, icon: Boxes, soon: true },
-  { href: "/purchases", label: <T>Purchases</T>, icon: ShoppingCart, soon: true },
-  { href: "/payments", label: <T>Payments</T>, icon: Banknote, soon: true },
-  { href: "/sales", label: <T>Sales</T>, icon: ShoppingBag, soon: true },
-  { href: "/settings", label: <T>Settings</T>, icon: Settings2, soon: false },
+  { href: "/dashboard", label: <T>Overview</T>, icon: LayoutGrid, soon: false, permission: "organization.read" },
+  { href: "/products", label: <T>Products</T>, icon: Package, soon: false, permission: "catalog.read" },
+  { href: "/inventory", label: <T>Inventory</T>, icon: Boxes, soon: true, permission: "inventory.read" },
+  { href: "/purchases", label: <T>Purchases</T>, icon: ShoppingCart, soon: true, permission: "purchases.read" },
+  { href: "/payments", label: <T>Payments</T>, icon: Banknote, soon: true, permission: "supplier_payments.read" },
+  { href: "/sales", label: <T>Sales</T>, icon: ShoppingBag, soon: true, permission: "organization.read" },
+  { href: "/settings", label: <T>Settings</T>, icon: Settings2, soon: false, permission: "organization.read" },
 ] as const;
 
 type AppNavigationProps = {
+  role: string;
   compact?: boolean;
 };
 
-export function AppNavigation({ compact = false }: AppNavigationProps) {
+export function AppNavigation({ role, compact = false }: AppNavigationProps) {
   const pathname = usePathname();
+  const gt = useGT();
 
   return (
-    <nav aria-label="Primary navigation">
+    <nav aria-label={gt("Primary navigation")}>
       <ul className={compact ? "flex gap-1" : "space-y-1.5"}>
-        {navigationItems.map(({ href, label, icon: Icon, soon }) => {
+        {navigationItems.filter(({ permission }) => hasPermission(role, permission)).map(({ href, label, icon: Icon, soon }) => {
           const isCurrent = pathname === href || pathname.startsWith(`${href}/`);
 
           return (
@@ -39,7 +42,7 @@ export function AppNavigation({ compact = false }: AppNavigationProps) {
               >
                 <Icon className={cn("size-[18px] shrink-0", isCurrent && "text-primary")} aria-hidden="true" />
                 <span>{label}</span>
-                {!compact && soon && <span className="ms-auto rounded px-1.5 py-0.5 text-[10px] font-normal text-ink-muted"><T>Soon</T></span>}
+                {soon && <span className="ms-auto rounded px-1.5 py-0.5 text-[10px] font-normal text-ink-muted">{href === "/sales" ? <T>Outside pilot</T> : <T>Soon</T>}</span>}
               </Link>
             </li>
           );
